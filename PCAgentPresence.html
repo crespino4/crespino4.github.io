@@ -18,8 +18,6 @@
 		// This client ID expects the redirect URL to be http://localhost:8080/
 		const clientId = '7d411159-c2f4-4196-97c4-e627fb007591';
 		const redirectUri = window.location.href;
-
-		alert(window.location.href);
 		
 		// Set purecloud objects
 		const platformClient = require('platformClient');
@@ -142,6 +140,15 @@
 
 				// Log messages
 				$('div#messages').append($('<pre>').text(`${new Date().toLocaleTimeString()} - ${JSON.stringify(notification,null,2)}`));
+				notification.eventBody.participants.forEach(function(participant){
+					if (participant.purpose === 'agent' && participant.wrapup !== undefined) {
+						wrapupCodes.entities.forEach(function(wrapupCode){
+							if (wrapupCode.id === participant.wrapup.code){
+								console.debug("Wrapup Code = " + wrapupCode.name);
+							}
+						});
+					}
+				});
 			} else {
 				// Unexpected topic
 				console.warn('Unknown notification: ', notification);
