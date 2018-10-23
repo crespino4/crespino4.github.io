@@ -27,6 +27,7 @@
 		const notificationsApi = new platformClient.NotificationsApi();
 		const presenceApi = new platformClient.PresenceApi();
 		const usersApi = new platformClient.UsersApi();
+		const routingApi = new platformClient.RoutingApi();
 
 		// Set PureCloud settings
 		client.setEnvironment('mypurecloud.com');
@@ -36,6 +37,7 @@
 		let presences = {};
 		let userPresenceTopic = '';
 		let userConversationTopic = '';
+		let wrapupCodes = {};
 		let webSocket = null;
 		let me, notificationChannel;
 
@@ -91,6 +93,17 @@
 				})
 				.then((channel) => {
 					console.log('Channel subscriptions set successfully');
+					
+					var opts = { 
+					  'pageSize': 25, // Number | Page size
+					  'pageNumber': 1, // Number | Page number
+					  'sortBy': "name" // String | Sort by
+					};
+					routingApi.getRoutingWrapupcodes(opts)
+					  .then(function(data) {
+						console.log(`getRoutingWrapupcodes success! data: ${JSON.stringify(data, null, 2)}`);
+						wrapupCodes = data;
+					  })
 				})
 				.catch((err) => console.error(err));
 		});
