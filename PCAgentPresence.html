@@ -35,6 +35,7 @@
 		// Local vars
 		let presences = {};
 		let userPresenceTopic = '';
+		let userConversationTopic = '';
 		let webSocket = null;
 		let me, notificationChannel;
 
@@ -82,7 +83,10 @@
 
 					// Subscribe to authenticated user's presence
 					userPresenceTopic = `v2.users.${me.id}.presence`;
-					const body = [ { id: userPresenceTopic } ];
+					// Subscribe to authenticated user's presence
+					userConversationTopic = `v2.users.${me.id}.conversations`;
+
+					const body = [ { id: userPresenceTopic }, {id: userConversationTopic} ];
 					return notificationsApi.putNotificationsChannelSubscriptions(notificationChannel.id, body);
 				})
 				.then((channel) => {
@@ -112,19 +116,25 @@
 				// Heartbeat
 				console.info('Ignoring metadata: ', notification);
 				return;
-			} else if (notification.topicName.toLowerCase() !== userPresenceTopic.toLowerCase()) {
+			} else if (notification.topicName.toLowerCase() === userPresenceTopic.toLowerCase()) {
+				console.debug('Presence notification: ', notification);
+
+				// Set current presence text in UI
+				$('#currentPresence').text(presences[notification.eventBody.presenceDefinition.id].languageLabels.en_US);
+
+				// Log messages
+				$('div#messages').append($('<pre>').text(`${new Date().toLocaleTimeString()} - ${JSON.stringify(notification,null,2)}`));
+			} else if (notification.topicName.toLowerCase() === userConversationTopic.toLowerCase()) {
+				console.debug('Conversation notification: ', notification);
+
+				// Log messages
+				$('div#messages').append($('<pre>').text(`${new Date().toLocaleTimeString()} - ${JSON.stringify(notification,null,2)}`));
+			} else {
 				// Unexpected topic
 				console.warn('Unknown notification: ', notification);
 				return;
-			} else {
-				console.debug('Presence notification: ', notification);
 			}
 
-			// Set current presence text in UI
-			$('#currentPresence').text(presences[notification.eventBody.presenceDefinition.id].languageLabels.en_US);
-
-			// Log messages
-			$('div#messages').append($('<pre>').text(`${new Date().toLocaleTimeString()} - ${JSON.stringify(notification,null,2)}`));
 		}
 	</script>
 </head>
