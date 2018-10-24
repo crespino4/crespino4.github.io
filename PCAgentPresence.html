@@ -148,7 +148,7 @@
 								
 								var payload = {
 								  "search": {
-									"transaction_id": participant.uuiData
+									"transaction_id": participant.calls[0].uuiData
 								  },
 								  "signals": [{
 									"name": wrapupCode.name,
@@ -167,8 +167,10 @@
     								contentType: "application/json; charset=utf-8",
     								dataType: "json",
 									success: function(result) {
+										console.debug("Invoca API successfully called: " + result);
 									},
 									failure: function(result) {
+										console.debug("Invoca API failed: " + result);
 									}
 								});
 							}
