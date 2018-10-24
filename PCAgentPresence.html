@@ -16,7 +16,7 @@
 
 	<script type="text/javascript">
 		// This client ID expects the redirect URL to be http://localhost:8080/
-		const clientId = '7d411159-c2f4-4196-97c4-e627fb007591';
+		const clientId = '3cb37977-a6a7-48ff-82bb-4f2193d25040';
 		const redirectUri = window.location.href;
 		
 		// Set purecloud objects
@@ -145,6 +145,32 @@
 						wrapupCodes.entities.forEach(function(wrapupCode){
 							if (wrapupCode.id === participant.wrapup.code){
 								console.debug("Wrapup Code = " + wrapupCode.name);
+								
+								var payload = {
+								  "search": {
+									"transaction_id": participant.uuiData
+								  },
+								  "signals": [{
+									"name": wrapupCode.name,
+								  }],
+								  "custom_data": [{
+									"name": "Agent",
+									"value": "Jim Crespino"
+								  }],
+								  "oauth_token": "0mavqotnMXjdA0ttaQOrZDQF0w5pqBdP"
+								};
+
+								$.ajax({
+									type: "POST",
+									url: "https://invoca.net/api/2018-02-01/transactions.json",
+									data: JSON.stringify(payload),
+    								contentType: "application/json; charset=utf-8",
+    								dataType: "json",
+									success: function(result) {
+									},
+									failure: function(result) {
+									}
+								});
 							}
 						});
 					}
