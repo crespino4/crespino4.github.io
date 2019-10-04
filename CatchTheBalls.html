@@ -210,15 +210,16 @@ Catch the balls with the paddle before they hit the bottom of the screen.</p>
     <script>
         var lifecycleStatusMessageTitle = 'Lifecycle Demo App';
         var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
+        var blurCount = 0;
 
         $( document ).ready(function() {
             console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
             console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
 
             let myClientApp = new window.purecloud.apps.ClientApp({
-                pcEnvironmentQueryParam: 'pcEnvironement'
+                pcEnvironmentQueryParam: 'pcEnvironment'
             });
-            
+
             console.log("PureCloud Environment: " + myClientApp.pcEnvironment);
 
             myClientApp.lifecycle.addBootstrapListener(() => {
@@ -261,6 +262,8 @@ Catch the balls with the paddle before they hit the bottom of the screen.</p>
                         id: lifecycleStatusMessageId
                     }
                 );
+
+                myClientApp.alerting.setAttentionCount(++blurCount);
             }
             myClientApp.lifecycle.addBlurListener(onAppBlur);
 
