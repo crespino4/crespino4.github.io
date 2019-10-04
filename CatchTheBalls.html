@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Catch the Balls</title>
+    <style>* { padding: 0; margin: 0; } canvas { background: #eee; display: block; margin: 0 auto; }</style>
+</head>
+<body>
+<h1 width="100%" align="center">Catch the Balls</h1>
+<br/>
+<br/>
+<p>Balls will drop from the top of the screen.  Use the left and right arrow keys or the mouse to move the paddle.
+Catch the balls with the paddle before they hit the bottom of the screen.</p>
+<br/>
+<br/>
+<canvas id="myCanvas" width="480" height="320" style="border-style:solid"></canvas>
+<br/>
+<p width="100%" align="center">
+    <button id="btnStartGame" onclick="startGame()">Start Game</button>
+</p>
+<script>
+    var canvas = document.getElementById("myCanvas");
+    var ctx = canvas.getContext("2d");
+
+    var deadSound = new sound("sounds/dead.wav");
+    var catchSound = new sound("sounds/jump.wav");
+
+    var ballRadius = 10;
+    var paddleHeight = 10;
+    var paddleWidth = 75;
+    var paddleX = (canvas.width-paddleWidth)/2;
+    var rightPressed = false;
+    var leftPressed = false;
+    var score = 0;
+    var level = 1;
+
+    var balls = [];     // the list of balls that are dropping
+    var dy = 3;         // number of pixels to move balls down the screen per frame
+    var frameCount = 0; // the current frame number, counts to 100 and resets
+    var addBallAtFrame = 50;
+
+    document.addEventListener("keydown", keyDownHandler, false);
+    document.addEventListener("keyup", keyUpHandler, false);
+    document.addEventListener("mousemove", mouseMoveHandler, false);
+
+    function keyDownHandler(e) {
+        if(e.keyCode == 39) {
+            rightPressed = true;
+        }
+        else if(e.keyCode == 37) {
+            leftPressed = true;
+        }
+    }
+
+    function keyUpHandler(e) {
+        if(e.keyCode == 39) {
+            rightPressed = false;
+        }
+        else if(e.keyCode == 37) {
+            leftPressed = false;
+        }
+    }
+
+    function mouseMoveHandler(e) {
+        var relativeX = e.clientX - canvas.offsetLeft;
+        if(relativeX > 0 && relativeX < canvas.width) {
+            paddleX = relativeX - paddleWidth/2;
+        }
+    }
+
+    function sound(src) {
+        this.sound = document.createElement("audio");
+        this.sound.src = src;
+        this.sound.setAttribute("preload", "auto");
+        this.sound.setAttribute("controls", "none");
+        this.sound.style.display = "none";
+        document.body.appendChild(this.sound);
+        this.play = function(){
+            this.sound.play();
+        }
+        this.stop = function(){
+            this.sound.pause();
+        }
+    }
+
+    function collisionDetection() {
+
+        // If the ball touches the bottom of the canvas, that is a collision
+        if ( balls[0].y + ballRadius >= canvas.height ) {
+            return true;
+        }
+
+        // If the ball touches the paddle, then that ball is considered captured,
+        // we remove the ball from the list of balls, and increment the score
+        if ( (balls[0].y + ballRadius >= canvas.height - paddleHeight) &&
+            (balls[0].x > paddleX && balls[0].x < paddleX + paddleWidth) ) {
+            balls.shift();
+            score++;
+
+            if (score % 10 == 0) {
+                level++;
+                addBallAtFrame -= 5;
+            }
+
+            catchSound.play();
+        }
+
+        // No collision occurred
+        return false;
+    }
+
+    function moveBallsDown() {
+        // Move each ball down the screen by 1 pixel
+        balls.forEach(function(item, index){
+            item.y += dy;
+        });
+    }
+
+    function addBall() {
+        // At the start of the game and every 100 frames,
+        // add a ball at a random X position.
+        // All new balls are added the end of the list of balls
+        if ( frameCount == 0  || frameCount >= addBallAtFrame ) {
+            xPos = Math.floor(Math.random() * Math.floor(canvas.width));
+            balls.push({x: xPos, y: 0});
+            frameCount = 0;
+        }
+    }
+
+    function drawBall(x, y) {
+        // Draw a single ball at the specified x and y coordinates
+        ctx.beginPath();
+        ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+        ctx.fillStyle = "#8500dd";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function drawBalls() {
+        // Draw each ball in the list of balls
+        balls.forEach(function(item, index) {
+            drawBall(item.x, item.y);
+        });
+    }
+
+    function drawPaddle() {
+        // Move the paddle if the right or left arrow is currently being pressed
+        if(rightPressed && paddleX < canvas.width-paddleWidth) {
+            paddleX += 7;
+        }
+        else if(leftPressed && paddleX > 0) {
+            paddleX -= 7;
+        }
+
+        // Draw the paddle
+        ctx.beginPath();
+        ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    function drawScore() {
+        // Draw the score in the upper left corner
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#dd0000";
+        ctx.fillText("Score: " + score, 8, 20);
+    }
+
+    function drawLevel() {
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#0095DD";
+        ctx.fillText("Level: " + level, canvas.width-65, 20);
+    }
+
+    function draw() {
+        frameCount++;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        moveBallsDown();
+        addBall();
+        drawBalls();
+        drawPaddle();
+        drawScore();
+        drawLevel();
+        var collided = collisionDetection();
+
+        if ( collided == true ) {
+            deadSound.play();
+            alert("Game Over! Score: " + score);
+            document.location.reload();
+            return;
+        }
+
+        requestAnimationFrame(draw);
+    }
+
+    function startGame() {
+        // Start the game with a dropping ball
+        addBall();
+        draw();
+    }
+
+</script>
+
+</body>
+</html>
