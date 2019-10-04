@@ -13,7 +13,7 @@
         const redirectUri = 'https://crespino4.github.io/CatchTheBalls.html';
         const state = 'ABC123';
 
-        const platformClient = require('platformClient');
+        const platformClient = platformClient.ApiClient.instance;
 
         platformClient.loginImplicitGrant(clientId, redirectUri, { state: state })
             .then((data) => {
