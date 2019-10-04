@@ -225,6 +225,26 @@ Catch the balls with the paddle before they hit the bottom of the screen.</p>
             var analyticsApi = new platformClient.AnalyticsApi();
             var routingApi = new platformClient.RoutingApi();
 
+            var clientId = 'c9ce12a2-0deb-4358-9bc8-055580b212b4';
+            var redirectUri = window.location.href;
+            var state = "CatchTheBalls";
+
+            client.loginImplicitGrant(clientId, redirectUri, { state: state })
+                .then((data) => {
+                    console.log(data);
+
+                    // Make request to GET /api/v2/users/me?expand=presence
+                    return usersApi.getUsersMe({ 'expand': ["presence"] });
+                })
+                .then((userMe) => {
+                    // Handle successful result
+                    console.log(`Hello, ${userMe.name}!`);
+                })
+                .catch((err) => {
+                    // Handle failure response
+                    console.log(err);
+                });
+
             console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
             console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
 
