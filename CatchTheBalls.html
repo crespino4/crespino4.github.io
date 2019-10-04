@@ -16,6 +16,10 @@
     <script src="//sdk-cdn.mypurecloud.com/javascript/58.0.0/purecloud-platform-client-v2.min.js"></script>
 </head>
 <body>
+    <h1 id="title" width="100%" align="center"></h1>
+    <h2 id="welcome" width="100%" align="center"></h2>
+    <canvas id="game"></canvas>
+
     <script type="text/javascript">
 
         var config = {
@@ -33,7 +37,8 @@
                 preload: preload,
                 create: create,
                 update: update
-            }
+            },
+            canvas: document.querySelector('#game')
         };
 
         var player;
@@ -239,6 +244,8 @@
                 })
                 .then((userMe) => {
                     // Handle successful result
+                    document.querySelector("#welcom").innerHTML = "Welcome " + userMe.name;
+
                     console.log(`Hello, ${userMe.name}!`);
 
                     // Create a Notifications Channel
