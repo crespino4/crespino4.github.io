@@ -18,17 +18,22 @@
         const redirectUri = 'https://crespino4.github.io/CatchTheBalls.html';
         const state = 'ABC123';
 
-        const platformClient = require('platformClient');
+        // Obtain a reference to the platformClient object
+        requirejs(['https://sdk-cdn.mypurecloud.com/javascript/amd/58.0.0/purecloud-platform-client-v2.min.js'], (platformClient) => {
+            console.log(platformClient);
+            
+            platformClient.loginImplicitGrant(clientId, redirectUri, { state: state })
+                .then((data) => {
+                    console.log(data);
+                    // Do authenticated things
+                })
+                .catch((err) => {
+                    // Handle failure response
+                    console.log(err);
+                });
+        });
 
-        platformClient.loginImplicitGrant(clientId, redirectUri, { state: state })
-            .then((data) => {
-                console.log(data);
-                // Do authenticated things
-            })
-            .catch((err) => {
-                // Handle failure response
-                console.log(err);
-            });
+
     </script>
 </head>
 <body>
