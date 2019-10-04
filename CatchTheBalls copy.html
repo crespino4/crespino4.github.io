@@ -210,83 +210,18 @@ Catch the balls with the paddle before they hit the bottom of the screen.</p>
 </script>
 
     <script type="module">
-        $( document ).ready(function() {
-            let myClientApp = null;
+        import clientApp from './client_app.js';
 
-            // Use default PureCloud region
-            myClientApp = new window.purecloud.apps.ClientApp();
-
-            myClientApp.lifecycle.addBootstrapListener(() => {
-                logLifecycleEvent('App Lifecycle Event: bootstrap', true);
-
-                // Simulating bootstrap delay of 500ms
-                window.setTimeout(() => {
-                    myClientApp.lifecycle.bootstrapped();
-
-                    myClientApp.alerting.showToastPopup(
-                        lifecycleStatusMessageTitle,
-                        'Bootstrap Complete (500ms delay)', {
-                            id: lifecycleStatusMessageId,
-                            type: 'success'
-                        }
-                    );
-
-                    logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
-                }, 500);
-            });
-
-            function onAppFocus () {
-                logLifecycleEvent('App Lifecycle Event: focus', true);
-
-                myClientApp.alerting.showToastPopup(
-                    lifecycleStatusMessageTitle,
-                    'App Focused', {
-                        id: lifecycleStatusMessageId
-                    }
-                );
-            }
-            myClientApp.lifecycle.addFocusListener(onAppFocus);
-
-            function onAppBlur () {
-                logLifecycleEvent('App Lifecycle Event: blur', true);
-
-                myClientApp.alerting.showToastPopup(
-                    lifecycleStatusMessageTitle,
-                    'App Blurred', {
-                        id: lifecycleStatusMessageId
-                    }
-                );
-            }
-            myClientApp.lifecycle.addBlurListener(onAppBlur);
-
-            myClientApp.lifecycle.addStopListener(() => {
-                logLifecycleEvent('App Lifecycle Event: stop', true);
-
-                // Clean up other, persistent listeners
-                myClientApp.lifecycle.removeFocusListener(onAppFocus);
-                myClientApp.lifecycle.removeBlurListener(onAppBlur);
-
-                // Simulating delay of 500ms
-                window.setTimeout(() => {
-                    myClientApp.lifecycle.stopped();
-
-                    myClientApp.alerting.showToastPopup(
-                        lifecycleStatusMessageTitle,
-                        'App Stopped (500ms delay)', {
-                            id: lifecycleStatusMessageId,
-                            type: 'error',
-                            showCloseButton: true
-                        }
-                    );
-
-                    logLifecycleEvent('Notified PC of Successful App Stop', false);
-                }, 500);
-            });
-
-            function logLifecycleEvent(logText, incommingEvent) {
-                console.log(logText)
-            }
-        });
+        // Setup the client app with the redirectUri
+        clientApp.setup("CatchTheBalls.html")
+        // Assign text to the page based on language
+            .then(() => {
+                $("#txtWelcomeMessage").text("Welcome " + clientApp.username);
+            })
+            // Set-up the Client App SDK for toast interaction
+            .then(() => {
+                clientApp.purecloudClientApi = new window.purecloud.apps.ClientApp({pcEnvironment: clientApp.pcEnv});
+            })
     </script>
 
 </body>
