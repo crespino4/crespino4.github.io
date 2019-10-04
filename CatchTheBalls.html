@@ -5,11 +5,11 @@
     <title>Catch the Balls</title>
     <style>* { padding: 0; margin: 0; } canvas { background: #eee; display: block; margin: 0 auto; }</style>
 
-
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chronomouse@2.4.0/chronomouse.2.4.0.min.js"></script>
+    <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.0.0/purecloud-client-app-sdk.js"></script>
+    <script src="https://sdk-cdn.mypurecloud.com/javascript/29.1.0/purecloud-platform-client-v2.min.js"></script>
 
-    <script src="https://sdk-cdn.mypurecloud.com/javascript/58.0.0/purecloud-platform-client-v2.min.js"></script>
 
     <script type="text/javascript">
         // Obtain a reference to the platformClient object
@@ -232,6 +232,24 @@ Catch the balls with the paddle before they hit the bottom of the screen.</p>
     }
 
 </script>
+
+    <script type="module">
+        import clientApp from './client_app.js';
+
+        // Setup the client app with the redirectUri
+        clientApp.setup("CatchTheBalls.html")
+        // Assign text to the page based on language
+            .then(() => {
+                $("#txtIncomingCall").text("\u260E " + clientApp.languageData.IncomingCall);
+                $("#txtName").text(clientApp.languageData.Name + ": ");
+                $("#txtNumber").text(clientApp.languageData.Number + ": ");
+                $("#txtStateInfo").text(clientApp.languageData.StateInfo + ": ");
+            })
+            // Set-up the Client App SDK for toast interaction
+            .then(() => {
+                clientApp.purecloudClientApi = new window.purecloud.apps.ClientApp({pcEnvironment: clientApp.pcEnv});
+            })
+    </script>
 
 </body>
 </html>
