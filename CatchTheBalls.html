@@ -4,6 +4,11 @@
     <meta charset="utf-8" />
     <title>Catch the Balls</title>
     <style>* { padding: 0; margin: 0; } canvas { background: #eee; display: block; margin: 0 auto; }</style>
+
+
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.5/require.min.js"></script>
+
     <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.0.0/purecloud-client-app-sdk.js"/>
     <script src="https://sdk-cdn.mypurecloud.com/javascript/58.0.0/purecloud-platform-client-v2.min.js"></script>
 
@@ -13,7 +18,7 @@
         const redirectUri = 'https://crespino4.github.io/CatchTheBalls.html';
         const state = 'ABC123';
 
-        const platformClient = platformClient.ApiClient.instance;
+        const platformClient = require('platformClient');
 
         platformClient.loginImplicitGrant(clientId, redirectUri, { state: state })
             .then((data) => {
