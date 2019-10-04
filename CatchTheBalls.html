@@ -184,14 +184,16 @@
                 });
 
                 var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-                var bomb = bombs.create(x, 16, 'bomb');
-                bomb.setBounce(1);
-                bomb.setCollideWorldBounds(true);
-                bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-                bomb.allowGravity = false;
-
             }
+        }
+
+        function addBomb()
+        {
+            var bomb = bombs.create(x, 16, 'bomb');
+            bomb.setBounce(1);
+            bomb.setCollideWorldBounds(true);
+            bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+            bomb.allowGravity = false;
         }
 
         function hitBomb (player, bomb)
@@ -238,11 +240,32 @@
                 .then((userMe) => {
                     // Handle successful result
                     console.log(`Hello, ${userMe.name}!`);
-                })
-                .catch((err) => {
+
+                    // Create a Notifications Channel
+                    return notificationsApi.postNotificationsChannels();
+                }).then(channel => {
+                    var socket = new WebSocket(channel.connectUri);
+                    socket.onmessage = onSocketMessage;
+
+                    // Subscribe to Call Conversations of Current user.
+                    let topic = [{"id": "v2.routing.queues.1ada27f0-c3e2-45c0-acd7-82628c0fed41.conversations"}];
+                    return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
+                }).catch((err) => {
                     // Handle failure response
                     console.log(err);
                 });
+
+            // Handler for every Websocket message
+            function onSocketMessage(event){
+                let data = JSON.parse(event.data);
+                let topic = data.topicName;
+                let eventBody = data.eventBody;
+
+                console.log(topic);
+                console.log(eventBody);
+
+                addBomb();
+            };
 
             console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
             console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
