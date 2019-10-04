@@ -214,6 +214,17 @@ Catch the balls with the paddle before they hit the bottom of the screen.</p>
         var blurCount = 0;
 
         $( document ).ready(function() {
+
+            // PureCloud OAuth information
+            var platformClient = require('platformClient');
+            var client = platformClient.ApiClient.instance;
+
+            // API instances
+            var usersApi = new platformClient.UsersApi();
+            var notificationsApi = new platformClient.NotificationsApi();
+            var analyticsApi = new platformClient.AnalyticsApi();
+            var routingApi = new platformClient.RoutingApi();
+
             console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
             console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
 
@@ -238,6 +249,8 @@ Catch the balls with the paddle before they hit the bottom of the screen.</p>
 
                     logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
                 }, 500);
+
+
             });
 
             function onAppFocus () {
