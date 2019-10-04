@@ -216,6 +216,8 @@ Catch the balls with the paddle before they hit the bottom of the screen.</p>
 
             // Use default PureCloud region
             myClientApp = new window.purecloud.apps.ClientApp();
+            console.log("Client App Version: " + myClientApp.version);
+            console.log(myClientApp.about());
 
             myClientApp.lifecycle.addBootstrapListener(() => {
                 logLifecycleEvent('App Lifecycle Event: bootstrap', true);
