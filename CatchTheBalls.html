@@ -2,211 +2,210 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Catch the Balls</title>
-    <style>* { padding: 0; margin: 0; } canvas { background: #eee; display: block; margin: 0 auto; }</style>
+    <title>Game</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
 
-    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="https://sdk-cdn.mypurecloud.com/client-apps/1.3.0/purecloud-client-app-sdk.js"></script>
-    <script src="https://sdk-cdn.mypurecloud.com/javascript/58.0.0/purecloud-platform-client-v2.min.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
+
+    <script src="//sdk-cdn.mypurecloud.com/client-apps/1.3.0/purecloud-client-app-sdk.js"></script>
+    <script src="//sdk-cdn.mypurecloud.com/javascript/58.0.0/purecloud-platform-client-v2.min.js"></script>
 </head>
 <body>
-<h1 width="100%" align="center">Catch the Balls</h1>
-<h2 id="txtWelcomeMessage" width="100%" align="center"></h2>
-<br/>
-<br/>
-<p>Balls will drop from the top of the screen.  Use the left and right arrow keys or the mouse to move the paddle.
-Catch the balls with the paddle before they hit the bottom of the screen.</p>
-<br/>
-<br/>
-<canvas id="myCanvas" width="480" height="320" style="border-style:solid"></canvas>
-<br/>
-<p width="100%" align="center">
-    <button id="btnStartGame" onclick="startGame()">Start Game</button>
-</p>
-<script>
-    var canvas = document.getElementById("myCanvas");
-    var ctx = canvas.getContext("2d");
+    <script type="text/javascript">
 
-    var deadSound = new sound("sounds/dead.wav");
-    var catchSound = new sound("sounds/jump.wav");
+        var config = {
+            type: Phaser.AUTO,
+            width: 800,
+            height: 600,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 300 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
 
-    var ballRadius = 10;
-    var paddleHeight = 10;
-    var paddleWidth = 75;
-    var paddleX = (canvas.width-paddleWidth)/2;
-    var rightPressed = false;
-    var leftPressed = false;
-    var score = 0;
-    var level = 1;
+        var player;
+        var stars;
+        var bombs;
+        var platforms;
+        var cursors;
+        var score = 0;
+        var gameOver = false;
+        var scoreText;
 
-    var balls = [];     // the list of balls that are dropping
-    var dy = 3;         // number of pixels to move balls down the screen per frame
-    var frameCount = 0; // the current frame number, counts to 100 and resets
-    var addBallAtFrame = 50;
+        var game = new Phaser.Game(config);
 
-    document.addEventListener("keydown", keyDownHandler, false);
-    document.addEventListener("keyup", keyUpHandler, false);
-    document.addEventListener("mousemove", mouseMoveHandler, false);
-
-    function keyDownHandler(e) {
-        if(e.keyCode == 39) {
-            rightPressed = true;
-        }
-        else if(e.keyCode == 37) {
-            leftPressed = true;
-        }
-    }
-
-    function keyUpHandler(e) {
-        if(e.keyCode == 39) {
-            rightPressed = false;
-        }
-        else if(e.keyCode == 37) {
-            leftPressed = false;
-        }
-    }
-
-    function mouseMoveHandler(e) {
-        var relativeX = e.clientX - canvas.offsetLeft;
-        if(relativeX > 0 && relativeX < canvas.width) {
-            paddleX = relativeX - paddleWidth/2;
-        }
-    }
-
-    function sound(src) {
-        this.sound = document.createElement("audio");
-        this.sound.src = src;
-        this.sound.setAttribute("preload", "auto");
-        this.sound.setAttribute("controls", "none");
-        this.sound.style.display = "none";
-        document.body.appendChild(this.sound);
-        this.play = function(){
-            this.sound.play();
-        }
-        this.stop = function(){
-            this.sound.pause();
-        }
-    }
-
-    function collisionDetection() {
-
-        // If the ball touches the bottom of the canvas, that is a collision
-        if ( balls[0].y + ballRadius >= canvas.height ) {
-            return true;
+        function preload ()
+        {
+            this.load.image('sky', 'assets/sky.png');
+            this.load.image('ground', 'assets/platform.png');
+            this.load.image('star', 'assets/star.png');
+            this.load.image('bomb', 'assets/bomb.png');
+            this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
         }
 
-        // If the ball touches the paddle, then that ball is considered captured,
-        // we remove the ball from the list of balls, and increment the score
-        if ( (balls[0].y + ballRadius >= canvas.height - paddleHeight) &&
-            (balls[0].x > paddleX && balls[0].x < paddleX + paddleWidth) ) {
-            balls.shift();
-            score++;
+        function create ()
+        {
+            //  A simple background for our game
+            this.add.image(400, 300, 'sky');
 
-            if (score % 10 == 0) {
-                level++;
-                addBallAtFrame -= 5;
+            //  The platforms group contains the ground and the 2 ledges we can jump on
+            platforms = this.physics.add.staticGroup();
+
+            //  Here we create the ground.
+            //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+            platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+
+            //  Now let's create some ledges
+            platforms.create(600, 400, 'ground');
+            platforms.create(50, 250, 'ground');
+            platforms.create(750, 220, 'ground');
+
+            // The player and its settings
+            player = this.physics.add.sprite(100, 450, 'dude');
+
+            //  Player physics properties. Give the little guy a slight bounce.
+            player.setBounce(0.2);
+            player.setCollideWorldBounds(true);
+
+            //  Our player animations, turning, walking left and walking right.
+            this.anims.create({
+                key: 'left',
+                frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'turn',
+                frames: [ { key: 'dude', frame: 4 } ],
+                frameRate: 20
+            });
+
+            this.anims.create({
+                key: 'right',
+                frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+            //  Input Events
+            cursors = this.input.keyboard.createCursorKeys();
+
+            //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
+            stars = this.physics.add.group({
+                key: 'star',
+                repeat: 11,
+                setXY: { x: 12, y: 0, stepX: 70 }
+            });
+
+            stars.children.iterate(function (child) {
+
+                //  Give each star a slightly different bounce
+                child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+
+            });
+
+            bombs = this.physics.add.group();
+
+            //  The score
+            scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
+            //  Collide the player and the stars with the platforms
+            this.physics.add.collider(player, platforms);
+            this.physics.add.collider(stars, platforms);
+            this.physics.add.collider(bombs, platforms);
+
+            //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
+            this.physics.add.overlap(player, stars, collectStar, null, this);
+
+            this.physics.add.collider(player, bombs, hitBomb, null, this);
+        }
+
+        function update ()
+        {
+            if (gameOver)
+            {
+                return;
             }
 
-            catchSound.play();
+            if (cursors.left.isDown)
+            {
+                player.setVelocityX(-160);
+
+                player.anims.play('left', true);
+            }
+            else if (cursors.right.isDown)
+            {
+                player.setVelocityX(160);
+
+                player.anims.play('right', true);
+            }
+            else
+            {
+                player.setVelocityX(0);
+
+                player.anims.play('turn');
+            }
+
+            if (cursors.up.isDown && player.body.touching.down)
+            {
+                player.setVelocityY(-330);
+            }
         }
 
-        // No collision occurred
-        return false;
-    }
+        function collectStar (player, star)
+        {
+            star.disableBody(true, true);
 
-    function moveBallsDown() {
-        // Move each ball down the screen by 1 pixel
-        balls.forEach(function(item, index){
-            item.y += dy;
-        });
-    }
+            //  Add and update the score
+            score += 10;
+            scoreText.setText('Score: ' + score);
 
-    function addBall() {
-        // At the start of the game and every 100 frames,
-        // add a ball at a random X position.
-        // All new balls are added the end of the list of balls
-        if ( frameCount == 0  || frameCount >= addBallAtFrame ) {
-            xPos = Math.floor(Math.random() * Math.floor(canvas.width));
-            balls.push({x: xPos, y: 0});
-            frameCount = 0;
-        }
-    }
+            if (stars.countActive(true) === 0)
+            {
+                //  A new batch of stars to collect
+                stars.children.iterate(function (child) {
 
-    function drawBall(x, y) {
-        // Draw a single ball at the specified x and y coordinates
-        ctx.beginPath();
-        ctx.arc(x, y, ballRadius, 0, Math.PI*2);
-        ctx.fillStyle = "#8500dd";
-        ctx.fill();
-        ctx.closePath();
-    }
+                    child.enableBody(true, child.x, 0, true, true);
 
-    function drawBalls() {
-        // Draw each ball in the list of balls
-        balls.forEach(function(item, index) {
-            drawBall(item.x, item.y);
-        });
-    }
+                });
 
-    function drawPaddle() {
-        // Move the paddle if the right or left arrow is currently being pressed
-        if(rightPressed && paddleX < canvas.width-paddleWidth) {
-            paddleX += 7;
-        }
-        else if(leftPressed && paddleX > 0) {
-            paddleX -= 7;
+                var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+                var bomb = bombs.create(x, 16, 'bomb');
+                bomb.setBounce(1);
+                bomb.setCollideWorldBounds(true);
+                bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+                bomb.allowGravity = false;
+
+            }
         }
 
-        // Draw the paddle
-        ctx.beginPath();
-        ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
-        ctx.fillStyle = "#0095DD";
-        ctx.fill();
-        ctx.closePath();
-    }
+        function hitBomb (player, bomb)
+        {
+            this.physics.pause();
 
-    function drawScore() {
-        // Draw the score in the upper left corner
-        ctx.font = "16px Arial";
-        ctx.fillStyle = "#dd0000";
-        ctx.fillText("Score: " + score, 8, 20);
-    }
+            player.setTint(0xff0000);
 
-    function drawLevel() {
-        ctx.font = "16px Arial";
-        ctx.fillStyle = "#0095DD";
-        ctx.fillText("Level: " + level, canvas.width-65, 20);
-    }
+            player.anims.play('turn');
 
-    function draw() {
-        frameCount++;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        moveBallsDown();
-        addBall();
-        drawBalls();
-        drawPaddle();
-        drawScore();
-        drawLevel();
-        var collided = collisionDetection();
-
-        if ( collided == true ) {
-            deadSound.play();
-            alert("Game Over! Score: " + score);
-            document.location.reload();
-            return;
+            gameOver = true;
         }
 
-        requestAnimationFrame(draw);
-    }
-
-    function startGame() {
-        // Start the game with a dropping ball
-        addBall();
-        draw();
-    }
-
-</script>
+    </script>
 
     <script>
         var lifecycleStatusMessageTitle = 'Lifecycle Demo App';
