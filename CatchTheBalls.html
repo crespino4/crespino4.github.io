@@ -187,7 +187,7 @@
 
         function addBomb()
         {
-            var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+            var x = Phaser.Math.Between(0, 800);
 
             var bomb = bombs.create(x, 16, 'bomb');
             bomb.setBounce(1);
