@@ -275,6 +275,8 @@
             function onAppFocus () {
                 logLifecycleEvent('App Lifecycle Event: focus', true);
 
+                game.scene.resume("default");
+
                 myClientApp.alerting.showToastPopup(
                     lifecycleStatusMessageTitle,
                     'App Focused', {
@@ -286,6 +288,8 @@
 
             function onAppBlur () {
                 logLifecycleEvent('App Lifecycle Event: blur', true);
+
+                game.scene.pause("default");
 
                 myClientApp.alerting.showToastPopup(
                     lifecycleStatusMessageTitle,
