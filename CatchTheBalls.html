@@ -212,12 +212,14 @@ Catch the balls with the paddle before they hit the bottom of the screen.</p>
         var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
 
         $( document ).ready(function() {
-            let myClientApp = null;
-
-            // Use default PureCloud region
-            myClientApp = new window.purecloud.apps.ClientApp();
             console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
-            console.log(window.purecloud.apps.ClientApp.about());
+            console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
+
+            let myClientApp = new window.purecloud.apps.ClientApp({
+                pcEnvironmentQueryParam: 'pcEnvironement'
+            });
+            
+            console.log("PureCloud Environment: " + myClientApp.pcEnvironment);
 
             myClientApp.lifecycle.addBootstrapListener(() => {
                 logLifecycleEvent('App Lifecycle Event: bootstrap', true);
@@ -291,6 +293,5 @@ Catch the balls with the paddle before they hit the bottom of the screen.</p>
             }
         });
     </script>
-
 </body>
 </html>
