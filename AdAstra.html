@@ -13,7 +13,7 @@
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
 
     <script src="//sdk-cdn.mypurecloud.com/client-apps/1.3.0/purecloud-client-app-sdk.js"></script>
-    <script src="//sdk-cdn.mypurecloud.com/javascript/58.0.0/purecloud-platform-client-v2.min.js"></script>
+
 </head>
 <body>
     <h1 id="title" width="100%" align="center">Ad Astra</h1>
@@ -220,59 +220,6 @@
         var blurCount = 0;
 
         $( document ).ready(function() {
-
-            // PureCloud OAuth information
-            var platformClient = require('platformClient');
-            var client = platformClient.ApiClient.instance;
-
-            // API instances
-            var usersApi = new platformClient.UsersApi();
-            var notificationsApi = new platformClient.NotificationsApi();
-            var analyticsApi = new platformClient.AnalyticsApi();
-            var routingApi = new platformClient.RoutingApi();
-
-            var clientId = 'c9ce12a2-0deb-4358-9bc8-055580b212b4';
-            var redirectUri = 'https://crespino4.github.io/CatchTheBalls.html';
-            var state = "CatchTheBalls";
-
-            client.loginImplicitGrant(clientId, redirectUri, { state: state })
-                .then((data) => {
-                    console.log(data);
-
-                    // Make request to GET /api/v2/users/me?expand=presence
-                    return usersApi.getUsersMe({ 'expand': ["presence"] });
-                })
-                .then((userMe) => {
-                    // Handle successful result
-                    document.querySelector("#welcome").innerHTML = "Welcome " + userMe.name;
-
-                    console.log(`Hello, ${userMe.name}!`);
-
-                    // Create a Notifications Channel
-                    return notificationsApi.postNotificationsChannels();
-                }).then(channel => {
-                    var socket = new WebSocket(channel.connectUri);
-                    socket.onmessage = onSocketMessage;
-
-                    // Subscribe to Call Conversations of Current user.
-                    let topic = [{"id": "v2.routing.queues.1ada27f0-c3e2-45c0-acd7-82628c0fed41.conversations"}];
-                    return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
-                }).catch((err) => {
-                    // Handle failure response
-                    console.log(err);
-                });
-
-            // Handler for every Websocket message
-            function onSocketMessage(event){
-                let data = JSON.parse(event.data);
-                let topic = data.topicName;
-                let eventBody = data.eventBody;
-
-                console.log(topic);
-                console.log(eventBody);
-
-                addBomb();
-            };
 
             console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
             console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
