@@ -213,6 +213,114 @@
 
     </script>
 
+    <script src="//sdk-cdn.mypurecloud.com/client-apps/1.3.0/purecloud-client-app-sdk.js"></script>
+    <script>
+        var lifecycleStatusMessageTitle = 'Lifecycle Demo App';
+        var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
+        var blurCount = 0;
+
+        $( document ).ready(function() {
+
+			// Log Version and About using static properties
+            console.log("Client App Version: " + window.purecloud.apps.ClientApp.version);
+            console.log("Client App About: " + window.purecloud.apps.ClientApp.about());
+
+			// Create instance of Client App SDK
+            let myClientApp = new window.purecloud.apps.ClientApp();
+
+			// Log the PureCloud environment (i.e. AWS Region)
+            console.log("PureCloud Environment: " + myClientApp.pcEnvironment);
+
+			// 
+			// Bootstrap Listener
+			//
+            myClientApp.lifecycle.addBootstrapListener(() => {
+                logLifecycleEvent('App Lifecycle Event: bootstrap', true);
+
+                // Simulating bootstrap delay of 500ms
+                window.setTimeout(() => {
+                    myClientApp.lifecycle.bootstrapped();
+
+                    myClientApp.alerting.showToastPopup(
+                        lifecycleStatusMessageTitle,
+                        'Bootstrap Complete (500ms delay)', {
+                            id: lifecycleStatusMessageId,
+                            type: 'success'
+                        }
+                    );
+
+                    logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
+                }, 500);
+            });
+
+			//
+			// Focus Listener
+			//
+            function onAppFocus () {
+                logLifecycleEvent('App Lifecycle Event: focus', true);
+
+                game.scene.resume("default");
+
+                myClientApp.alerting.showToastPopup(
+                    lifecycleStatusMessageTitle,
+                    'App Focused', {
+                        id: lifecycleStatusMessageId
+                    }
+                );
+            }
+            myClientApp.lifecycle.addFocusListener(onAppFocus);
+
+			//
+			// Blur Listener
+			//
+            function onAppBlur () {
+                logLifecycleEvent('App Lifecycle Event: blur', true);
+
+                game.scene.pause("default");
+
+                myClientApp.alerting.showToastPopup(
+                    lifecycleStatusMessageTitle,
+                    'App Blurred', {
+                        id: lifecycleStatusMessageId
+                    }
+                );
+
+                myClientApp.alerting.setAttentionCount(++blurCount);
+            }
+            myClientApp.lifecycle.addBlurListener(onAppBlur);
+
+			//
+			// Stop Listener
+			//
+            myClientApp.lifecycle.addStopListener(() => {
+                logLifecycleEvent('App Lifecycle Event: stop', true);
+
+                // Clean up other, persistent listeners
+                myClientApp.lifecycle.removeFocusListener(onAppFocus);
+                myClientApp.lifecycle.removeBlurListener(onAppBlur);
+
+                // Simulating delay of 500ms
+                window.setTimeout(() => {
+                    myClientApp.lifecycle.stopped();
+
+                    myClientApp.alerting.showToastPopup(
+                        lifecycleStatusMessageTitle,
+                        'App Stopped (500ms delay)', {
+                            id: lifecycleStatusMessageId,
+                            type: 'error',
+                            showCloseButton: true
+                        }
+                    );
+
+                    logLifecycleEvent('Notified PC of Successful App Stop', false);
+                }, 500);
+            });
+
+            function logLifecycleEvent(logText, incommingEvent) {
+                console.log(logText)
+            }
+        });
+    </script>
     
 </body>
 </html>
