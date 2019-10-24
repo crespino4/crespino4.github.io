@@ -323,6 +323,73 @@
         });
     </script>
 
-   
+    <script src="//sdk-cdn.mypurecloud.com/javascript/58.0.0/purecloud-platform-client-v2.min.js"></script>
+        
+	<script>
+
+        $( document ).ready(function() {
+
+            // PureCloud OAuth information
+            var platformClient = require('platformClient');
+            var client = platformClient.ApiClient.instance;
+            var clientId = 'd95b009e-45e0-4686-9b87-d2000d2d67ed';
+            var redirectUri = 'https://crespino4.github.io/AdAstra.html';
+            var state = "AdAstra";
+            
+            // API instances
+            var usersApi = new platformClient.UsersApi();
+            var notificationsApi = new platformClient.NotificationsApi();
+
+			// Perform Implicit Grant Authentication
+            client.loginImplicitGrant(clientId, redirectUri, { state: state })
+                .then((data) => {
+                	// User Authenticated
+                	
+                    console.log("Authenticated: " + data);
+
+                    // Make request to GET /api/v2/users/me?expand=presence
+                    return usersApi.getUsersMe({ 'expand': ["presence"] });
+                })
+                .then((userMe) => {
+                	// Me Response
+                	
+                    document.querySelector("#welcome").innerHTML = "Welcome " + userMe.name;
+
+                    console.log("Hello, ${userMe.name}!");
+
+                    // Create a Notifications Channel
+                    return notificationsApi.postNotificationsChannels();
+                }).then((channel) => {
+                	// Channel Created
+                	
+                	// Setup WebSocket on Channel
+                    var socket = new WebSocket(channel.connectUri);
+                    socket.onmessage = onSocketMessage;
+
+                    // Subscribe to conversation events in the queue.
+                    let topic = [{"id": "v2.routing.queues.264ce314-37b0-4f14-ba8c-521d827043b5.conversations"}];
+                    return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
+                }).catch((err) => {
+                    // Handle failure response
+                    console.log(err);
+                });
+
+            // Handler for every Websocket message
+            function onSocketMessage(event){
+            	console.log("WebSocket Event Received: " + event.data);
+                let data = JSON.parse(event.data);
+                let topic = data.topicName;
+                let eventBody = data.eventBody;
+
+                console.log("Notification: Topic = " + topic);
+                console.log("Notification: Body = " + eventBody);
+
+				// Add a Bomb to the Game
+				if ( topic == "v2.routing.queues.264ce314-37b0-4f14-ba8c-521d827043b5.conversations" ) {
+	                addBomb();
+	            }
+            };
+        });
+    </script>   
 </body>
 </html>
