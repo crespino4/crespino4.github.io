@@ -72,7 +72,8 @@
                     console.log("Hello, ${userMe.name}!");
                     
                     if ( userMe.authorization.permissions.includes(permission) ) {
-                    	document.querySelector("#permission").innerHTML = permission + " found!";
+                    	document.querySelector("#permission").innerHTML = permission + " found! Redirecting in 5 seconds...";
+                    	setTimeout(function(){ window.location.replace(redirect); }, 5000);
                     }
 
                     return;
