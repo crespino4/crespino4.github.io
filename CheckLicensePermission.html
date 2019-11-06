@@ -34,7 +34,43 @@
 			document.querySelector("#permission").innerHTML = permission;
 			document.querySelector("#redirect").innerHTML = redirect;
 
+            // PureCloud OAuth information
+            var platformClient = require('platformClient');
+            var client = platformClient.ApiClient.instance;
+            var clientId = '0fe546c4-6b35-4ba2-8826-6ef61f3ea474';
+            var redirectUri = 'https://crespino4.github.io/CheckLicensePermission.html';
+            var state = "";
+            
+            // API instances
+            var usersApi = new platformClient.UsersApi();
+            var notificationsApi = new platformClient.NotificationsApi();
 
+			// Perform Implicit Grant Authentication
+            client.loginImplicitGrant(clientId, redirectUri, { state: state })
+                .then((data) => {
+                	// User Authenticated
+                	
+                    console.log("Authenticated: " + data);
+
+                    // Make request to GET /api/v2/users/me?expand=presence
+                    return usersApi.getUsersMe({ 'expand': ["authorization"] });
+                })
+                .then((userMe) => {
+                	// Me Response
+                	
+                    document.querySelector("#welcome").innerHTML = "Welcome " + userMe.name;
+
+                    console.log("Hello, ${userMe.name}!");
+                    
+                    if ( userMe.authorization.permissions.includes(permission) ) {
+                    	document.querySelector("#permission").innerHTML = permission + " found!";
+                    }
+
+                    return;
+                }).catch((err) => {
+                    // Handle failure response
+                    console.log(err);
+                });
 
         });
     </script>    
