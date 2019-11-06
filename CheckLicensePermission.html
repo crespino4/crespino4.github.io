@@ -33,6 +33,9 @@
 			
 		$( document ).ready(function() {
 		
+			permission = localStorage.getItem("emite_permission");
+			redirect = localStorage.getItem("emite_redirect");
+			
 			document.querySelector("#permission").innerHTML = permission;
 			document.querySelector("#redirect").innerHTML = redirect;
 
