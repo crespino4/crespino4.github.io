@@ -14,11 +14,15 @@
 
 			var permission = params.get("permission");
 			console.log("permission = " + permission);
-			localStorage.setItem("emite_permission", permission);
-			
+			if ( permission != null ) {
+				localStorage.setItem("emite_permission", permission);
+			}
+					
 			var redirect = params.get("redirect");
 			console.log("redirect = " + redirect);
-			localStorage.setItem("emite_redirect", redirect);
+			if ( redirect != null ) {
+				localStorage.setItem("emite_redirect", redirect);
+			}
     </script>
 	<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="//sdk-cdn.mypurecloud.com/javascript/58.0.0/purecloud-platform-client-v2.min.js"></script>
