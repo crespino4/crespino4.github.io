@@ -40,12 +40,12 @@ function getQueues(){
 }
 
 function addQueue(queue){
-    var queuesList = document.getElementById("queuesList");
+    var queueList = document.getElementById("queueList");
 
     var option = document.createElement("option");
     option.text = queue.name;
     option.value = queue.id;
-    queuesList.options.add(option);
+    queueList.options.add(option);
 }
 
 /**
