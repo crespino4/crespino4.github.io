@@ -35,15 +35,17 @@ function getQueues(){
 
     return routingApi.getRoutingQueues(opts)
     .then((data) => {
-        var queuesList = document.getElementById("queuesList");
-
-        console.log(`getRoutingQueues success! data: ${JSON.stringify(data, null, 2)}`);
-
-        var option = document.createElement("option");
-        option.text = "Queue";
-        option.value = "1";
-        queuesList.options.add()
+        data.entities.forEach((queue) => addQueue(queue));
     })
+}
+
+function addQueue(queue){
+    var queuesList = document.getElementById("queuesList");
+
+    var option = document.createElement("option");
+    option.text = queue.name;
+    option.value = queue.id;
+    queuesList.options.add(option);
 }
 
 /**
