@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>AppFoundry Premium Apps</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="//stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+
+    <script>
+        var appfoundryBaseURL = "https://appfoundry.genesys.com/filter/purecloud/listing/"
+
+        $(document).ready(function() {
+            getAppList();
+        });
+
+        function getAppList() {
+            var query = {
+                "query":"purecloud",
+                "facets":["licenseOwnership"],
+                "facetFilters": {
+                    "licenseOwnership":"genesys"
+                },
+                "pageSize": 50,
+                "pageNumber": 1
+            };
+
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: "https://api.mypurecloud.com/api/v2/marketplace/listings/search",
+                    // The key needs to match your method's input parameter (case-sensitive).
+                    data: JSON.stringify(query),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        processAppList(data)
+                    },
+                    failure: function (errMsg) {
+                        $("#apps").innerHTML('<div class="alert alert-danger" role="alert">An error occurred retrieving the list of applications</div>')
+                    }
+                });
+            } catch (exc) {
+                $("#apps").innerHTML('<div class="alert alert-danger" role="alert">An error occurred retrieving the list of applications</div>')
+            }
+        }
+
+        function processAppList(data) {
+            console.log(JSON.stringify(data));
+
+            var tableRow = '<tr><th scope="row">{{name.en-us}}</tn><td>{{companyName.en-us}}</td><td><a target="appfoundry" href="' + appfoundryBaseURL + '{{id}}">Listing {{id}}</a></td></tr>';
+            var template = Handlebars.compile(tableRow);
+
+            var table = $("#appsTableBody");
+
+            data.entities.forEach(function(application){
+                var tr = template(application);
+                table.append(tr);
+            });
+        }
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-expand-lg navbar-light" style="background-color:FFFFFF">
+                <a class="navbar-brand" href="#">
+                    <img src="images/appfoundry-logo.png" height="30px" width="327px" alt="AppFoundry">
+                </a>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="background-color: #FF4F1F">
+            <h3 class="text-center" style="color: #FFFFFF">Premium Applications</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div id="apps" class="col-md-12">
+            <table id="appsTable" class="table table-stripped">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Application</th>
+                        <th scope="col">Vendor</th>
+                        <th scope="col">Listing</th>
+                    </tr>
+                </thead>
+                <tbody id="appsTableBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

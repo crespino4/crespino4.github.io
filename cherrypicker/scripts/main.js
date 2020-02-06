@@ -20,12 +20,21 @@ const routingApi = new platformClient.RoutingApi();
 // User Values
 let userId = null;
 
+// Conversation Map
+let conversationsMap = new Map();
+
 /**
  * Get queues
  * @param {String} queueId PureCloud Queue ID
  * @returns {Promise} the api response
  */
 function getQueues(){
+
+    //
+    addQueue({
+        "name": "Select Queue",
+        "id": -1
+    });
 
     let opts = {
         'pageSize': 25, // Number | Page size
@@ -39,6 +48,10 @@ function getQueues(){
     })
 }
 
+/**
+ * Add a queue to the <SELECT> list
+ * @param queue
+ */
 function addQueue(queue){
     var queueList = document.getElementById("queueList");
 
@@ -106,13 +119,21 @@ function getUnansweredEmailsFromQueue(queueId){
     return analyticsApi.postAnalyticsConversationsDetailsQuery(queryBody);
 }
 
+function processConversationFromAPI(conversation) {
+
+}
+
+function processConversationFromEvent(conversation){
+
+}
+
 /**
  * Builds custom Email objects containing the information from the
  * conversations.
  * @param {Object} conversationsData analytics query results
  * @returns {Promise} array of the custom email objects
  */
-function buildEmailInformation(conversationsData){
+function buildEmailInformation(conversation){
     let emails = [];
     console.log(conversationsData);
     if(!conversationsData.conversations) return [];
@@ -136,9 +157,9 @@ function buildEmailInformation(conversationsData){
             let hoursAgo = Math.floor((durationMinutes / 60) % 24);
             let minutesAgo = Math.floor(durationMinutes % 60);
             let emailDuration = '';
-            if(daysAgo >= 1) emailDuration += daysAgo + 'day(s) ';
-            if(hoursAgo >= 1) emailDuration += hoursAgo + 'hour(s) ';
-            emailDuration += minutesAgo + 'minute(s)';
+            if(daysAgo >= 1) emailDuration += daysAgo + ' day(s) ';
+            if(hoursAgo >= 1) emailDuration += hoursAgo + ' hour(s) ';
+            emailDuration += minutesAgo + ' minute(s)';
 
             // Get message information for Email Subject and Body
             conversationsApi.getConversationsEmailMessages(conversation.conversationId)
@@ -210,11 +231,35 @@ function assignEmailToAgent(conversationId, acdParticipantId){
  * Check Queue for new emails
  */
 function refreshEmails(){
+
+    if ( queueId == "-1" ){
+        conversationsMap.clear();
+        view.clearEmailContainer();
+        view.hideLoader();
+        return;
+    }
+
     view.showLoader('Gathering Emails...');
     view.hideBlankEmails();
 
+    // setup a notification listener for queue events for that queue
+    setQueueListener();
+
     return getUnansweredEmailsFromQueue(queueId)
     .then((conversations) => {
+        console.log(`getEmailsFromQueue success! data: ${JSON.stringify(conversations, null, 2)}`);
+        for(let conversation of conversationsData.conversations) {
+            conversationsMap.set( conversation.conversationId, conversation );
+            conversationApi.getConversation(conversation.conversationId)
+                .then((data) => {
+                    console.log(`getConversation success! data: ${JSON.stringify(data, null, 2)}`);
+                    conversationsMap.set( data.conversationId, data );
+                })
+                .catch((err) => {
+                    console.log('There was a failure calling getConversation');
+                    console.error(err);
+                });
+        }
         // mutate the information from emails to prepare for viewing
         return buildEmailInformation(conversations);
     })
@@ -256,7 +301,7 @@ function setQueueListener(){
         webSocket.onmessage = function(event){
             let msg = JSON.parse(event.data);
             if((msg.topicName == topicId) && (msg.eventBody.participants.length == 3)){
-                setTimeout(refreshEmails, 3000);
+                processConversationEvent(msg.eventBody);
             }
         };
     })
@@ -278,14 +323,14 @@ client.loginImplicitGrant(clientId, redirectUri)
     userId = me.id;
     return getQueues();
 })
-.then(() => {
-    // Get Available Emails
-    return refreshEmails();
-})
-.then(() => {
-    // Set up queue listener
-    return setQueueListener();
-})
+// .then(() => {
+//     // Get Available Emails
+//     return refreshEmails();
+// })
+// .then(() => {
+//     // Set up queue listener
+//     return setQueueListener();
+// })
 .catch((err) => {
     console.log(err);
 });
