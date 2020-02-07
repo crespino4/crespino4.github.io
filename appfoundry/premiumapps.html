@@ -18,12 +18,15 @@
 
     <script>
         var appfoundryBaseURL = "https://appfoundry.genesys.com/filter/purecloud/listing/"
+        var applications = [];
 
         $(document).ready(function() {
-            getAppList();
+            $("#applicationSort").click(sortApplicationsByNameAsc);
+            $("#vendorSort").click(sortApplicationsByVendorAsc);
+            getAppList(1);
         });
 
-        function getAppList() {
+        function getAppList(pageNumber) {
             var query = {
                 "query":"purecloud",
                 "facets":["licenseOwnership"],
@@ -31,10 +34,12 @@
                     "licenseOwnership":"genesys"
                 },
                 "pageSize": 50,
-                "pageNumber": 1
+                "pageNumber": pageNumber
             };
 
             try {
+                var done = false;
+
                 $.ajax({
                     type: "POST",
                     url: "https://api.mypurecloud.com/api/v2/marketplace/listings/search",
@@ -57,15 +62,71 @@
         function processAppList(data) {
             console.log(JSON.stringify(data));
 
+            data.entities.forEach(function(application){
+                applications.push(application);
+            });
+
+            if ( data.pageNumber < data.pageCount ) {
+                getAppList(data.pageNumber + 1);
+            } else {
+                sortApplicationsByNameAsc();
+                buildAppTable();
+            }
+        }
+
+        function buildAppTable() {
+            $("#applicationCount").html(applications.length);
+
             var tableRow = '<tr><th scope="row">{{name.en-us}}</tn><td>{{companyName.en-us}}</td><td><a target="appfoundry" href="' + appfoundryBaseURL + '{{id}}">Listing {{id}}</a></td></tr>';
             var template = Handlebars.compile(tableRow);
 
             var table = $("#appsTableBody");
+            table.empty();
 
-            data.entities.forEach(function(application){
+            applications.forEach(function(application){
                 var tr = template(application);
                 table.append(tr);
             });
+        }
+
+        function sortApplicationsByNameAsc() {
+            applications.sort(function (a, b) {
+                var x = a["name"]["en-us"].toUpperCase(); var y = b["name"]["en-us"].toUpperCase();
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+            });
+
+            buildAppTable();
+            $("#applicationSort").click(sortApplicationsByNameDesc);
+        }
+
+        function sortApplicationsByNameDesc() {
+            applications.sort(function (a, b) {
+                var x = a["name"]["en-us"].toUpperCase(); var y = b["name"]["en-us"].toUpperCase();
+                return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+            });
+
+            buildAppTable();
+            $("#applicationSort").click(sortApplicationsByNameAsc);
+        }
+
+        function sortApplicationsByVendorAsc() {
+            applications.sort(function (a, b) {
+                var x = a["companyName"]["en-us"].toUpperCase(); var y = b["companyName"]["en-us"].toUpperCase();
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+            });
+
+            buildAppTable();
+            $("#vendorSort").click(sortApplicationsByVendorDesc);
+        }
+
+        function sortApplicationsByVendorDesc() {
+            applications.sort(function (a, b) {
+                var x = a["companyName"]["en-us"].toUpperCase(); var y = b["companyName"]["en-us"].toUpperCase();
+                return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+            });
+
+            buildAppTable();
+            $("#vendorSort").click(sortApplicationsByVendorAsc);
         }
     </script>
 </head>
@@ -82,17 +143,17 @@
     </div>
     <div class="row">
         <div class="col-md-12" style="background-color: #FF4F1F">
-            <h3 class="text-center" style="color: #FFFFFF">Premium Applications</h3>
+            <h3 class="text-center" style="color: #FFFFFF">Premium Applications (<span id="applicationCount">0</span>)</h3>
         </div>
     </div>
     <div class="row">
         <div id="apps" class="col-md-12">
-            <table id="appsTable" class="table table-stripped">
-                <thead class="thead-light">
+            <table id="appsTable" class="table table-hover">
+                <thead class="thead-dark">
                     <tr>
-                        <th scope="col">Application</th>
-                        <th scope="col">Vendor</th>
-                        <th scope="col">Listing</th>
+                        <th scope="col" style="color: #FFFFFF"><span id="applicationSort">Application</span></th>
+                        <th scope="col" style="color: #FFFFFF"><span id="vendorSort">Vendor</span></th>
+                        <th scope="col" style="color: #FFFFFF">Listing</th>
                     </tr>
                 </thead>
                 <tbody id="appsTableBody">
