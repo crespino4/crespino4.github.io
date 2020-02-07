@@ -19,6 +19,7 @@
     <script>
         var appfoundryBaseURL = "https://appfoundry.genesys.com/filter/purecloud/listing/"
         var applications = [];
+        var sorting = false;
 
         $(document).ready(function() {
             $("#applicationSort").click(sortApplicationsByNameAsc);
@@ -90,6 +91,11 @@
         }
 
         function sortApplicationsByNameAsc() {
+            if ( sorting )
+                return;
+
+            sorting = true;
+
             applications.sort(function (a, b) {
                 var x = a["name"]["en-us"].toUpperCase(); var y = b["name"]["en-us"].toUpperCase();
                 return ((x < y) ? -1 : ((x > y) ? 1 : 0));
@@ -97,9 +103,16 @@
 
             buildAppTable();
             $("#applicationSort").click(sortApplicationsByNameDesc);
+
+            sorting = faslse;
         }
 
         function sortApplicationsByNameDesc() {
+            if ( sorting )
+                return;
+
+            sorting = true;
+
             applications.sort(function (a, b) {
                 var x = a["name"]["en-us"].toUpperCase(); var y = b["name"]["en-us"].toUpperCase();
                 return ((x > y) ? -1 : ((x < y) ? 1 : 0));
@@ -107,9 +120,16 @@
 
             buildAppTable();
             $("#applicationSort").click(sortApplicationsByNameAsc);
+
+            sorting = false;
         }
 
         function sortApplicationsByVendorAsc() {
+            if ( sorting )
+                return;
+
+            sorting = true;
+
             applications.sort(function (a, b) {
                 var x = a["companyName"]["en-us"].toUpperCase(); var y = b["companyName"]["en-us"].toUpperCase();
                 return ((x < y) ? -1 : ((x > y) ? 1 : 0));
@@ -117,9 +137,16 @@
 
             buildAppTable();
             $("#vendorSort").click(sortApplicationsByVendorDesc);
+
+            sorting = false;
         }
 
         function sortApplicationsByVendorDesc() {
+            if ( sorting )
+                return;
+
+            sorting = true;
+
             applications.sort(function (a, b) {
                 var x = a["companyName"]["en-us"].toUpperCase(); var y = b["companyName"]["en-us"].toUpperCase();
                 return ((x > y) ? -1 : ((x < y) ? 1 : 0));
@@ -127,6 +154,8 @@
 
             buildAppTable();
             $("#vendorSort").click(sortApplicationsByVendorAsc);
+
+            sorting = false;
         }
     </script>
 </head>
