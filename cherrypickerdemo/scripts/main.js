@@ -6,7 +6,7 @@ const client = platformClient.ApiClient.instance;
 
 // OAuth
 const redirectUri = window.location.href;
-const clientId = 'dc5c5c9f-5be7-40b2-b1d6-bee95d2eb0f0';
+const clientId = '292d95e8-00b8-496b-b1b1-a0ee81b0906e';
 
 const queueId = '';
 
