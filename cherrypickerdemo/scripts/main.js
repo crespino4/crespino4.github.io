@@ -41,7 +41,7 @@ function getQueueByPage(opts) {
         .then((data) => {
             data.entities.forEach((queue) => addQueue(queue));
 
-            if (data.pageName !== data.pageCount) {
+            if (data.pageNumber !== data.pageCount) {
                 opts.pageNumber++;
                 getQueueByPage(opts);
             }
