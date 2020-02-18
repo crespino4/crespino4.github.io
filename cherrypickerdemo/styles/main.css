@@ -1,0 +1,22 @@
+.box {
+    margin: 10px;
+}
+
+.box:not(:last-child) {
+    margin-bottom: 0;
+}
+
+#loader-icon {
+    margin-top: 50px;
+    text-align: center;
+    color: #EE8888;
+}
+
+#loader-icon i{
+    font-size: 100px;
+}
+
+#no-emails{
+    margin-top: 20px;
+    text-align: center;
+}
