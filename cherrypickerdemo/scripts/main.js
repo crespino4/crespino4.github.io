@@ -25,7 +25,7 @@ let userId = null;
  * @param {String} queueId PureCloud Queue ID
  * @returns {Promise} the api response
  */
-function getQueues(){
+function getQueues() {
 
     let opts = {
         'pageSize': 25, // Number | Page size
@@ -33,10 +33,19 @@ function getQueues(){
         'sortBy': "name", // String | Sort by
     };
 
+    getQueueByPage(opts)
+}
+
+function getQueueByPage(opts) {
     return routingApi.getRoutingQueues(opts)
         .then((data) => {
             data.entities.forEach((queue) => addQueue(queue));
-        })
+
+            if (data.pageName !== data.pageCount) {
+                opts.pageNumber++;
+                getQueueByPage(opts);
+            }
+        });
 }
 
 function addQueue(queue){
