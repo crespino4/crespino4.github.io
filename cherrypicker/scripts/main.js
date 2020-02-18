@@ -20,21 +20,12 @@ const routingApi = new platformClient.RoutingApi();
 // User Values
 let userId = null;
 
-// Conversation Map
-let conversationsMap = new Map();
-
 /**
  * Get queues
  * @param {String} queueId PureCloud Queue ID
  * @returns {Promise} the api response
  */
 function getQueues(){
-
-    //
-    addQueue({
-        "name": "Select Queue",
-        "id": -1
-    });
 
     let opts = {
         'pageSize': 25, // Number | Page size
@@ -43,15 +34,11 @@ function getQueues(){
     };
 
     return routingApi.getRoutingQueues(opts)
-    .then((data) => {
-        data.entities.forEach((queue) => addQueue(queue));
-    })
+        .then((data) => {
+            data.entities.forEach((queue) => addQueue(queue));
+        })
 }
 
-/**
- * Add a queue to the <SELECT> list
- * @param queue
- */
 function addQueue(queue){
     var queueList = document.getElementById("queueList");
 
@@ -119,21 +106,13 @@ function getUnansweredEmailsFromQueue(queueId){
     return analyticsApi.postAnalyticsConversationsDetailsQuery(queryBody);
 }
 
-function processConversationFromAPI(conversation) {
-
-}
-
-function processConversationFromEvent(conversation){
-
-}
-
 /**
  * Builds custom Email objects containing the information from the
  * conversations.
  * @param {Object} conversationsData analytics query results
  * @returns {Promise} array of the custom email objects
  */
-function buildEmailInformation(conversation){
+function buildEmailInformation(conversationsData){
     let emails = [];
     console.log(conversationsData);
     if(!conversationsData.conversations) return [];
@@ -157,48 +136,48 @@ function buildEmailInformation(conversation){
             let hoursAgo = Math.floor((durationMinutes / 60) % 24);
             let minutesAgo = Math.floor(durationMinutes % 60);
             let emailDuration = '';
-            if(daysAgo >= 1) emailDuration += daysAgo + ' day(s) ';
-            if(hoursAgo >= 1) emailDuration += hoursAgo + ' hour(s) ';
-            emailDuration += minutesAgo + ' minute(s)';
+            if(daysAgo >= 1) emailDuration += daysAgo + 'day(s) ';
+            if(hoursAgo >= 1) emailDuration += hoursAgo + 'hour(s) ';
+            emailDuration += minutesAgo + 'minute(s)';
 
             // Get message information for Email Subject and Body
             conversationsApi.getConversationsEmailMessages(conversation.conversationId)
-            .then((messages) => {
-                // Get the latest email message
-                let lastEntryIndex = messages.entities.length - 1;
-                let messageId = messages.entities[lastEntryIndex].id;
+                .then((messages) => {
+                    // Get the latest email message
+                    let lastEntryIndex = messages.entities.length - 1;
+                    let messageId = messages.entities[lastEntryIndex].id;
 
-                // Assign Subject String
-                emailSubject = messages.entities[lastEntryIndex].subject ?
-                    messages.entities[lastEntryIndex].subject : emailSubject;
+                    // Assign Subject String
+                    emailSubject = messages.entities[lastEntryIndex].subject ?
+                        messages.entities[lastEntryIndex].subject : emailSubject;
 
-                return conversationsApi
-                    .getConversationsEmailMessage(conversation.conversationId, messageId);
-            })
-            .then((message) => {
-                // Assigne email values based from latest message
-                senderName = message.from.name ? message.from.name : senderName;
-                senderEmail = message.from.email ? message.from.email : senderEmail;
-                emailBody = message.textBody ? message.textBody : emailBody;
-            })
-            .then(() => {
-                resolve({
-                    'senderName': senderName,
-                    'senderEmail': senderEmail,
-                    'emailDuration': emailDuration,
-                    'emailSubject': emailSubject,
-                    'emailBody': emailBody,
-                    'conversationId': conversation.conversationId,
-                    'acdParticipant':
+                    return conversationsApi
+                        .getConversationsEmailMessage(conversation.conversationId, messageId);
+                })
+                .then((message) => {
+                    // Assigne email values based from latest message
+                    senderName = message.from.name ? message.from.name : senderName;
+                    senderEmail = message.from.email ? message.from.email : senderEmail;
+                    emailBody = message.textBody ? message.textBody : emailBody;
+                })
+                .then(() => {
+                    resolve({
+                        'senderName': senderName,
+                        'senderEmail': senderEmail,
+                        'emailDuration': emailDuration,
+                        'emailSubject': emailSubject,
+                        'emailBody': emailBody,
+                        'conversationId': conversation.conversationId,
+                        'acdParticipant':
                         conversation.participants[conversation.participants.length - 1]
-                        .participantId
+                            .participantId
+                    });
+                })
+                .catch((err) => {
+                    console.log('Something went wrong');
+                    console.error(err);
+                    reject(err);
                 });
-            })
-            .catch((err) => {
-                console.log('Something went wrong');
-                console.error(err);
-                reject(err);
-            });
         }));
     }
 
@@ -217,66 +196,42 @@ function assignEmailToAgent(conversationId, acdParticipantId){
         'userId': userId,
     };
     conversationsApi.postConversationParticipantReplace(conversationId, acdParticipantId, body)
-    .then(() => {
+        .then(() => {
 
-        view.hideEmailBox(conversationId);
-        view.hideLoader();
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+            view.hideEmailBox(conversationId);
+            view.hideLoader();
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 }
 
 /**
  * Check Queue for new emails
  */
 function refreshEmails(){
-
-    if ( queueId == "-1" ){
-        conversationsMap.clear();
-        view.clearEmailContainer();
-        view.hideLoader();
-        return;
-    }
-
     view.showLoader('Gathering Emails...');
     view.hideBlankEmails();
 
-    // setup a notification listener for queue events for that queue
-    setQueueListener();
-
     return getUnansweredEmailsFromQueue(queueId)
-    .then((conversations) => {
-        console.log(`getEmailsFromQueue success! data: ${JSON.stringify(conversations, null, 2)}`);
-        for(let conversation of conversationsData.conversations) {
-            conversationsMap.set( conversation.conversationId, conversation );
-            conversationApi.getConversation(conversation.conversationId)
-                .then((data) => {
-                    console.log(`getConversation success! data: ${JSON.stringify(data, null, 2)}`);
-                    conversationsMap.set( data.conversationId, data );
-                })
-                .catch((err) => {
-                    console.log('There was a failure calling getConversation');
-                    console.error(err);
-                });
-        }
-        // mutate the information from emails to prepare for viewing
-        return buildEmailInformation(conversations);
-    })
-    .then((emails) => {
-        // Show the emails info on the document
-        view.clearEmailContainer();
-        view.hideLoader();
+        .then((conversations) => {
+            // mutate the information from emails to prepare for viewing
+            return buildEmailInformation(conversations);
+        })
+        .then((emails) => {
+            // Show the emails info on the document
+            view.clearEmailContainer();
+            view.hideLoader();
 
-        if(emails.length <= 0){
-            view.showBlankEmails();
-        }else{
-            emails.forEach((email) => view.addEmailBox(email));
-        }
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+            if(emails.length <= 0){
+                view.showBlankEmails();
+            }else{
+                emails.forEach((email) => view.addEmailBox(email));
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 }
 
 /**
@@ -288,52 +243,52 @@ function setQueueListener(){
     let topicId = `v2.routing.queues.${queueId}.conversations.emails`;
 
     notificationsApi.postNotificationsChannels()
-    .then((data) => {
-        channel = data;
+        .then((data) => {
+            channel = data;
 
-        return notificationsApi.putNotificationsChannelSubscriptions(
-            channel.id, [{'id': topicId}]);
-    })
-    .then(() => {
-        console.log('Subscribed to Queue!');
+            return notificationsApi.putNotificationsChannelSubscriptions(
+                channel.id, [{'id': topicId}]);
+        })
+        .then(() => {
+            console.log('Subscribed to Queue!');
 
-        let webSocket = new WebSocket(channel.connectUri);
-        webSocket.onmessage = function(event){
-            let msg = JSON.parse(event.data);
-            if((msg.topicName == topicId) && (msg.eventBody.participants.length == 3)){
-                processConversationEvent(msg.eventBody);
-            }
-        };
-    })
-    .catch((err) => {
-        console.log('There was a failure.');
-        console.error(err);
-    });
+            let webSocket = new WebSocket(channel.connectUri);
+            webSocket.onmessage = function(event){
+                let msg = JSON.parse(event.data);
+                if((msg.topicName == topicId) && (msg.eventBody.participants.length == 3)){
+                    setTimeout(refreshEmails, 3000);
+                }
+            };
+        })
+        .catch((err) => {
+            console.log('There was a failure.');
+            console.error(err);
+        });
 }
 
 // Initial Setup
 client.loginImplicitGrant(clientId, redirectUri)
-.then((data) => {
-    console.log(data);
+    .then((data) => {
+        console.log(data);
 
-    // Get User Info
-    return usersApi.getUsersMe();
-})
-.then((me) => {
-    userId = me.id;
-    return getQueues();
-})
-// .then(() => {
-//     // Get Available Emails
-//     return refreshEmails();
-// })
-// .then(() => {
-//     // Set up queue listener
-//     return setQueueListener();
-// })
-.catch((err) => {
-    console.log(err);
-});
+        // Get User Info
+        return usersApi.getUsersMe();
+    })
+    .then((me) => {
+        userId = me.id;
+        return getQueues();
+    })
+    .then(() => {
+        // Get Available Emails
+        return refreshEmails();
+    })
+    .then(() => {
+        // Set up queue listener
+        return setQueueListener();
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
 // Global assignment
 window.assignEmailToAgent = assignEmailToAgent;
