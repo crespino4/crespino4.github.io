@@ -254,96 +254,96 @@
     </script>
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <nav class="navbar navbar-expand-lg navbar-light" style="background-color:FFFFFF">
-                <a class="navbar-brand" href="#">
-                    <img src="images/appfoundry-logo.png" height="30px" width="327px" alt="AppFoundry">
-                </a>
-            </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <nav class="navbar navbar-expand-lg navbar-light" style="background-color:FFFFFF">
+                    <a class="navbar-brand" href="#">
+                        <img src="images/appfoundry-logo.png" height="30px" width="327px" alt="AppFoundry">
+                    </a>
+                </nav>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12" style="background-color: #FF4F1F">
-            <h3 class="text-center" style="color: #FFFFFF">Applications (<span id="applicationCount">0</span>)</h3>
+        <div class="row">
+            <div class="col-md-12" style="background-color: #FF4F1F">
+                <h3 class="text-center" style="color: #FFFFFF">Applications (<span id="applicationCount">0</span>)</h3>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div id="sidebar" class="col-md-2 bg-dark sidenav">
-            <div class="sidebar-sticky">
-                <div class="card">
-                    <h5 class="card-header">Filters</h5>
-                    <div class="card-body">
-                        <form id="formFilters">
-                            <!---
-                                                            <div class="form-group">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="radio" name="platform" id="rdoPureCloud" value="purecloud" checked>
-                                                                    <label class="form-check-label" for="rdoPureCloud">
-                                                                        PureCloud
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="radio" name="platform" id="rdoPureConnect" value="pureconnect">
-                                                                    <label class="form-check-label" for="rdoPureConnect">
-                                                                        PureConnect
-                                                                    </label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input" type="radio" name="platform" id="rdoPureEngage" value="pureengage">
-                                                                    <label class="form-check-label" for="rdoPureEngage">
-                                                                        PureEngage
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                            --->
+        <div class="row">
+            <div id="sidebar" class="col-md-2 bg-dark sidenav">
+                <div class="sidebar-sticky">
+                    <div class="card">
+                        <h5 class="card-header">Filters</h5>
+                        <div class="card-body">
+                            <form id="formFilters">
+<!---
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="platform" id="rdoPureCloud" value="purecloud" checked>
+                                        <label class="form-check-label" for="rdoPureCloud">
+                                            PureCloud
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="platform" id="rdoPureConnect" value="pureconnect">
+                                        <label class="form-check-label" for="rdoPureConnect">
+                                            PureConnect
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="platform" id="rdoPureEngage" value="pureengage">
+                                        <label class="form-check-label" for="rdoPureEngage">
+                                            PureEngage
+                                        </label>
+                                    </div>
+                                </div>
+--->
+                                <div class="form-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="chkPremium" id="chkPremium" value="checked">
+                                        <label class="form-check-label" for="chkPremium">
+                                            Premium
+                                        </label>
+                                    </div>
+<!---
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="chkPurchase" id="chkPurchase" value="purchase">
+                                        <label class="form-check-label" for="chkPurchase">
+                                            Purchase
+                                        </label>
+                                    </div>
+--->
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="chkFreeTrial" id="chkFreeTrial" value="checked">
+                                        <label class="form-check-label" for="chkFreeTrial">
+                                            Free Trial
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
                             <div class="form-group">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="chkPremium" id="chkPremium" value="checked">
-                                    <label class="form-check-label" for="chkPremium">
-                                        Premium
-                                    </label>
-                                </div>
-                                <!---
-                                                                    <div class="form-check">
-                                                                        <input class="form-check-input" type="checkbox" name="chkPurchase" id="chkPurchase" value="purchase">
-                                                                        <label class="form-check-label" for="chkPurchase">
-                                                                            Purchase
-                                                                        </label>
-                                                                    </div>
-                                --->
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="chkFreeTrial" id="chkFreeTrial" value="checked">
-                                    <label class="form-check-label" for="chkFreeTrial">
-                                        Free Trial
-                                    </label>
-                                </div>
+                                <button id="applyFilter" class="btn btn-block btn-primary">Apply</button>
                             </div>
-                        </form>
-                        <div class="form-group">
-                            <button id="applyFilter" class="btn btn-block btn-primary">Apply</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="apps" class="col-md-10">
-            <main class="main">
-                <table id="appsTable" class="table table-hover">
-                    <thead class="thead-dark">
-                    <tr>
-                        <th scope="col" style="color: #FFFFFF"><span id="applicationSort">Application</span></th>
-                        <th scope="col" style="color: #FFFFFF"><span id="vendorSort">Vendor</span></th>
-                        <th scope="col" style="color: #FFFFFF">Listing</th>
-                    </tr>
-                    </thead>
-                    <tbody id="appsTableBody">
-                    </tbody>
-                </table>
-            </main>
+            <div id="apps" class="col-md-10">
+                <main class="main">
+                    <table id="appsTable" class="table table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col" style="color: #FFFFFF"><span id="applicationSort">Application</span></th>
+                                <th scope="col" style="color: #FFFFFF"><span id="vendorSort">Vendor</span></th>
+                                <th scope="col" style="color: #FFFFFF">Listing</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appsTableBody">
+                        </tbody>
+                    </table>
+                </main>
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>
