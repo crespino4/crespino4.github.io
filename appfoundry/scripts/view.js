@@ -146,6 +146,15 @@ export default {
     },
 
     /**
+     * Removes all Email panels from the container
+     */
+    clearEmailTableBody(){
+        while(emailTableBody.firstChild) {
+            emailTableBody.firstChild.remove();
+        }
+    },
+
+    /**
      * Show message that informs that there are no available emails
      */
     showBlankEmails(){

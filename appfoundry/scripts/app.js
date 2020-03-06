@@ -220,7 +220,7 @@ function refreshEmails(){
         })
         .then((emails) => {
             // Show the emails info on the document
-            view.clearEmailContainer();
+            view.clearEmailTableBody();
             view.hideLoader();
 
             if(emails.length <= 0){
