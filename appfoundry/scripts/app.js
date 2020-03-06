@@ -226,7 +226,7 @@ function refreshEmails(){
             if(emails.length <= 0){
                 view.showBlankEmails();
             }else{
-                emails.forEach((email) => view.addEmailBox(email));
+                emails.forEach((email) => view.addEmailTableRow(email));
             }
         })
         .catch((err) => {
