@@ -48,7 +48,7 @@ export default {
         let emailView = document.importNode(emailBoxTemplate.content, true);
         let emailViewElement = emailView.firstChild;
         emailViewElement.id = emailData.conversationId;
-        emailTableBody.appendChild(emailView);
+        emailContainer.appendChild(emailView);
 
         // Get references to dynamic elements
         let senderName = emailViewElement.getElementsByClassName('sender-name')[0];
@@ -83,7 +83,7 @@ export default {
         let emailView = document.importNode(emailTableRowTemplate.content, true);
         let emailViewElement = emailView.firstChild;
         emailViewElement.id = emailData.conversationId;
-        emailContainer.appendChild(emailView);
+        emailTableBody.appendChild(emailView);
 
         // Get references to dynamic elements
         let senderName = emailViewElement.getElementsByClassName('sender-name')[0];
