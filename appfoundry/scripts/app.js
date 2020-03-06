@@ -8,7 +8,7 @@ const client = platformClient.ApiClient.instance;
 const redirectUri = window.location.href;
 const clientId = 'ca06028b-ed46-49c9-8f90-5b55f524ed1e';
 
-const queueId = '';
+let queueId = '';
 
 // API instances
 const analyticsApi = new platformClient.AnalyticsApi();
@@ -35,6 +35,9 @@ function getQueues(){
 
     return routingApi.getRoutingQueues(opts)
         .then((data) => {
+            if ( data.entities.length > 0 ) {
+                queueId = data.entities[0].id;
+            }
             data.entities.forEach((queue) => addQueue(queue));
         })
 }
@@ -228,6 +231,8 @@ function refreshEmails(){
             }else{
                 emails.forEach((email) => view.addEmailTableRow(email));
             }
+
+            setQueueListener();
         })
         .catch((err) => {
             console.log(err);
