@@ -56,7 +56,7 @@ function addQueue(queue){
  * @param {String} queueId PureCloud Queue ID
  * @returns {Promise} the api response
  */
-function getUnansweredEmailsFromQueue(queueId){
+function getUnansweredEmailsFromQueue(){
     var queueList = document.getElementById('queueList');
     queueId = queueList.value;
 
@@ -216,7 +216,7 @@ function refreshEmails(){
     view.showLoader('Gathering Emails...');
     view.hideBlankEmails();
 
-    return getUnansweredEmailsFromQueue(queueId)
+    return getUnansweredEmailsFromQueue()
         .then((conversations) => {
             // mutate the information from emails to prepare for viewing
             return buildEmailInformation(conversations);
