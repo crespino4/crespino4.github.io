@@ -55,7 +55,7 @@ export default {
         let senderEmail = emailViewElement.getElementsByClassName('sender-email')[0];
         let emailDuration = emailViewElement.getElementsByClassName('email-duration')[0];
         let emailSubject = emailViewElement.getElementsByClassName('email-subject')[0];
-        //let emailBody = emailViewElement.getElementsByClassName('email-body')[0];
+        let emailBody = emailViewElement.getElementsByClassName('email-body')[0];
         let btnAssign = emailViewElement.getElementsByClassName('btn-assign')[0];
 
         // Assign values
@@ -63,7 +63,7 @@ export default {
         senderEmail.textContent = emailData.senderEmail ? emailData.senderEmail : null;
         emailDuration.textContent = emailData.emailDuration ? emailData.emailDuration : null;
         emailSubject.textContent = emailData.emailSubject ? emailData.emailSubject : null;
-        //emailBody.textContent = emailData.emailBody ? emailData.emailBody : null;
+        emailBody.textContent = emailData.emailBody ? emailData.emailBody : null;
 
 
         // Assign onlcick action to button
@@ -90,7 +90,7 @@ export default {
         let senderEmail = emailViewElement.getElementsByClassName('sender-email')[0];
         let emailDuration = emailViewElement.getElementsByClassName('email-duration')[0];
         let emailSubject = emailViewElement.getElementsByClassName('email-subject')[0];
-        let emailBody = emailViewElement.getElementsByClassName('email-body')[0];
+        //let emailBody = emailViewElement.getElementsByClassName('email-body')[0];
         let btnAssign = emailViewElement.getElementsByClassName('btn-assign')[0];
 
         // Assign values
@@ -98,7 +98,7 @@ export default {
         senderEmail.textContent = emailData.senderEmail ? emailData.senderEmail : null;
         emailDuration.textContent = emailData.emailDuration ? emailData.emailDuration : null;
         emailSubject.textContent = emailData.emailSubject ? emailData.emailSubject : null;
-        emailBody.textContent = emailData.emailBody ? emailData.emailBody : null;
+        //emailBody.textContent = emailData.emailBody ? emailData.emailBody : null;
 
         // Assign onlcick action to button
         btnAssign.setAttribute('onclick',
