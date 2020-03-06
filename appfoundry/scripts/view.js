@@ -1,4 +1,5 @@
 const emailContainer = document.getElementById('email-container');
+const emailTableBody = document.getElementById('email-table-body');
 const loader = document.getElementById('loader-icon');
 const loaderText = document.getElementById('loader-text');
 const noEmailText = document.getElementById('no-emails');
@@ -28,6 +29,15 @@ emailBoxTemplate.innerHTML =
     </article>
 </div>`;
 
+let emailTableRowTemplate = document.createElement('template');
+emailTableRowTemplate.innerHTML =
+    `<tr>
+        <td><span class="email-duration">31m</span></td>
+        <td><strong><span class="email-subject">Subject</span></strong></td>
+        <td><strong><span class="sender-name">John Smith</span></strong> <small><span class="sender-email">email@email.com</span></small></td>
+        <td><a class="button is-dark btn-assign" onclick="assignEmailToAgent()">Assign To Me</a></td>
+    </tr>`;
+
 export default {
     /**
      * Add an email box to the document
@@ -36,6 +46,40 @@ export default {
     addEmailBox(emailData){
         // Add the email box to the DOM
         let emailView = document.importNode(emailBoxTemplate.content, true);
+        let emailViewElement = emailView.firstChild;
+        emailViewElement.id = emailData.conversationId;
+        emailTableBody.appendChild(emailView);
+
+        // Get references to dynamic elements
+        let senderName = emailViewElement.getElementsByClassName('sender-name')[0];
+        let senderEmail = emailViewElement.getElementsByClassName('sender-email')[0];
+        let emailDuration = emailViewElement.getElementsByClassName('email-duration')[0];
+        let emailSubject = emailViewElement.getElementsByClassName('email-subject')[0];
+        //let emailBody = emailViewElement.getElementsByClassName('email-body')[0];
+        let btnAssign = emailViewElement.getElementsByClassName('btn-assign')[0];
+
+        // Assign values
+        senderName.textContent = emailData.senderName ? emailData.senderName : null;
+        senderEmail.textContent = emailData.senderEmail ? emailData.senderEmail : null;
+        emailDuration.textContent = emailData.emailDuration ? emailData.emailDuration : null;
+        emailSubject.textContent = emailData.emailSubject ? emailData.emailSubject : null;
+        emailBody.textContent = emailData.emailBody ? emailData.emailBody : null;
+
+        // Assign onlcick action to button
+        btnAssign.setAttribute('onclick',
+            'assignEmailToAgent(' +
+                `"${emailData.conversationId}",` +
+                `"${emailData.acdParticipant}",` +
+            ')');
+    },
+
+    /**
+     * Add an email table row to the table
+     * @param {Object} emailData contains the email information
+     */
+    addEmailTableRow(emailData){
+        // Add the email box to the DOM
+        let emailView = document.importNode(emailTableRowTemplate.content, true);
         let emailViewElement = emailView.firstChild;
         emailViewElement.id = emailData.conversationId;
         emailContainer.appendChild(emailView);
@@ -47,7 +91,7 @@ export default {
         let emailSubject = emailViewElement.getElementsByClassName('email-subject')[0];
         let emailBody = emailViewElement.getElementsByClassName('email-body')[0];
         let btnAssign = emailViewElement.getElementsByClassName('btn-assign')[0];
-        
+
         // Assign values
         senderName.textContent = emailData.senderName ? emailData.senderName : null;
         senderEmail.textContent = emailData.senderEmail ? emailData.senderEmail : null;
@@ -56,16 +100,16 @@ export default {
         emailBody.textContent = emailData.emailBody ? emailData.emailBody : null;
 
         // Assign onlcick action to button
-        btnAssign.setAttribute('onclick', 
-            'assignEmailToAgent(' + 
-                `"${emailData.conversationId}",` +
-                `"${emailData.acdParticipant}",` +
-            ')'); 
+        btnAssign.setAttribute('onclick',
+            'assignEmailToAgent(' +
+            `"${emailData.conversationId}",` +
+            `"${emailData.acdParticipant}",` +
+            ')');
     },
 
     /**
      * Hide an email box when user assigns it to agent
-     * @param {String} id 
+     * @param {String} id
      */
     hideEmailBox(id){
         document.getElementById(id).style.display = 'none';
@@ -99,7 +143,7 @@ export default {
             emailContainer.firstChild.remove();
         }
     },
-    
+
     /**
      * Show message that informs that there are no available emails
      */

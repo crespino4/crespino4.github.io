@@ -17,24 +17,18 @@
   <title>AppFoundry Cherry Picker</title>
 </head>
 <body>
-  <section class="hero is-dark">
-    <div class="hero-body">
+  <section class="section">
       <div class="container">
-        <h1 class="title">
-          AppFoundry Cherry Picker 🍒
-        </h1>
-        <h2 class="subtitle">
-          Choose a workflow item.
-        </h2>
+        <h1 class="title">AppFoundry Onboarding Cherry Picker 🍒</h1>
+        <h2 class="subtitle">Choose an item to work on.</h2>
       </div>
-    </div>
   </section>
   <section style="margin: 10px;">
-      <div class="select is-outlined is-fullwidth">
-        <select class="is-fullwidth" id="queueList" onchange="refreshEmails();"></select>
+      <div class="select is-outlined">
+        <select class="" id="queueList" onchange="refreshEmails();"></select>
       </div>
-      <a onclick="refreshEmails();" class="button is-primary is-outlined is-fullwidth">
-        <span>Refresh</span>&nbsp;<i class="fa fa-refresh" aria-hidden="true"></i>
+      <a onclick="refreshEmails();" class="button is-primary is-outlined">
+        <i class="fa fa-refresh" aria-hidden="true"></i>
       </a>
   </section>
   <section id="loader-icon">
@@ -45,10 +39,21 @@
       </div>
   </section>
   <section id="no-emails" style="display: none;">
-    <div>Nothing to show here</div>
+    <div>The queue is currently empty</div>
   </section>
   <section id="email-container">
-
+      <table class="table">
+          <thead>
+              <tr>
+                  <th>On Queue</th>
+                  <th>Subject</th>
+                  <th>From</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody id="email-table-body">
+          </tbody>
+      </table>
   </section>
 </body>
 </html>
