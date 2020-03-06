@@ -65,6 +65,7 @@ export default {
         emailSubject.textContent = emailData.emailSubject ? emailData.emailSubject : null;
         //emailBody.textContent = emailData.emailBody ? emailData.emailBody : null;
 
+
         // Assign onlcick action to button
         btnAssign.setAttribute('onclick',
             'assignEmailToAgent(' +
