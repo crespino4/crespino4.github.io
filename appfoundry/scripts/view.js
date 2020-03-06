@@ -63,7 +63,7 @@ export default {
         senderEmail.textContent = emailData.senderEmail ? emailData.senderEmail : null;
         emailDuration.textContent = emailData.emailDuration ? emailData.emailDuration : null;
         emailSubject.textContent = emailData.emailSubject ? emailData.emailSubject : null;
-        emailBody.textContent = emailData.emailBody ? emailData.emailBody : null;
+        //emailBody.textContent = emailData.emailBody ? emailData.emailBody : null;
 
         // Assign onlcick action to button
         btnAssign.setAttribute('onclick',
