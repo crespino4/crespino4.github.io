@@ -18,10 +18,7 @@
 </head>
 <body>
   <section class="section">
-      <div class="container">
-        <h1 class="title">AppFoundry Onboarding Cherry Picker 🍒</h1>
-        <h2 class="subtitle">Choose an item to work on.</h2>
-      </div>
+     <h1 class="title">AppFoundry Onboarding Cherry Picker 🍒</h1>
   </section>
   <section style="margin: 10px;">
       <div class="select is-outlined">
@@ -30,16 +27,6 @@
       <a onclick="refreshEmails();" class="button is-primary is-outlined">
         <i class="fa fa-refresh" aria-hidden="true"></i>
       </a>
-  </section>
-  <section id="loader-icon">
-      <div>
-        <i class="fas fa-cog fa-spin"></i>
-        <br>
-        <span id="loader-text">Loading...</span>
-      </div>
-  </section>
-  <section id="no-emails" style="display: none;">
-    <div>The queue is currently empty</div>
   </section>
   <section id="email-container">
       <table class="table is-bordered is-striped is-hoverable is-fullwidth">
@@ -54,6 +41,16 @@
           <tbody id="email-table-body">
           </tbody>
       </table>
+  </section>
+  <section id="loader-icon">
+      <div>
+          <i class="fas fa-cog fa-spin"></i>
+          <br>
+          <span id="loader-text">Loading...</span>
+      </div>
+  </section>
+  <section id="no-emails" style="display: none;">
+      <div>The queue is currently empty</div>
   </section>
 </body>
 </html>
