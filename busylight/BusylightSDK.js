@@ -60,32 +60,35 @@ function BusylightSDK(OnConnected)
    this.BusylightDevices = new Array();
    this.BusylightDevices.length=0;
 
-    const filters = [
-        {
-            "vendorId": 10171,
-            "productId": 15309
-        },
-        {
-            "vendorId": 1240,
-            "productId": 63560
-        },
-        {
-            "vendorId": 10171,
-            "productId": 15307
-        },
-        {
-            "vendorId": 10171,
-            "productId": 15306
-        }
-    ];
+    this.gestureInitializer = function() {
+        const filters = [
+            {
+                "vendorId": 10171,
+                "productId": 15309
+            },
+            {
+                "vendorId": 1240,
+                "productId": 63560
+            },
+            {
+                "vendorId": 10171,
+                "productId": 15307
+            },
+            {
+                "vendorId": 10171,
+                "productId": 15306
+            }
+        ];
 
-    navigator.usb.requestDevice({filters: filters})
-        .then(device => {
-            console.log("Device: " + device);
-        })
-        .catch(e => {
-            console.error("Error " + e);
-        });
+        navigator.usb.requestDevice({filters: filters})
+            .then(device => {
+                console.log("Device: " + device);
+            })
+            .catch(e => {
+                console.error("Error " + e);
+            });
+    };
+
 
    this.GenerateCommands = function(steps)
    {

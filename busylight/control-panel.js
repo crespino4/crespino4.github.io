@@ -11,7 +11,10 @@
   };
 
   var connection = -1;
-  var busylightSDK;
+  var busylightSDK = new BusylightSDK(function() {
+    busylightSDK.ColorRGB(0,100,0);
+    enableIOControls(true);
+  });
 
   var initializeWindow = function() {
     for (var k in ui) {
@@ -23,7 +26,7 @@
       ui[k] = element;
     }
     enableIOControls(false);
-    ui.busylight.addEventListener('click', onBusyLightClicked);
+    ui.busylight.addEventListener('click', busylightSDK.gestureInitializer);
     ui.green.addEventListener('click', onGreenClicked);
     ui.red.addEventListener('click', onRedClicked);
     ui.alert.addEventListener('click', onAlertClicked);
@@ -41,13 +44,6 @@
     ui.pulse.disabled = !ioEnabled;
     ui.flash.disabled = !ioEnabled;
     ui.off.disabled = !ioEnabled;
-  };
-
-  var onBusyLightClicked = function() {
-    busylightSDK = new BusylightSDK(function() {
-      busylightSDK.ColorRGB(0,100,0);
-      enableIOControls(true);
-    } );
   };
 
   var onGreenClicked = function() {
