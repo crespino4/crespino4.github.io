@@ -1,0 +1,88 @@
+body {
+  font-size: 10pt;
+  display: flex;
+  align-items: center;
+  flex-flow: column;
+  background-image: linear-gradient(to bottom, #007991, #29A7A9, #5ADEC5, #78ffd6);
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+
+#device-panel {
+  text-align: center;
+  margin-top: 50px;
+}
+
+/* Button Styling */
+
+.btn-hover {
+  font-family: roboto;
+  width: 90px;
+  height: 90px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+  margin: 15px;
+  text-align:center;
+  border: none;
+  background-size: 300% 100%;
+  border-radius: 50%;
+  -moz-transition: all .4s ease-in-out;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+  text-transform: uppercase;
+}
+
+.btn-hover:hover {
+  background-position: 100% 0;
+  -moz-transition: all .4s ease-in-out;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+.btn-hover:focus {
+  outline: none;
+}
+
+.btn-hover.color-1 {
+  background-image: linear-gradient(to right, #5eb130, #00883a, #2f9937, #00773b);
+  box-shadow: 0 4px 15px 0 rgba(23, 168, 108, 0.75);
+}
+.btn-hover.color-2 {
+  background-image: linear-gradient(to right, #e5262b, #9c1d23, #c12228, #7d171f);
+  box-shadow: 0 4px 15px 0 rgba(229, 66, 10, 0.75);
+}
+.btn-hover.color-3 {
+  background-image: linear-gradient(to right, #2cb8eb, #0b7ea1, #1899c3, #09627e);  
+  box-shadow: 0 5px 15px rgba(11, 126, 161, .7);
+}
+.btn-hover.color-4 {
+  background-image: linear-gradient(to right, #5eb130, #00883a, #2f9937, #00773b);
+  box-shadow: 0 4px 15px 0 rgba(23, 168, 108, 0.75);
+}
+.btn-hover.color-5 {
+  background-image: linear-gradient(to right, #f7b6aa, #e5262b, #ec6056, #7d171f);
+  box-shadow: 0 4px 15px 0 rgba(252, 104, 110, 0.75);
+}
+.btn-hover.color-6 {
+  background-image: linear-gradient(to right, #2cb8eb, #feeb00, #2cb8eb, #cec220);
+  box-shadow: 0 4px 15px 0 rgba(83, 176, 57, 0.75);
+}
+.btn-hover.color-7 {
+  background-image: linear-gradient(to right, #29323c, #485563, #2b5876, #4e4376);
+  box-shadow: 0 4px 15px 0 rgba(45, 54, 65, 0.75);
+}
+
+/* Image Container */
+
+.img-container {
+  margin-top: 70px;
+  max-width: 500px;
+}
+
+.img-container img {
+  max-width: 100%;
+}

@@ -1,0 +1,37 @@
+{
+    "name": "Busylight Tester",
+    "manifest_version": 2,
+    "version": "1.0.0",
+    "minimum_chrome_version": "45.0.2439.3",
+    "icons": {
+        "16": "Busylight16.png"
+    },
+    "app": {
+        "background": {
+            "scripts": [ "main.js" ]
+        }
+    },
+    "permissions": [
+        "hid",
+        {
+            "usbDevices": [
+                {
+                    "vendorId": 10171,
+                    "productId": 15309
+                },
+                {
+                    "vendorId": 1240,
+                    "productId": 63560
+                },
+                {
+                    "vendorId": 10171,
+                    "productId": 15307
+                },
+                {
+                    "vendorId": 10171,
+                    "productId": 15306
+                }
+            ]
+        }
+    ]
+}
