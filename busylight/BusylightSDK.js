@@ -86,11 +86,11 @@ function BusylightSDK(OnConnected)
                 self.BusylightDevice = device;
                 self.BusylightDevice.open()
                     .then(() => {
-                        self.BusylightDevice.selectConfiguration(1)
+                        self.BusylightDevice.selectConfiguration(1);
                     })
                     .then(() => {
+                        self.BusylightDevice.claimInterface(0);
                         OnConnected();
-                        //self.BusylightDevice.claimInterface(0)
                     });
             })
             .catch(e => {
