@@ -1,5 +1,6 @@
 (function() {
   var ui = {
+    busylight: null,
     green: null,
     red: null,
     alert: null,
@@ -10,10 +11,7 @@
   };
 
   var connection = -1;
-  var busylightSDK = new BusylightSDK(function() {
-		busylightSDK.ColorRGB(0,100,0); 
-		enableIOControls(true);
-		} );
+  var busylightSDK;
 
   var initializeWindow = function() {
     for (var k in ui) {
@@ -25,6 +23,7 @@
       ui[k] = element;
     }
     enableIOControls(false);
+    ui.busylight.addEventListener('click', onBusyLightClicked);
     ui.green.addEventListener('click', onGreenClicked);
     ui.red.addEventListener('click', onRedClicked);
     ui.alert.addEventListener('click', onAlertClicked);
@@ -44,8 +43,15 @@
     ui.off.disabled = !ioEnabled;
   };
 
+  var onBusyLightClicked = function() {
+    busylightSDK = new BusylightSDK(function() {
+      busylightSDK.ColorRGB(0,100,0);
+      enableIOControls(true);
+    } );
+  };
+
   var onGreenClicked = function() {
-    busylightSDK.ColorRGB(0,100,0); 
+    busylightSDK.ColorRGB(0,100,0);
   };
 
   var onRedClicked = function() {
@@ -57,7 +63,7 @@
   };
 
   var onBlinkClicked = function() {
-    busylightSDK.Blink(BusylightColor_Blue,3,5); 
+    busylightSDK.Blink(BusylightColor_Blue,3,5);
   };
 
   var onPulseClicked = function () {
@@ -69,7 +75,7 @@
   };
 
   var onOffClicked = function() {
-    busylightSDK.ColorRGB(0,0,0); 
+    busylightSDK.ColorRGB(0,0,0);
   };
 
 
