@@ -55,9 +55,10 @@ let BusylightPulseSeqence = {
 function BusylightSDK(OnConnected)
 {
     var connection = -1;
+    var self = this;
     this.refreshtimer = function () { };
-   console.log('Constructor called.');
-   this.BusylightDevice = null;
+    console.log('Constructor called.');
+    this.BusylightDevice = null;
 
     this.gestureInitializer = function() {
         const filters = [
@@ -82,14 +83,14 @@ function BusylightSDK(OnConnected)
         navigator.usb.requestDevice({filters: filters})
             .then(device => {
                 console.log("Device: " + device);
-                this.BusylightDevice = device;
-                this.BusylightDevice.open()
+                self.BusylightDevice = device;
+                self.BusylightDevice.open()
                     .then(() => {
-                        this.BusylightDevice.selectConfiguration(1)
+                        self.BusylightDevice.selectConfiguration(1)
                     })
                     .then(() => {
-                        //this.BusylightDevice.claimInterface(0)
                         OnConnected();
+                        //self.BusylightDevice.claimInterface(0)
                     });
             })
             .catch(e => {
@@ -171,7 +172,7 @@ function BusylightSDK(OnConnected)
 
    this.WriteToDevice = function(bytes)
    {
-      this.BusylightDevice.transferOut(1, bytes.buffer);
+      self.BusylightDevice.transferOut(1, bytes.buffer);
    }
 
    this.Disconnect = function()
@@ -179,9 +180,9 @@ function BusylightSDK(OnConnected)
       if ( this.BusylightDevice === null)
          return;
 
-      this.BusylightDevice.close()
+      self.BusylightDevice.close()
           .then(() => {
-              this.BusylightDevice = null
+              self.BusylightDevice = null
           });
    }
 
