@@ -84,8 +84,13 @@ function BusylightSDK(OnConnected)
                 console.log("Device: " + device);
                 this.BusylightDevice = device;
                 this.BusylightDevice.open()
-                    .then(() => this.BusylightDevice.selectConfiguration(1))
-                    .then(() => this.BusylightDevice.claimInterface(0));
+                    .then(() => {
+                        this.BusylightDevice.selectConfiguration(1)
+                    })
+                    .then(() => {
+                        //this.BusylightDevice.claimInterface(0)
+                        OnConnected();
+                    });
             })
             .catch(e => {
                 console.error("Error " + e);
