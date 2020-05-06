@@ -89,7 +89,7 @@ function BusylightSDK(OnConnected)
                         self.BusylightDevice.selectConfiguration(1);
                     })
                     .then(() => {
-                        self.BusylightDevice.claimInterface(1);
+                        self.BusylightDevice.selectAlternateInterface(0, 0);
                         OnConnected();
                     });
             })
