@@ -57,8 +57,7 @@ function BusylightSDK(OnConnected)
     var connection = -1;
     this.refreshtimer = function () { };
    console.log('Constructor called.');
-   this.BusylightDevices = new Array();
-   this.BusylightDevices.length=0;
+   this.BusylightDevice = null;
 
     this.gestureInitializer = function() {
         const filters = [
@@ -83,6 +82,10 @@ function BusylightSDK(OnConnected)
         navigator.usb.requestDevice({filters: filters})
             .then(device => {
                 console.log("Device: " + device);
+                this.BusylightDevice = device;
+                this.BusylightDevice.open()
+                    .then(() => this.BusylightDevice.selectConfiguration(1))
+                    .then(() => this.BusylightDevice.claimInterface(0));
             })
             .catch(e => {
                 console.error("Error " + e);
@@ -163,33 +166,25 @@ function BusylightSDK(OnConnected)
 
    this.WriteToDevice = function(bytes)
    {
-      chrome.hid.send(connection, 0, bytes.buffer, function() {
-	console.log("Bytes send");
-	if (chrome.runtime.lastError)
-        {
-           console.log("Error on sending: " + chrome.runtime.lastError.message);
-        }
-        chrome.hid.receive(connection, function(reportId, data) {
-          console.log("Bytes received");
-          console.log(new Uint8Array(data));
-	});
-      });
+      this.BusylightDevice.transferOut(1, bytes.buffer);
    }
 
    this.Disconnect = function()
    {
-      if (connection === -1)
+      if ( this.BusylightDevice === null)
          return;
-      chrome.hid.disconnect(connection, function() {
-         connection = -1;
-         });
+
+      this.BusylightDevice.close()
+          .then(() => {
+              this.BusylightDevice = null
+          });
    }
 
 
    this.SetTimer = function () {
        var inst = this;
        this.refreshtimer = setInterval(function () {
-           if (connection != -1)
+           if (this.BusylightDevice != null)
            {
              let cmd = new BusylightCommandStep();
              cmd.NextStep = 0x8F;
