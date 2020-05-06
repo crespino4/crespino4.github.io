@@ -59,46 +59,33 @@ function BusylightSDK(OnConnected)
    console.log('Constructor called.');
    this.BusylightDevices = new Array();
    this.BusylightDevices.length=0;
-   chrome.hid.getDevices({}, function(devices) {
-     if (chrome.runtime.lastError) {
-        console.error("Unable to enumerate devices: " +
-                    chrome.runtime.lastError.message);
-        return;
-     }
 
-     //for (var device of devices) {
-     //  onDeviceAdded(device);
-     //}
-     for (var device of devices) {
-        if (Array.isArray(this.BusylightDevices) && this.BusylightDevices.length){
-           //this.BusylightDevices.push("device");
-        }
-        else
+    const filters = [
         {
-           this.BusylightDevices = new Array(device.deviceId);
-           this.BusylightDevices[0]=device.deviceId;
+            "vendorId": 10171,
+            "productId": 15309
+        },
+        {
+            "vendorId": 1240,
+            "productId": 63560
+        },
+        {
+            "vendorId": 10171,
+            "productId": 15307
+        },
+        {
+            "vendorId": 10171,
+            "productId": 15306
         }
-        
-        console.log("Device: " + this.BusylightDevices[0] + " " + device.deviceName);
-     }
+    ];
 
-     //if (this.BusylightDevices.Length > 0) {
-     if (Array.isArray(this.BusylightDevices) && this.BusylightDevices.length){
-        chrome.hid.connect(this.BusylightDevices[0], function(connectInfo) {
-              if (!connectInfo) {
-                  console.warn("Unable to connect to device.");
-              }
-              connection = connectInfo.connectionId;
-              console.log("Connected to connection: " + connection);
-              OnConnected();
+    navigator.usb.requestDevice({filters: filters})
+        .then(device => {
+            console.log("Device: " + device);
+        })
+        .catch(e => {
+            console.error("Error " + e);
         });
-     }
-
-   });
-   //chrome.hid.onDeviceAdded.addListener(onDeviceAdded);
-   //chrome.hid.onDeviceRemoved.addListener(onDeviceRemoved);
-
-    
 
    this.GenerateCommands = function(steps)
    {
@@ -123,7 +110,7 @@ function BusylightSDK(OnConnected)
            {
               bytes[counter]=steps[i].Color.rgbred;
               counter++;
-              bytes[counter]=steps[i].Color.rgbgreen;           
+              bytes[counter]=steps[i].Color.rgbgreen;
               counter++;
               bytes[counter]=steps[i].Color.rgbblue;
               counter++;
@@ -166,7 +153,7 @@ function BusylightSDK(OnConnected)
    {
        var retval = 0x80;
 
-       retval += soundclip + volume;       
+       retval += soundclip + volume;
 
        return retval;
    };
@@ -178,7 +165,7 @@ function BusylightSDK(OnConnected)
 	if (chrome.runtime.lastError)
         {
            console.log("Error on sending: " + chrome.runtime.lastError.message);
-        } 
+        }
         chrome.hid.receive(connection, function(reportId, data) {
           console.log("Bytes received");
           console.log(new Uint8Array(data));
