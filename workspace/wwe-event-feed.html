@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+ @License Workspace Web Edition
+ Copyright (c) 2017 Genesys Telecommunications Laboratories
+ All rights reserved.
+ FILE NAME: WWEEventFeed.html
+ 
+ Page should be invoked with the following parameters:
+ 
+ /wwe-event-feed.html?eventURL=https://webhookserver/eventfeed.php&eventTypes=agent,interaction,media
+-->
+<html>
+	<head>
+		<title>WWE Event Feed</title>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+			
+		<!-- JQuery 2.x from CDN -->
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		
+		<!-- Genesys WWE Service Client API -->
+		<script src="wwe-service-client-api.js"></script>
+
+		<script>
+			var eventURL = "";
+			var eventTypes = [];
+			
+			$(document).ready(function(){
+				var query = window.location.search.substring(1);
+				query = decodeURI(query);
+				
+				console.log("WWEEventFeed: Query string = " + query);
+			
+				var vars = query.split("&");
+			
+				$.each(vars, function() {
+					var pair = this.split("=");
+					switch(pair[0]) {
+						case 'eventURL':
+							eventURL = pair[1];
+							console.log("WWEEventFeed: eventURL=" + eventURL);
+						break;
+					
+						case 'eventTypes':
+							eventTypes = pair[1].split(",");
+							console.log("WWEEventFeed: eventTypes=" + eventTypes);
+							break;
+					}
+				});
+				
+				genesys.wwe.service.sendMessage({ 
+					request: "system.getAllowedServices", 
+					parameters: [] }, 
+					function(response){  //success
+						console.log("WWEEventFeed: Subscribing to WWE events");
+						subscribe();
+					},
+					function(response){  //failure
+						alert("WWEEventFeed: Failed to communicate with WWE");
+					}
+				);
+			});	
+					
+			var eventHandler = {
+				eventReceived: function(evt)
+				{
+					console.log("WWEEventFeed received event: " + JSON.stringify(evt));
+					
+					$.ajax({
+						url: eventURL,
+						type: "POST",
+						data: evt
+					})
+					.done(function(data, status, jqXHR){
+						console.log("WWEEventFeed: Event sent successfully");
+					})
+					.fail(function(jqXHR, status, err) {
+						console.log("WWEEventFeed: Event failed to send");
+					});
+				}
+			};
+			
+			function subscribe() {
+				genesys.wwe.service.subscribe(
+					eventTypes, 
+					eventHandler.eventReceived, 
+					eventHandler
+				);
+			}
+			
+			function unsubscribe() {
+				genesys.wwe.service.unsubscribe(
+					eventHandler
+				);
+			}
+
+		</script>
+	</head>
+	<body>
+		<p>This page has no content.  Please check the Javascript console for messages from "WWEEventFeed".</p>
+	</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<!--
+ @License Workspace Web Edition
+ Copyright (c) 2015 Genesys Telecommunications Laboratories
+ All rights reserved.
+ FILE NAME:          sample.html
+-->
+<html>
+	<head>
+		<title>WWE Integration Framework Sample</title>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+		<!-- JQuery 2.x from CDN -->
+<!-- 		<script src="jquery-2.1.4.min.js"></script> -->
+		
+		<!-- Bootstrap 3.x from CDN -->
+<!-- 		<link rel="stylesheet" href="bootstrap.min.css"> -->
+<!-- 		<link rel="stylesheet" href="bootstrap-theme.min.css"> -->
+<!-- 		<script src="bootstrap.min.js"></script> -->
+		
+			
+		<!-- JQuery 2.x from CDN -->
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		
+		<!-- Bootstrap 3.x from CDN -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+		<!-- Genesys WWE Service Client API -->
+		<script src="wwe-service-client-api.js"></script>
+
+		<script>
+			var selectedInteractionId = -1;
+			var agentUserName = '';
+		
+			$(document).ready(function(){
+				var query = window.location.search.substring(1);
+				query = decodeURI(query);
+				
+				console.log("InteractionTab: Query string = " + query);
+			
+				var vars = query.split("&");
+			
+				$.each(vars, function() {
+					var pair = this.split("=");
+					switch(pair[0]) {
+						case 'Interaction.Id':
+							$("#interactionId").val(pair[1]);
+							selectedInteractionId = pair[1];
+						break;
+					
+						case 'Agent.UserName':
+							$("#agentUsername").val(pair[1]);
+							agentUserName = pair[1];
+							break;
+						
+						case 'Agent.FirstName':
+							$("#agentFirstname").val(pair[1]);
+							break;
+						
+						case 'Agent.LastName':
+							$("#agentLastname").val(pair[1]);
+							break;
+						
+						case 'Agent.FullName':
+							$("#agentFullname").val(pair[1]);
+							break;
+						
+						case 'Agent.EmployeeId':
+							$("#agentEmployeeId").val(pair[1]);
+							break;
+					}
+				});
+				
+				getInteractionById();
+			});	
+						
+			function getInteractionById() {
+
+				if ( selectedInteractionId == -1 ) {
+					alert("The interaction id was not found on the URL");
+					return;
+				}
+
+				genesys.wwe.service.sendMessage({ 
+					request: "interaction.getByInteractionId", 
+					parameters: [ selectedInteractionId ] }, 
+					function(response){  //success
+						console.log("getByInteractionId success: " + JSON.stringify(response));
+						$("#interactionData").val(JSON.stringify(response));
+					},
+					function(data){  //failure
+						alert("Unable to get interaction: id = " + selectedInteractionId);
+						selectedInteractionId = -1;
+					}
+				);
+			}
+		
+			function setCallRecordingState(operation) {
+			
+				if ( selectedInteractionId == -1 ) {
+					alert("The interaction id was not found on the URL");
+					return;
+				}
+
+				genesys.wwe.service.sendMessage({ 
+					request: operation, 
+					parameters: [ selectedInteractionId ] }, 
+					function(response){  //success
+						alert("Successfully performed call recording operation: " + operation);
+					}, 
+					function(response){  //failure
+						alert("Failed to perform call recording operation: " + operation);
+					});
+			}
+			
+			function setUserData() {
+
+				if ( selectedInteractionId == -1 ) {
+					alert("The interaction id was not found on the URL");
+					return;
+				}
+
+				var userData = $("#userdata");
+				
+				if ( userData == '' ) {
+					alert("Please enter user data");
+					return;
+				}
+				
+				try {
+					userData = JSON.parse(userData);
+				} catch(e) {
+				}
+
+				genesys.wwe.service.sendMessage({ 
+					request: "interaction.setUserData", 
+					parameters: [ selectedInteractionId, userData ] }, 
+					function(response){  //success
+						alert("Successfully updated user data");
+					},
+					function(response){  //failure
+						alert("Failed to update user data");
+					}
+				);
+			}
+			
+			function deleteUserData() {
+
+				if ( selectedInteractionId == -1 ) {
+					alert("The interaction id was not found on the URL");
+					return;
+				}
+
+				var key = $("#key").val();
+				
+				if ( key == '' ) {
+					alert("Please enter a key name");
+					return;
+				}
+				
+				genesys.wwe.service.sendMessage({ 
+					request: "interaction.deleteUserData", 
+					parameters: [ selectedInteractionId, key ] }, 
+					function(response){  //success
+						alert("Successfully deleted user data: key = " + key);
+					},
+					function(response){  //failure
+						alert("Failed to delete user data: key = " + key);
+					}
+				);
+			}
+			
+		</script>
+	</head>
+	<body>
+		<div class="container-fluid">
+			
+			<div class="row">
+				<div class="col-sm-12">
+					<h2 class="text-center">WWE Integration Framework Interaction Tab</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="panel panel-primary">
+						<div class="panel-heading">Agent Info</div>
+						<div class="panel-body">
+							<form class="form-horizontal">
+								<div class="form-group">
+									<label for="agentUsername" class="col-sm-3 control-label">Username</label>
+									<div class="col-sm-9">
+										<input type="text" id="agentUsername" class="form-control" placeholder="Username" readonly></input>
+									</div>
+								</div>							
+								<div class="form-group">
+									<label for="agentFirstname" class="col-sm-3 control-label">Firstname</label>
+									<div class="col-sm-9">
+										<input type="text" id="agentFirstname" class="form-control" placeholder="Firstname" readonly></input>
+									</div>
+								</div>							
+								<div class="form-group">
+									<label for="agentLastname" class="col-sm-3 control-label">Lastname</label>
+									<div class="col-sm-9">
+										<input type="text" id="agentLastname" class="form-control" placeholder="Lastname" readonly></input>
+									</div>
+								</div>							
+								<div class="form-group">
+									<label for="agentFullname" class="col-sm-3 control-label">Fullname</label>
+									<div class="col-sm-9">
+										<input type="text" id="agentFullname" class="form-control" placeholder="Fullname" readonly></input>
+									</div>
+								</div>							
+								<div class="form-group">
+									<label for="agentEmployeeId" class="col-sm-3 control-label">EmployeeId</label>
+									<div class="col-sm-9">
+										<input type="text" id="agentEmployeeId" class="form-control" placeholder="Employee ID" readonly></input>
+									</div>
+								</div>							
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="panel panel-primary">
+						<div class="panel-heading">Interaction <button class="btn btn-xs btn-default pull-right" type="button" onclick="getInteractionById()">Refresh</button></div>
+						<div class="panel-body">
+							<form class="form-horizontal">
+								<div class="form-group">
+									<label for="interactionId" class="col-sm-3 control-label">Id</label>
+									<div class="col-sm-9">
+										<input type="text" id="interactionId" class="form-control" placeholder="Interaction Id" readonly></input>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="interactionData" class="col-sm-3 control-label">Data</label>
+									<div class="col-sm-9">
+										<textarea id="interactionData" class="form-control" rows="5" placeholder="Interaction Data" readonly></textarea>
+									</div>
+								</div>
+							</form>								
+							
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="panel panel-default">
+										<div class="panel-heading">Recording</div>
+										<div class="panel-body">
+										  <button type="button" class="btn btn-default btn-block" onclick="setCallRecordingState('voice.startCallRecording')"><span class="glyphicon glyphicon-play"></span> Start</button>
+										  <button type="button" class="btn btn-default btn-block" onclick="setCallRecordingState('voice.pauseCallRecording')"><span class="glyphicon glyphicon-pause"></span> Pause</button>
+										  <button type="button" class="btn btn-default btn-block" onclick="setCallRecordingState('voice.resumeCallRecording')"><span class="glyphicon glyphicon-step-forward"></span> Resume</button>
+										  <button type="button" class="btn btn-default btn-block" onclick="setCallRecordingState('voice.stopCallRecording')"><span class="glyphicon glyphicon-stop"></span> Stop</button>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-8">
+									<div class="panel panel-default">
+										<div class="panel-heading">Attached Data</div>
+										<div class="panel-body">
+											<form>
+												<div class="form-group input-group">
+													<input type="text" class="form-control" id="key" placeholder="Key">
+													<span class="input-group-btn">
+														<button class="btn btn-danger" type="button" onclick="deleteUserData()">Delete</button>
+													</span>
+												</div>
+												<div class="form-group">
+													<label for="userdata">Userdata</label>
+													<textarea id="userdata" class="form-control" rows="5" placeholder="{key:'value'}"></textarea>
+												</div>
+												<button type="button" class="btn btn-success" onclick="setUserData()">Set</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+														
+		</div>
+	</body>
+</html>

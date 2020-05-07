@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<!--
+ @License Workspace Web Edition
+ Copyright (c) 2015 Genesys Telecommunications Laboratories
+ All rights reserved.
+ FILE NAME:          sample.html
+-->
+<html>
+	<head>
+		<title>Custom API Sample</title>
+		<style>
+		</style>
+
+		<script src="wwe-service-client-api.js"></script>
+
+		<script>
+		
+			function executeCommand() {
+				eval(document.getElementById("command").value);
+			}
+			
+			function log(text) {
+				var divOutput = document.getElementById("output");
+				divOutput.innerHTML = "<pre>" + text + "</pre><br/>" + divOutput.innerHTML;
+			}
+			
+			function succeeded(result) { log("SUCCEEDED, result: " + JSON.stringify(result, null, "\t")); }
+			function failed(result) { log("FAILED, result: " + JSON.stringify(result, null, "\t")); }
+			
+			function showCommand(commandName) {
+				var command = "", commandHelp = "";
+				switch(commandName) {
+				case "agent.get":
+					command = 'genesys.wwe.service.agent.get(succeeded, failed)';
+					commandHelp = "Get the agent attributes.";
+					break;
+				case "agent.getStateList":
+					command = 'genesys.wwe.service.agent.getStateList(succeeded, failed)';
+					commandHelp = "Get the list of possible states of the agent.";
+					break;
+				case "agent.setState":
+					command = 'genesys.wwe.service.agent.setState("NotReady", succeeded, failed)';
+					commandHelp = "Set the agent state.";
+					break;
+				case "agent.getState":
+					command = 'genesys.wwe.service.agent.getState(succeeded, failed)';
+					commandHelp = "Get the agent state.";
+					break;
+				case "interaction.getInteractions":
+					command = 'genesys.wwe.service.interaction.getInteractions(succeeded, failed)';
+					commandHelp = "Get all the interactions.";
+					break;
+				case "interaction.getByInteractionId":
+					command = 'genesys.wwe.service.interaction.getByInteractionId("1", succeeded, failed)';
+					commandHelp = "Get an interaction by its interaction identifier.";
+					break;
+				case "interaction.setUserData":
+					command = 'genesys.wwe.service.interaction.setUserData("1", { KEY1: "MyValue111", KEY2: "MyValue222" }, succeeded, failed)';
+					commandHelp = "Set the user data to the live interaction.";
+					break;
+				case "interaction.deleteUserData":
+					command = 'genesys.wwe.service.interaction.deleteUserData("1", "KEY1", succeeded, failed)';
+					commandHelp = "Deletes the user data attached to the interaction.";
+					break;
+				case "voice.dial":
+					command = 'genesys.wwe.service.voice.dial("*PhoneNumber*", { myAttachedDataKey1: "myAttachedDataValue1", myAttachedDataKey2: "myAttachedDataValue2" }, succeeded, failed)';
+					commandHelp = "Call the destination with the optional attached data.";
+					break;
+				case "voice.startCallRecording":
+					command = 'genesys.wwe.service.voice.startCallRecording("1", succeeded, failed)';
+					commandHelp = "Start the call recording.";
+					break;
+				case "voice.stopCallRecording":
+					command = 'genesys.wwe.service.voice.stopCallRecording("1", succeeded, failed)';
+					commandHelp = "Stop the call recording.";
+					break;
+				case "voice.pauseCallRecording":
+					command = 'genesys.wwe.service.voice.pauseCallRecording("1", succeeded, failed)';
+					commandHelp = "Pause the call recording.";
+					break;
+				case "voice.resumeCallRecording":
+					command = 'genesys.wwe.service.voice.resumeCallRecording("1", succeeded, failed)';
+					commandHelp = "Resume the call recording.";
+					break;
+				case "email.create":
+					command = 'genesys.wwe.service.email.create("omaha@gmail.com", succeeded, failed)';
+					commandHelp = "Create a new empty email.";
+					break;
+				case "media.getMediaList":
+					command = 'genesys.wwe.service.media.getMediaList(succeeded, failed)';
+					commandHelp = "Get the media attributes.";
+					break;
+				case "media.setState":
+					command = 'genesys.wwe.service.media.setState("voice", "NotReady", succeeded, failed)';
+					commandHelp = "Set the media state.";
+					break;
+				case "system.getAllowedServices":
+					command = 'genesys.wwe.service.system.getAllowedServices(succeeded, failed)';
+					commandHelp = "Following the security configuration, this service retrieves the list of allowed services.";
+					break;
+				}
+				document.getElementById("command").value = command;
+				commandHelp += " The 'succeeded' and 'failed' arguments are the callback functions called asynchronously to send the result.";
+				document.getElementById("commandHelp").innerText = commandHelp;
+			}
+			
+			function eventHandler(message) {
+				switch(message.event) {
+					case "agent":
+						log("Received agent event: " + JSON.stringify(message, null, "\t"));
+						break;
+					case "interaction":
+						log("Received interaction event: " + JSON.stringify(message, null, "\t"));
+						break;
+					case "media":
+						log("Received media event: " + JSON.stringify(message, null, "\t"));
+						break;
+					default:
+				}
+			}
+			
+			// Called when the current web page is loaded.
+			function initializeWebPage() {
+
+				// Subscribe to Workspace Web Edition
+				genesys.wwe.service.subscribe([ "agent", "interaction", "media" ], eventHandler, this);
+			}
+			
+		</script>
+	</head>
+	<body onload="initializeWebPage()">
+		<br/>
+		<button onclick="showCommand('agent.get')">agent.get</button>
+		<button onclick="showCommand('agent.getStateList')">agent.getStateList</button>
+		<button onclick="showCommand('agent.setState')">agent.setState</button>
+		<button onclick="showCommand('agent.getState')">agent.getState</button>
+		<br/>
+		<button onclick="showCommand('media.getMediaList')">media.getMediaList</button>
+		<button onclick="showCommand('media.setState')">media.setState</button>
+		<br/>
+		<button onclick="showCommand('interaction.getInteractions')">interaction.getInteractions</button>
+		<button onclick="showCommand('interaction.getByInteractionId')">interaction.getByInteractionId</button>
+		<button onclick="showCommand('interaction.setUserData')">interaction.setUserData</button>
+		<button onclick="showCommand('interaction.deleteUserData')">interaction.deleteUserData</button>
+		<br/>
+		<button onclick="showCommand('voice.dial')">voice.dial</button>
+		<button onclick="showCommand('voice.startCallRecording')">voice.startCallRecording</button>
+		<button onclick="showCommand('voice.stopCallRecording')">voice.stopCallRecording</button>
+		<button onclick="showCommand('voice.pauseCallRecording')">voice.pauseCallRecording</button>
+		<button onclick="showCommand('voice.resumeCallRecording')">voice.resumeCallRecording</button>
+		<br/>
+		<button onclick="showCommand('email.create')">email.create</button>
+		<br/>
+		<button onclick="showCommand('system.getAllowedServices')">system.getAllowedServices</button>
+		<br/>
+		<textarea id="command" style="height: 50px; width: 600px;"></textarea>
+		<br/>
+		<div id="commandHelp"></div>
+		<br/>
+		<button onclick="executeCommand()">Execute</button>
+		<button onclick="document.getElementById('output').innerHTML = ''">Clear</button>
+		<br/>
+		<div id="output"></div>
+	</body>
+</html>
