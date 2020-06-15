@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>AppFoundry Premium Apps</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+
+    <style>
+        /*
+         * Sidebar
+         */
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100; /* Behind the navbar */
+            padding: 48px 0 0; /* Height of navbar */
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+
+        .sidebar-sticky {
+            position: relative;
+            top: 0;
+            height: calc(100vh - 48px);
+            padding-top: .5rem;
+            overflow-x: hidden;
+            overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        }
+
+        @supports ((position: -webkit-sticky) or (position: sticky)) {
+            .sidebar-sticky {
+                position: -webkit-sticky;
+                position: sticky;
+            }
+        }
+
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .sidebar .nav-link .feather {
+            margin-right: 4px;
+            color: #999;
+        }
+
+        .sidebar .nav-link.active {
+            color: #007bff;
+        }
+
+        .sidebar .nav-link:hover .feather,
+        .sidebar .nav-link.active .feather {
+            color: inherit;
+        }
+
+        .sidebar-heading {
+            font-size: .75rem;
+            text-transform: uppercase;
+        }
+
+    </style>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="//stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+
+    <script>
+        var appfoundryBaseURL = "https://appfoundry.genesys.com/filter/purecloud/listing/"
+        var localStorageAppList = "AppFoundry_Applications";
+        var applications = [];
+        var sorting = false;
+
+        $(document).ready(function() {
+            $("#applicationSort").click(sortApplicationsByNameAsc);
+            $("#vendorSort").click(sortApplicationsByVendorAsc);
+            $("#applyFilter").click(applyFilter);
+            getAppList(1);
+        });
+
+        function objectifyForm(formArray) {//serialize data function
+
+            var returnArray = {};
+            for (var i = 0; i < formArray.length; i++){
+                returnArray[formArray[i]['name']] = formArray[i]['value'];
+            }
+            return returnArray;
+        }
+
+        function applyFilter() {
+
+            var formvars = $('#formFilters').serializeArray();
+            var filters = objectifyForm(formvars);
+
+            applications = JSON.parse(localStorage.getItem(localStorageAppList));
+
+            var filteredApplications = [];
+
+            applications.forEach(function(application){
+                add = true;
+
+                if ( filters.chkPremium != undefined && (application.licensing == undefined || application.licensing.ownership != 'genesys'))
+                    add = false;
+
+                if ( filters.chkFreeTrial != undefined && (application.purchaseTypes == undefined || !application.purchaseTypes.includes('FreeTrial')))
+                    add = false;
+
+                if ( add == true )
+                    filteredApplications.push(application);
+            });
+
+            applications = filteredApplications;
+            buildAppTable();
+        }
+
+        function getAppList(pageNumber) {
+            var query = {
+                "query":"pureengage",
+                "pageSize": 50,
+                "pageNumber": pageNumber
+            };
+
+            try {
+                var done = false;
+
+                $.ajax({
+                    type: "POST",
+                    url: "https://api.mypurecloud.com/api/v2/marketplace/listings/search",
+                    // The key needs to match your method's input parameter (case-sensitive).
+                    data: JSON.stringify(query),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        processAppList(data)
+                    },
+                    failure: function (errMsg) {
+                        $("#apps").innerHTML('<div class="alert alert-danger" role="alert">An error occurred retrieving the list of applications</div>')
+                    }
+                });
+            } catch (exc) {
+                $("#apps").innerHTML('<div class="alert alert-danger" role="alert">An error occurred retrieving the list of applications</div>')
+            }
+        }
+
+        function processAppList(data) {
+            console.log(JSON.stringify(data));
+
+            data.entities.forEach(function(application){
+                applications.push(application);
+            });
+
+            if ( data.pageNumber < data.pageCount ) {
+                getAppList(data.pageNumber + 1);
+            } else {
+                localStorage.setItem(localStorageAppList, JSON.stringify(applications));
+
+                sortApplicationsByNameAsc();
+                buildAppTable();
+            }
+        }
+
+        function buildAppTable() {
+            $("#applicationCount").html(applications.length);
+
+            var tableRow = '<tr><th scope="row">{{name.en-us}}</tn><td>{{companyName.en-us}}</td><td><a target="appfoundry" href="' + appfoundryBaseURL + '{{id}}">Listing {{id}}</a></td></tr>';
+            var template = Handlebars.compile(tableRow);
+
+            var table = $("#appsTableBody");
+            table.empty();
+
+            applications.forEach(function(application){
+                var tr = template(application);
+                table.append(tr);
+            });
+        }
+
+        function sortApplicationsByNameAsc() {
+            if ( sorting )
+                return;
+
+            sorting = true;
+
+            applications.sort(function (a, b) {
+                var x = a["name"]["en-us"].toUpperCase(); var y = b["name"]["en-us"].toUpperCase();
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+            });
+
+            buildAppTable();
+            $("#applicationSort").off('click');
+            $("#applicationSort").click(sortApplicationsByNameDesc);
+
+            sorting = false;
+        }
+
+        function sortApplicationsByNameDesc() {
+            if ( sorting )
+                return;
+
+            sorting = true;
+
+            applications.sort(function (a, b) {
+                var x = a["name"]["en-us"].toUpperCase(); var y = b["name"]["en-us"].toUpperCase();
+                return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+            });
+
+            buildAppTable();
+            $("#applicationSort").off('click');
+            $("#applicationSort").click(sortApplicationsByNameAsc);
+
+            sorting = false;
+        }
+
+        function sortApplicationsByVendorAsc() {
+            if ( sorting )
+                return;
+
+            sorting = true;
+
+            applications.sort(function (a, b) {
+                var x = a["companyName"]["en-us"].toUpperCase(); var y = b["companyName"]["en-us"].toUpperCase();
+                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+            });
+
+            buildAppTable();
+            $("#vendorSort").off('click');
+            $("#vendorSort").click(sortApplicationsByVendorDesc);
+
+            sorting = false;
+        }
+
+        function sortApplicationsByVendorDesc() {
+            if ( sorting )
+                return;
+
+            sorting = true;
+
+            applications.sort(function (a, b) {
+                var x = a["companyName"]["en-us"].toUpperCase(); var y = b["companyName"]["en-us"].toUpperCase();
+                return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+            });
+
+            buildAppTable();
+            $("#vendorSort").off('click');
+            $("#vendorSort").click(sortApplicationsByVendorAsc);
+
+            sorting = false;
+        }
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-expand-lg navbar-light" style="background-color:FFFFFF">
+                <a class="navbar-brand" href="#">
+                    <img src="images/appfoundry-logo.png" height="30px" width="327px" alt="AppFoundry">
+                </a>
+            </nav>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12" style="background-color: #FF4F1F">
+            <h3 class="text-center" style="color: #FFFFFF">Applications (<span id="applicationCount">0</span>)</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div id="sidebar" class="col-md-2 bg-dark sidenav">
+            <div class="sidebar-sticky">
+                <div class="card">
+                    <h5 class="card-header">Filters</h5>
+                    <div class="card-body">
+                        <form id="formFilters">
+                            <!---
+                                                            <div class="form-group">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio" name="platform" id="rdoPureCloud" value="purecloud" checked>
+                                                                    <label class="form-check-label" for="rdoPureCloud">
+                                                                        PureCloud
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio" name="platform" id="rdoPureConnect" value="pureconnect">
+                                                                    <label class="form-check-label" for="rdoPureConnect">
+                                                                        PureConnect
+                                                                    </label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="radio" name="platform" id="rdoPureEngage" value="pureengage">
+                                                                    <label class="form-check-label" for="rdoPureEngage">
+                                                                        PureEngage
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                            
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="chkPremium" id="chkPremium" value="checked">
+                                    <label class="form-check-label" for="chkPremium">
+                                        Premium
+                                    </label>
+                                </div>
+                                
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox" name="chkPurchase" id="chkPurchase" value="purchase">
+                                                                        <label class="form-check-label" for="chkPurchase">
+                                                                            Purchase
+                                                                        </label>
+                                                                    </div>
+                                
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="chkFreeTrial" id="chkFreeTrial" value="checked">
+                                    <label class="form-check-label" for="chkFreeTrial">
+                                        Free Trial
+                                    </label>
+                                </div>
+                                --->
+                            </div>
+                        </form>
+                        <div class="form-group">
+                            <button id="applyFilter" class="btn btn-block btn-primary">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="apps" class="col-md-10">
+            <main class="main">
+                <table id="appsTable" class="table table-hover">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" style="color: #FFFFFF"><span id="applicationSort">Application</span></th>
+                        <th scope="col" style="color: #FFFFFF"><span id="vendorSort">Vendor</span></th>
+                        <th scope="col" style="color: #FFFFFF">Listing</th>
+                    </tr>
+                    </thead>
+                    <tbody id="appsTableBody">
+                    </tbody>
+                </table>
+            </main>
+        </div>
+    </div>
+</div>
+</body>
+</html>
