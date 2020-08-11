@@ -72,7 +72,7 @@
     <script src="//cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
     <script>
-        var appfoundryBaseURL = "https://appfoundry.genesys.com/filter/purecloud/listing/"
+        var appfoundryBaseURL = "https://appfoundry.genesys.com/filter/genesyscloud/listing/"
         var localStorageAppList = "AppFoundry_Applications";
         var applications = [];
         var sorting = false;
@@ -121,7 +121,7 @@
 
         function getAppList(pageNumber) {
             var query = {
-                "platform":"purecloud",
+                "platform":"genesyscloud",
                 "pageSize": 50,
                 "pageNumber": pageNumber
             };

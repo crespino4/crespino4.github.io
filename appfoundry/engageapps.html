@@ -72,7 +72,7 @@
     <script src="//cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
     <script>
-        var appfoundryBaseURL = "https://appfoundry.genesys.com/filter/purecloud/listing/"
+        var appfoundryBaseURL = "https://appfoundry.genesys.com/filter/genesysengage/listing/"
         var localStorageAppList = "AppFoundry_Applications";
         var applications = [];
         var sorting = false;
@@ -121,7 +121,7 @@
 
         function getAppList(pageNumber) {
             var query = {
-                "platform":"PureEngage",
+                "platform":"genesysengage",
                 "pageSize": 50,
                 "pageNumber": pageNumber
             };
@@ -297,7 +297,7 @@
                                                                     </label>
                                                                 </div>
                                                             </div>
-                            
+
                             <div class="form-group">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="chkPremium" id="chkPremium" value="checked">
@@ -305,14 +305,14 @@
                                         Premium
                                     </label>
                                 </div>
-                                
+
                                                                     <div class="form-check">
                                                                         <input class="form-check-input" type="checkbox" name="chkPurchase" id="chkPurchase" value="purchase">
                                                                         <label class="form-check-label" for="chkPurchase">
                                                                             Purchase
                                                                         </label>
                                                                     </div>
-                                
+
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="chkFreeTrial" id="chkFreeTrial" value="checked">
                                     <label class="form-check-label" for="chkFreeTrial">
