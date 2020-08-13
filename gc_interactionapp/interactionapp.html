@@ -19,12 +19,13 @@
 
 	<script>
 		let appParams = {
-							pcEnv = null,
-							langTag = null,
-							pcConversationId = null
+							pcEnv: null,
+							langTag: null,
+							pcConversationId: null
 						};
 
 	    const queryString = window.location.search.substring(1);
+	    console.log("Interaction App Query String: " + queryString);
 	    
 	    if ( queryString.length != 0 ) {
 			const pairs = queryString.split('&');
@@ -33,7 +34,7 @@
 			{
 				var currParam = pairs[i].split('=');
 
-				if(currParam[0] === 'langTag') {
+				if(currParam[0] === 'pcLangTag') {
 					appParams.langTag = currParam[1];
 				} else if(currParam[0] === 'pcEnvironment') {
 					appParams.pcEnv = currParam[1];
@@ -42,7 +43,7 @@
 				}
 			}
 	
-			localStorage.setItem("InteractionApp", appParams);			
+			localStorage.setItem("InteractionApp" + appParams.conversationId, appParams);			
 		} else 
 			appParams = localStorage.getItem("InteractionApp");
 		}
@@ -163,7 +164,7 @@
             var client = platformClient.ApiClient.instance;
             var clientId = 'b457d6c8-feb8-40f7-aff4-94d9cba953b5';
             var redirectUri = 'https://crespino4.github.io/gc_interactionapp/interactionapp.html';
-            var state = appParams.conversationId;
+            var state = appParams.conversactionId;
             
             // API instances
             var usersApi = new platformClient.UsersApi();
