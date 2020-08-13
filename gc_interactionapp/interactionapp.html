@@ -175,7 +175,7 @@
                 .then((data) => {
                 	// User Authenticated
                 	
-                    console.log("Authenticated: " + JSON.Stringify(data));
+                    console.log("Authenticated: " + JSON.stringify(data));
 
                     // Make request to GET /api/v2/users/me?expand=presence
                     return usersApi.getUsersMe({ 'expand': ["presence","authorization"] });
