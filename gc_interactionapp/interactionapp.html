@@ -17,6 +17,38 @@
 	<h1 id="title" width="100%" align="center">Interaction App</h1>
 	<h2 id="welcome" width="100%" align="center">Welcome</h2>
 
+	<script>
+		let appParams = {
+							pcEnv = null,
+							langTag = null,
+							pcConversationId = null
+						};
+
+	    const queryString = window.location.search.substring(1);
+	    
+	    if ( queryString.length != 0 ) {
+			const pairs = queryString.split('&');
+		
+			for (var i = 0; i < pairs.length; i++)
+			{
+				var currParam = pairs[i].split('=');
+
+				if(currParam[0] === 'langTag') {
+					appParams.langTag = currParam[1];
+				} else if(currParam[0] === 'pcEnvironment') {
+					appParams.pcEnv = currParam[1];
+				} else if(currParam[0] === 'pcConversationId') {
+					appParams.pcConversationId = currParam[1];
+				}
+			}
+	
+			localStorage.setItem("InteractionApp", appParams);			
+		} else 
+			appParams = localStorage.getItem("InteractionApp");
+		}
+
+	</script>
+	
     <script>
         var lifecycleStatusMessageTitle = 'Interaction App - Lifecycle Demo';
         var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
@@ -131,7 +163,7 @@
             var client = platformClient.ApiClient.instance;
             var clientId = 'b457d6c8-feb8-40f7-aff4-94d9cba953b5';
             var redirectUri = 'https://crespino4.github.io/gc_interactionapp/interactionapp.html';
-            var state = "GCInteractionApp";
+            var state = appParams.conversationId;
             
             // API instances
             var usersApi = new platformClient.UsersApi();
