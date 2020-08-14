@@ -48,6 +48,7 @@
 			var lifecycleStatusMessageTitle = 'Interaction App - Lifecycle Demo';
 			var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
 			var topicName = "";
+			var me = null;
 			
 			// Perform Implicit Grant Authentication
             client.loginImplicitGrant(clientId, redirectUri, { state: integrationQueryString })
@@ -163,6 +164,8 @@
                 	// Me Response
                     document.querySelector("#welcome").innerHTML = "Welcome " + userMe.name;
 
+					me = userMe;
+					
                     // Create a Notifications Channel
                     return notificationsApi.postNotificationsChannels();
                 }).then((channel) => {
@@ -172,7 +175,7 @@
                     var socket = new WebSocket(channel.connectUri);
                     socket.onmessage = onSocketMessage;
 
-					topicName = `v2.users.${userMe.id}.conversations`;
+					topicName = `v2.users.${me.id}.conversations`;
 					
                     // Subscribe to conversation events in the queue.
                     let topic = [{"id": topicName}];
