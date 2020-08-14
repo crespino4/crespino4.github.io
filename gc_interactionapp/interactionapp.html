@@ -25,24 +25,20 @@
 
         $( document ).ready(function() {
 
-            // PureCloud OAuth information
-            var platformClient = require('platformClient');
-            var client = null;
             var clientId = 'b457d6c8-feb8-40f7-aff4-94d9cba953b5';
             var redirectUri = 'https://crespino4.github.io/gc_interactionapp/interactionapp.html';
             
-            //var state = appParams.pcConversationId;
+            // PureCloud OAuth information
+            var platformClient = require('platformClient');
+            var	client = platformClient.ApiClient.instance;
+            
+            client.setPersistSettings(true, 'InteractionApp');
+            
             const integrationQueryString = window.location.search.substring(1);
 			var appParams = parseAppParameters(integrationQueryString);
-            if ( appParams.pcEnvironment == null) {
-            	console.log("Restoring platform client instance");
-            	client = platformClient.ApiClient.instance;
-            	console.log("Restored platform client for region: " + client.pcEnvironment);
-            } else {
+            if ( appParams.pcEnvironment !== null) {
             	console.log("Initializing platform client for region: " + appParams.pcEnvironment);
-            	client = new platformClient.ApiClient({
-					pcEnvironmentQueryParam: appParams.pcEnvironment
-				});
+            	client.setEnvironment(appParams.pcEnvironment);
             }
             
             // API instances
@@ -74,6 +70,7 @@
 					});
 
 					// Log the PureCloud environment (i.e. AWS Region)
+					console.log("PureCloud API Client Environment: " + client.pcEnvironment);
 					console.log("PureCloud ClientApp Environment: " + myClientApp.pcEnvironment);
 					
                     // Make request to GET /api/v2/users/me?expand=presence
