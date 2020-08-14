@@ -180,7 +180,7 @@
                 	
                     console.log("Authenticated: " + JSON.stringify(data));
 					appParams = parseAppParameters(data.state);
-					document.querySelector("#conversation").innerHTML = "Conversation: " + appData.pcConversationId;
+					document.querySelector("#conversation").innerHTML = "Conversation: " + appParams.pcConversationId;
 					
                     // Make request to GET /api/v2/users/me?expand=presence
                     return usersApi.getUsersMe({ 'expand': ["presence","authorization"] });
