@@ -16,39 +16,9 @@
 <body>
 	<h1 id="title" width="100%" align="center">Interaction App</h1>
 	<h2 id="welcome" width="100%" align="center">Welcome</h2>
-	<h2 id="conversation" width="100%" align="center">Conversation:</h2>
-	<script>
-	
-	function parseAppParameters(queryString) {
-	    console.log("Interaction App Query String: " + queryString);
-
-		let appParams = {
-							pcEnv: null,
-							langTag: null,
-							pcConversationId: null
-						};
-
-	    
-	    if ( queryString.length != 0 ) {
-			const pairs = queryString.split('&');
-		
-			for (var i = 0; i < pairs.length; i++)
-			{
-				var currParam = pairs[i].split('=');
-
-				if(currParam[0] === 'pcLangTag') {
-					appParams.langTag = currParam[1];
-				} else if(currParam[0] === 'pcEnvironment') {
-					appParams.pcEnv = currParam[1];
-				} else if(currParam[0] === 'pcConversationId') {
-					appParams.pcConversationId = currParam[1];
-				}
-			}
-		}
-		
-		return appParams;
-	}
-	</script>
+	<p width="100%" align="center">pcConversationId: <span id="pcConversationId"></span></p>
+	<p width="100%" align="center">pcEnvironment: <span id="pcEnvironment"></span></p>
+	<p width="100%" align="center">pcLangTag: <span id="pcLangTag"></span></p>
 	
     <script>
         var lifecycleStatusMessageTitle = 'Interaction App - Lifecycle Demo';
@@ -172,25 +142,25 @@
             var usersApi = new platformClient.UsersApi();
             var notificationsApi = new platformClient.NotificationsApi();
 			var appParams = null;
+			var topicName = "";
 			
 			// Perform Implicit Grant Authentication
             client.loginImplicitGrant(clientId, redirectUri, { state: integrationQueryString })
                 .then((data) => {
                 	// User Authenticated
-                	
-                    console.log("Authenticated: " + JSON.stringify(data));
+                	console.log("Authenticated: " + JSON.stringify(data));
+					
 					appParams = parseAppParameters(data.state);
-					document.querySelector("#conversation").innerHTML = "Conversation: " + appParams.pcConversationId;
+					document.querySelector("#pcConversationId").innerHTML = appParams.pcConversationId;
+					document.querySelector("#pcEnvironment").innerHTML = appParams.pcEnvironment;
+					document.querySelector("#pcLangTag").innerHTML = appParams.pcLangTag;
 					
                     // Make request to GET /api/v2/users/me?expand=presence
                     return usersApi.getUsersMe({ 'expand': ["presence","authorization"] });
                 })
                 .then((userMe) => {
                 	// Me Response
-                	
                     document.querySelector("#welcome").innerHTML = "Welcome " + userMe.name;
-
-                    console.log(`Hello, ${userMe.name}!`);
 
                     // Create a Notifications Channel
                     return notificationsApi.postNotificationsChannels();
@@ -201,8 +171,10 @@
                     var socket = new WebSocket(channel.connectUri);
                     socket.onmessage = onSocketMessage;
 
+					topicName = `v2.users.${userMe.id}.conversations`;
+					
                     // Subscribe to conversation events in the queue.
-                    let topic = [{"id": "v2.users.1c1ca8b5-8740-481e-92f5-cf23870284bd.conversations"}];
+                    let topic = [{"id": topicName}];
                     return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
                 }).catch((err) => {
                     // Handle failure response
@@ -219,11 +191,41 @@
                 console.log("Notification: Topic = " + topic);
                 console.log("Notification: Body = " + eventBody);
 
-				if ( topic == "v2.users.1c1ca8b5-8740-481e-92f5-cf23870284bd.conversations" ) {
+				if ( topic == topicName ) {
 	                // Do something here
 	            }
             };
         });
+        
+        function parseAppParameters(queryString) {
+			console.log("Interaction App Query String: " + queryString);
+
+			let appParams = {
+								pcEnv: null,
+								pcLangTag: null,
+								pcConversationId: null
+							};
+
+		
+			if ( queryString.length != 0 ) {
+				const pairs = queryString.split('&');
+		
+				for (var i = 0; i < pairs.length; i++)
+				{
+					var currParam = pairs[i].split('=');
+
+					if(currParam[0] === 'pcLangTag') {
+						appParams.pcLangTag = currParam[1];
+					} else if(currParam[0] === 'pcEnvironment') {
+						appParams.pcEnv = currParam[1];
+					} else if(currParam[0] === 'pcConversationId') {
+						appParams.pcConversationId = currParam[1];
+					}
+				}
+			}
+		
+			return appParams;
+		}
     </script>    
 </body>
 </html>
