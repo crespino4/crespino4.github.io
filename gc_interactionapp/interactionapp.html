@@ -16,7 +16,7 @@
 <body>
 	<h1 id="title" width="100%" align="center">Interaction App</h1>
 	<h2 id="welcome" width="100%" align="center">Welcome</h2>
-
+	<h2 id="conversation" width="100%" align="center">Conversation:</h2>
 	<script>
 	
 	function parseAppParameters(queryString) {
@@ -171,14 +171,16 @@
             // API instances
             var usersApi = new platformClient.UsersApi();
             var notificationsApi = new platformClient.NotificationsApi();
-
+			var appParams = null;
+			
 			// Perform Implicit Grant Authentication
             client.loginImplicitGrant(clientId, redirectUri, { state: integrationQueryString })
                 .then((data) => {
                 	// User Authenticated
                 	
                     console.log("Authenticated: " + JSON.stringify(data));
-					var x = parseAppParameters(data.state);
+					appParams = parseAppParameters(data.state);
+					document.querySelector("#conversation").innerHTML = "Conversation: " + appData.pcConversationId;
 					
                     // Make request to GET /api/v2/users/me?expand=presence
                     return usersApi.getUsersMe({ 'expand': ["presence","authorization"] });
