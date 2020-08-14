@@ -18,14 +18,16 @@
 	<h2 id="welcome" width="100%" align="center">Welcome</h2>
 
 	<script>
+	
+	function parseAppParameters(queryString) {
+	    console.log("Interaction App Query String: " + queryString);
+
 		let appParams = {
 							pcEnv: null,
 							langTag: null,
 							pcConversationId: null
 						};
 
-	    const queryString = window.location.search.substring(1);
-	    console.log("Interaction App Query String: " + queryString);
 	    
 	    if ( queryString.length != 0 ) {
 			const pairs = queryString.split('&');
@@ -42,15 +44,10 @@
 					appParams.pcConversationId = currParam[1];
 				}
 			}
-	
-			localStorage.setItem("InteractionApp", JSON.stringify(appParams));			
-		} else {
-			appParamsStr = localStorage.getItem("InteractionApp");
-			if ( appParamsStr !== null ) {
-				appParams = JSON.parse(appParamsStr);
-			}
 		}
-
+		
+		return appParams;
+	}
 	</script>
 	
     <script>
@@ -167,19 +164,22 @@
             var client = platformClient.ApiClient.instance;
             var clientId = 'b457d6c8-feb8-40f7-aff4-94d9cba953b5';
             var redirectUri = 'https://crespino4.github.io/gc_interactionapp/interactionapp.html';
-            var state = appParams.pcConversationId;
+            
+            //var state = appParams.pcConversationId;
+            const integrationQueryString = window.location.search.substring(1);
             
             // API instances
             var usersApi = new platformClient.UsersApi();
             var notificationsApi = new platformClient.NotificationsApi();
 
 			// Perform Implicit Grant Authentication
-            client.loginImplicitGrant(clientId, redirectUri, { state: state })
+            client.loginImplicitGrant(clientId, redirectUri, { state: integrationQueryString })
                 .then((data) => {
                 	// User Authenticated
                 	
                     console.log("Authenticated: " + JSON.stringify(data));
-
+					var x = parseAppParameters(data.state);
+					
                     // Make request to GET /api/v2/users/me?expand=presence
                     return usersApi.getUsersMe({ 'expand': ["presence","authorization"] });
                 })
