@@ -69,6 +69,89 @@
 						pcEnvironment: appParams.pcEnvironment
 					});
 
+					// 
+					// Bootstrap Listener
+					//
+					myClientApp.lifecycle.addBootstrapListener(() => {
+						logLifecycleEvent('App Lifecycle Event: bootstrap', true);
+
+						// Simulating bootstrap delay of 500ms
+						window.setTimeout(() => {
+							myClientApp.lifecycle.bootstrapped();
+
+							myClientApp.alerting.showToastPopup(
+								lifecycleStatusMessageTitle,
+								'Bootstrap Complete (500ms delay)', {
+									id: lifecycleStatusMessageId,
+									type: 'success'
+								}
+							);
+
+							logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
+						}, 500);
+					});
+
+					//
+					// Focus Listener
+					//
+					function onAppFocus () {
+						logLifecycleEvent('App Lifecycle Event: focus', true);
+
+						myClientApp.alerting.showToastPopup(
+							lifecycleStatusMessageTitle,
+							'App Focused', {
+								id: lifecycleStatusMessageId
+							}
+						);
+					}
+					myClientApp.lifecycle.addFocusListener(onAppFocus);
+
+					//
+					// Blur Listener
+					//
+					function onAppBlur () {
+						logLifecycleEvent('App Lifecycle Event: blur', true);
+
+						myClientApp.alerting.showToastPopup(
+							lifecycleStatusMessageTitle,
+							'App Blurred', {
+								id: lifecycleStatusMessageId
+							}
+						);
+
+						myClientApp.alerting.setAttentionCount(++blurCount);
+					}
+					myClientApp.lifecycle.addBlurListener(onAppBlur);
+
+					//
+					// Stop Listener
+					//
+					myClientApp.lifecycle.addStopListener(() => {
+						logLifecycleEvent('App Lifecycle Event: stop', true);
+
+						// Clean up other, persistent listeners
+						myClientApp.lifecycle.removeFocusListener(onAppFocus);
+						myClientApp.lifecycle.removeBlurListener(onAppBlur);
+
+						// Simulating delay of 500ms
+						window.setTimeout(() => {
+							myClientApp.lifecycle.stopped();
+
+							myClientApp.alerting.showToastPopup(
+								lifecycleStatusMessageTitle,
+								'App Stopped (500ms delay)', {
+									id: lifecycleStatusMessageId,
+									type: 'error',
+									showCloseButton: true
+								}
+							);
+
+							logLifecycleEvent('Notified PC of Successful App Stop', false);
+						}, 500);
+					});
+
+            		client.setEnvironment(appParams.pcEnvironment);
+            	
 					// Log the PureCloud environment (i.e. AWS Region)
 					console.log("PureCloud API Client Environment: " + client.pcEnvironment);
 					console.log("PureCloud ClientApp Environment: " + myClientApp.pcEnvironment);
@@ -114,87 +197,6 @@
 	            }
             };
             
-			// 
-			// Bootstrap Listener
-			//
-            myClientApp.lifecycle.addBootstrapListener(() => {
-                logLifecycleEvent('App Lifecycle Event: bootstrap', true);
-
-                // Simulating bootstrap delay of 500ms
-                window.setTimeout(() => {
-                    myClientApp.lifecycle.bootstrapped();
-
-                    myClientApp.alerting.showToastPopup(
-                        lifecycleStatusMessageTitle,
-                        'Bootstrap Complete (500ms delay)', {
-                            id: lifecycleStatusMessageId,
-                            type: 'success'
-                        }
-                    );
-
-                    logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
-                }, 500);
-            });
-
-			//
-			// Focus Listener
-			//
-            function onAppFocus () {
-                logLifecycleEvent('App Lifecycle Event: focus', true);
-
-                myClientApp.alerting.showToastPopup(
-                    lifecycleStatusMessageTitle,
-                    'App Focused', {
-                        id: lifecycleStatusMessageId
-                    }
-                );
-            }
-            myClientApp.lifecycle.addFocusListener(onAppFocus);
-
-			//
-			// Blur Listener
-			//
-            function onAppBlur () {
-                logLifecycleEvent('App Lifecycle Event: blur', true);
-
-                myClientApp.alerting.showToastPopup(
-                    lifecycleStatusMessageTitle,
-                    'App Blurred', {
-                        id: lifecycleStatusMessageId
-                    }
-                );
-
-                myClientApp.alerting.setAttentionCount(++blurCount);
-            }
-            myClientApp.lifecycle.addBlurListener(onAppBlur);
-
-			//
-			// Stop Listener
-			//
-            myClientApp.lifecycle.addStopListener(() => {
-                logLifecycleEvent('App Lifecycle Event: stop', true);
-
-                // Clean up other, persistent listeners
-                myClientApp.lifecycle.removeFocusListener(onAppFocus);
-                myClientApp.lifecycle.removeBlurListener(onAppBlur);
-
-                // Simulating delay of 500ms
-                window.setTimeout(() => {
-                    myClientApp.lifecycle.stopped();
-
-                    myClientApp.alerting.showToastPopup(
-                        lifecycleStatusMessageTitle,
-                        'App Stopped (500ms delay)', {
-                            id: lifecycleStatusMessageId,
-                            type: 'error',
-                            showCloseButton: true
-                        }
-                    );
-
-                    logLifecycleEvent('Notified PC of Successful App Stop', false);
-                }, 500);
-            });
-
             function logLifecycleEvent(logText, incommingEvent) {
                 console.log(logText)
             };
