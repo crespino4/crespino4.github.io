@@ -43,9 +43,12 @@
 				}
 			}
 	
-			localStorage.setItem("InteractionApp", appParams);			
+			localStorage.setItem("InteractionApp", JSON.stringify(appParams));			
 		} else {
-			appParams = localStorage.getItem("InteractionApp");
+			appParamsStr = localStorage.getItem("InteractionApp");
+			if ( appParamsStr !== null ) {
+				appParams = JSON.parse(appParamsStr);
+			}
 		}
 
 	</script>
