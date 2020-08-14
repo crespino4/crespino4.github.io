@@ -131,17 +131,27 @@
 
             // PureCloud OAuth information
             var platformClient = require('platformClient');
-            var client = platformClient.ApiClient.instance;
+            var client = null;
             var clientId = 'b457d6c8-feb8-40f7-aff4-94d9cba953b5';
             var redirectUri = 'https://crespino4.github.io/gc_interactionapp/interactionapp.html';
             
             //var state = appParams.pcConversationId;
             const integrationQueryString = window.location.search.substring(1);
+			var appParams = parseAppParameters(integrationQueryString);
+            if ( appParams.pcEnvironment !== null) {
+            	console.log("Restoring platform client instance");
+            	client = platformClient.ApiClient.instance;
+            	console.log("Restored platform client for region: " + client.pcEnvironment);
+            } else {
+            	console.log("Initializing platform client for region: " + appParams.pcEnvironment);
+            	client = new platformClient({
+					pcEnvironmentQueryParam: appParams.pcEnvironment
+				});
+            }
             
             // API instances
             var usersApi = new platformClient.UsersApi();
             var notificationsApi = new platformClient.NotificationsApi();
-			var appParams = null;
 			var topicName = "";
 			
 			// Perform Implicit Grant Authentication
