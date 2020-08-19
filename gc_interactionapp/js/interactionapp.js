@@ -74,7 +74,7 @@ myClientApp.lifecycle.addBootstrapListener(() => {
         })
         .then((userMe) => {
             // Me Response
-            document.querySelector("#welcome").innerHTML = "Welcome " + userMe.name;
+            document.querySelector("#username").innerHTML = userMe.username;
 
             me = userMe;
 
@@ -183,8 +183,9 @@ function onSocketMessage(event){
     let topic = data.topicName;
     let eventBody = data.eventBody;
 
-    if ( topic == topicName ) {
-        // Do something here
+    if ( topic === topicName && eventBody.id === appParams.pcConversationId ) {
+        console.log("Received an event for a Conversation ID that is recognized");
+        document.querySelector("#conversationEvent").innerHTML = JSON.stringify(eventBody);
     }
 };
 
@@ -212,6 +213,7 @@ function parseAppParameters(queryString) {
             } else if (currParam[0] === 'pcConversationId') {
                 appParams.pcConversationId = currParam[1];
             } else if (currParam[0] === 'state') {
+                console.log("Found 'state' query parameter from implicit grant redirect");
                 appParams = parseAppParameters(decodeURIComponent(currParam[1]));
             }
         }
