@@ -186,9 +186,6 @@ function onSocketMessage(event){
     let topic = data.topicName;
     let eventBody = data.eventBody;
 
-    console.log("Notification: Topic = " + topic);
-    console.log("Notification: Body = " + eventBody);
-
     if ( topic == topicName ) {
         // Do something here
     }
