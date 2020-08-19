@@ -185,7 +185,7 @@ function onSocketMessage(event){
 
     if ( topic === topicName && eventBody.id === appParams.pcConversationId ) {
         console.log("Received an event for a Conversation ID that is recognized");
-        document.querySelector("#conversationEvent").innerHTML = JSON.stringify(eventBody);
+        document.querySelector("#conversationEvent").innerHTML = JSON.stringify(eventBody, null, 3);
     }
 };
 
