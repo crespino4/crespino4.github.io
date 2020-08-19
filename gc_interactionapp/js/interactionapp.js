@@ -74,9 +74,9 @@ myClientApp.lifecycle.addBootstrapListener(() => {
         })
         .then((userMe) => {
             // Me Response
-            document.querySelector("#username").innerHTML = userMe.username;
-
             me = userMe;
+
+            document.querySelector("#username").innerHTML = me.username;
 
             // Create a Notifications Channel
             return notificationsApi.postNotificationsChannels();
