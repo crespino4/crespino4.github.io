@@ -13,6 +13,7 @@ client.setPersistSettings(true, 'InteractionApp');
 // Specific Platform API Instances
 const usersApi = new platformClient.UsersApi();
 const notificationsApi = new platformClient.NotificationsApi();
+const conversationsApi = new platformClient.ConversationsApi();
 
 var lifecycleStatusMessageTitle = 'Interaction App - Lifecycle Demo';
 var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
@@ -81,21 +82,25 @@ myClientApp.lifecycle.addBootstrapListener(() => {
             // Create a Notifications Channel
             return notificationsApi.postNotificationsChannels();
         }).then((channel) => {
-        // Channel Created
+            // Channel Created
 
-        // Setup WebSocket on Channel
-        socket = new WebSocket(channel.connectUri);
-        socket.onmessage = onSocketMessage;
+            // Setup WebSocket on Channel
+            socket = new WebSocket(channel.connectUri);
+            socket.onmessage = onSocketMessage;
 
-        topicName = `v2.users.${me.id}.conversations`;
+            topicName = `v2.users.${me.id}.conversations`;
 
-        // Subscribe to conversation events in the queue.
-        let topic = [{"id": topicName}];
-        return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
-    }).catch((err) => {
-        // Handle failure response
-        console.log(err);
-    });
+            // Subscribe to conversation events in the queue.
+            let topic = [{"id": topicName}];
+            return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
+        }).then( () => {
+            return conversationsApi.getConversation(appParams.pcConversationId);
+        }).then((data) => {
+            document.querySelector("#conversationEvent").innerHTML = JSON.stringify(data, null, 3);
+        }).catch((err) => {
+            // Handle failure response
+            console.log(err);
+        });
 
     // Simulating bootstrap delay of 500ms
     window.setTimeout(() => {
