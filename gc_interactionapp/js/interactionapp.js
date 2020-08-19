@@ -49,9 +49,6 @@ console.log("PureCloud ClientApp Environment: " + myClientApp.pcEnvironment);
 console.log("PureCloud ClientApp Version: " + window.purecloud.apps.ClientApp.version);
 console.log("PureCloud ClientApp About: " + window.purecloud.apps.ClientApp.about());
 
-// Obtain the query string paramters from the 'state' parameter and parse
-// the values out and display them in the UI just for confirmation.
-appParams = parseAppParameters(data.state);
 document.querySelector("#pcConversationId").innerHTML = appParams.pcConversationId;
 document.querySelector("#pcEnvironment").innerHTML = appParams.pcEnvironment;
 document.querySelector("#pcLangTag").innerHTML = appParams.pcLangTag;
