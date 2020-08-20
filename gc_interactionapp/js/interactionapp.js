@@ -223,7 +223,7 @@ function parseAppParameters(queryString) {
                 console.log("state = " + stateValue);
                 var stateValueDecoded = decodeURIComponent(stateValue);
                 console.log("decoded state = " + stateValueDecoded);
-                appParams = parseAppParameters(stateValueDecoded);
+                appParams = parseAppParameters(decodeURIComponent(stateValueDecoded));
             }
         }
     }
