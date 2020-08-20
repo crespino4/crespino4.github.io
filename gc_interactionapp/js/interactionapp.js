@@ -94,8 +94,10 @@ myClientApp.lifecycle.addBootstrapListener(() => {
             let topic = [{"id": topicName}];
             return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
         }).then( () => {
+            console.log("Getting initial conversation details for conversation ID: " + appParams.pcConversationId);
             return conversationsApi.getConversation(appParams.pcConversationId);
         }).then((data) => {
+            console.log("Conversation details for " + appParams.pcConversationId + ": " + JSON.stringify(data));
             document.querySelector("#conversationEvent").innerHTML = JSON.stringify(data, null, 3);
         }).catch((err) => {
             // Handle failure response
