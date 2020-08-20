@@ -66,9 +66,20 @@ myClientApp.lifecycle.addBootstrapListener(() => {
     //       to us after the implicit grant redirect.
     client.loginImplicitGrant(clientId, redirectUri, { state: integrationQueryString })
         .then((data) => {
-
             // User Authenticated
             console.log("User Authenticated: " + JSON.stringify(data));
+
+            myClientApp.lifecycle.bootstrapped();
+
+            myClientApp.alerting.showToastPopup(
+                lifecycleStatusMessageTitle,
+                'Bootstrap Complete (500ms delay)', {
+                    id: lifecycleStatusMessageId,
+                    type: 'success'
+                }
+            );
+
+            logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
 
             // Make request to GET /api/v2/users/me?expand=presence
             return usersApi.getUsersMe({ 'expand': ["presence","authorization"] });
@@ -103,21 +114,6 @@ myClientApp.lifecycle.addBootstrapListener(() => {
             // Handle failure response
             console.log(err);
         });
-
-    // Simulating bootstrap delay of 500ms
-    window.setTimeout(() => {
-        myClientApp.lifecycle.bootstrapped();
-
-        myClientApp.alerting.showToastPopup(
-            lifecycleStatusMessageTitle,
-            'Bootstrap Complete (500ms delay)', {
-                id: lifecycleStatusMessageId,
-                type: 'success'
-            }
-        );
-
-        logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
-    }, 500);
 });
 
 //
