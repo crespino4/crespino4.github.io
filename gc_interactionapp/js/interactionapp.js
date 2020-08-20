@@ -219,7 +219,7 @@ function parseAppParameters(queryString) {
                 appParams.pcConversationId = currParam[1];
             } else if (currParam[0] === 'state') {
                 console.log("Found 'state' query parameter from implicit grant redirect");
-                appParams = parseAppParameters(decodeURIComponent(currParam[1]));
+                appParams = parseAppParameters(decodeURIComponent(currParam[1].replace(/\+/g, ' ')));
             }
         }
     }
