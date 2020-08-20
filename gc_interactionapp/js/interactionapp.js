@@ -55,14 +55,14 @@ document.querySelector("#pcEnvironment").innerHTML = appParams.pcEnvironment;
 document.querySelector("#pcLangTag").innerHTML = appParams.pcLangTag;
 
 if ( window.location.hash.length !== 0 ) {
-    bootstrap();
+    initializeApplication();
 }
 //
 // Bootstrap Listener
 //
 myClientApp.lifecycle.addBootstrapListener(() => {
     logLifecycleEvent('App Lifecycle Event: bootstrap', true);
-    bootstrap();
+    initializeApplication();
 });
 
 //
@@ -141,9 +141,9 @@ function onSocketMessage(event){
     }
 };
 
-function bootstrap() {
+function initializeApplication() {
     console.log("Performing application bootstrapping");
-    
+
     // Perform Implicit Grant Authentication
     //
     // Note: Pass the query string parameters in the 'state' parameter so that they are returned
@@ -152,18 +152,6 @@ function bootstrap() {
         .then((data) => {
             // User Authenticated
             console.log("User Authenticated: " + JSON.stringify(data));
-
-            myClientApp.lifecycle.bootstrapped();
-
-            myClientApp.alerting.showToastPopup(
-                lifecycleStatusMessageTitle,
-                'Bootstrap Complete (500ms delay)', {
-                    id: lifecycleStatusMessageId,
-                    type: 'success'
-                }
-            );
-
-            logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
 
             // Make request to GET /api/v2/users/me?expand=presence
             return usersApi.getUsersMe({ 'expand': ["presence","authorization"] });
@@ -194,6 +182,18 @@ function bootstrap() {
     }).then((data) => {
         console.log("Conversation details for " + appParams.pcConversationId + ": " + JSON.stringify(data));
         document.querySelector("#conversationEvent").innerHTML = JSON.stringify(data, null, 3);
+
+        myClientApp.lifecycle.bootstrapped();
+
+        myClientApp.alerting.showToastPopup(
+            lifecycleStatusMessageTitle,
+            'Bootstrap Complete (500ms delay)', {
+                id: lifecycleStatusMessageId,
+                type: 'success'
+            }
+        );
+
+        logLifecycleEvent('Notified PC of Successful App Bootstrap', false);
     }).catch((err) => {
         // Handle failure response
         console.log(err);
