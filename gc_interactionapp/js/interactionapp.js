@@ -142,6 +142,8 @@ function onSocketMessage(event){
 };
 
 function bootstrap() {
+    console.log("Performing application bootstrapping");
+    
     // Perform Implicit Grant Authentication
     //
     // Note: Pass the query string parameters in the 'state' parameter so that they are returned
