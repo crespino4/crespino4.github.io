@@ -644,7 +644,7 @@ class WizardApp {
             // Use default PureCloud region
             pcEnv = appConfig.defaultPcEnv;
         }
-        this.pcApp = new global.purecloud.apps.ClientApp({ pcEnvironment: pcEnv });
+        this.pcApp = new window.purecloud.apps.ClientApp({ pcEnvironment: pcEnv });
 
 
         if (langTag) {
