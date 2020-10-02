@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Finish</title>
+
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' async type='text/css'>
+    <link rel="stylesheet" href="./style.css">
+
+    <script src="https://sdk-cdn.mypurecloud.com/javascript/92.0.0/purecloud-platform-client-v2.min.js"></script>
+    <script
+        src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk-ed1f20f5244ee2bb9cc242f669369639.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+    <script src="./scripts/util.js"></script>
+
+</head>
+
+<body>
+    <div id="background"></div>
+    <!-- <canvas id="bubbly-layer" style="position: fixed; top:0; left:0; z-index: -5; "></canvas> -->
+
+    <noscript>
+        For full functionality of this site it is necessary to enable JavaScript. Here are the <a
+            href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web
+            browser</a>.
+    </noscript>
+
+    <canvas id="bubbly-layer" style="position: fixed; top:0; left:0; z-index: -5; "></canvas>
+
+    <div class="content">
+        <header>
+            <p>Premium App /&nbsp; Summary</p>
+        </header>
+
+        <div class="title">
+            Done
+        </div>
+
+        <ul class="progress-bar">
+            <li class="active">
+                <span class="txt-start">Start</span>
+            </li>
+            <li class="active">
+                <span class="txt-install">Install</span>
+            </li>
+            <li class="active current">
+                <span class="txt-summary">Summary</span>
+            </li>
+        </ul>
+        <main>
+            <p class="success">
+            <div class="txt-finish-install">
+                Please wait while we take you to the application.
+            </div>
+            <div id="loading" style="margin-top: 30px; text-align: center;">
+                <i class="fa fa-spinner fa-spin" style="font-size:70px; color: #1997CA;"></i>
+            </div>
+            </p>
+            <!-- <button class="btn-info" onclick="goToPage('index')">
+                <span class="txt-back">Back</span>
+            </button> -->
+        </main>
+    </div>
+    <footer>
+        <img src="logo.png" alt="Logo">
+    </footer>
+
+    <script type="module">
+        import WizardApp from './scripts/wizard-app.js';
+        import SuccessKpiApp from './scripts/successkpi-app.js';
+        let registrationObj = new Object();
+        // Initiate the App
+        let myApp = new WizardApp();
+        let successKpiApp = new SuccessKpiApp();
+        myApp.start()
+            .then((exists) => {
+                return myApp.getUserDetails()
+            }).then((user) => {
+                registrationObj.userId = user.id;
+                registrationObj.userName = user.name;
+                registrationObj.userDivisionId = user.division.id;
+                registrationObj.userEmail = user.email;
+                return myApp.getExistingAuthClients1()
+            }).then((data) => {
+                return myApp.getExistingOAuthClient1(data[0].id);
+            }).then((oAuthInfo) => {
+                registrationObj.clientId = oAuthInfo.id;
+                registrationObj.clientSecret = oAuthInfo.secret;
+                registrationObj.clientName = oAuthInfo.name;
+                console.log('registrationObj', JSON.stringify(registrationObj))
+                return myApp.getExistingGroups();
+            }).then((group) => {
+                registrationObj.group = group.results;
+                return myApp.getOrganization()
+            }).then((org) => {
+                registrationObj.orgId = org.id;
+                registrationObj.orgName = org.name;
+                window.localStorage.setItem("email", registrationObj.userEmail)
+                let setObj = { ...registrationObj }
+                delete setObj.group
+                window.localStorage.setItem("g_obj", JSON.stringify(setObj))
+                successKpiApp.regitsrationToSuccessKPI(JSON.stringify(registrationObj))
+
+            })
+
+    </script>
+    <script>
+        $(document).ready(() => {
+            setTimeout(() => {
+                goToPage('../../index');
+            }, 12500);
+        });
+    </script>
+    <!-- <script src="./scripts/bubbles.js"></script> -->
+</body>
+
+</html>

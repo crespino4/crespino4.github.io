@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SuccessKPI Conversation Analytics</title>
+
+    <link href='//fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' async type='text/css'>
+    <link rel="stylesheet" href="./style.css">
+
+    <script src="https://sdk-cdn.mypurecloud.com/javascript/92.0.0/purecloud-platform-client-v2.min.js"></script>
+    <script
+        src="https://sdk-cdn.mypurecloud.com/client-apps/1.4.0/purecloud-client-app-sdk-ed1f20f5244ee2bb9cc242f669369639.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+    <script src="./scripts/util.js"></script>
+    <style>
+        .txt-greeting-ig {
+            font-family: "Times New Roman", Times, serif;
+            color: #4B4B4B;
+        }
+
+        .txt-greeting-2-ig {
+            font-family: "Times New Roman", Times, serif;
+            color: #4B4B4B;
+        }
+
+        .txt-greeting-2-lt {
+            font-family: "Times New Roman", Times, serif;
+            color: #4B4B4B;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="background"></div>
+    <!-- <canvas id="bubbly-layer" style="position: fixed; top:0; left:0; z-index: -5; "></canvas> -->
+
+    <noscript>
+        For full functionality of this site it is necessary to enable JavaScript. Here are the <a
+            href="http://www.enable-javascript.com/" target="_blank">instructions how to enable JavaScript in your web
+            browser</a>.
+    </noscript>
+
+    <header>
+        <p>Premium App /&nbsp; SuccessKPI Conversation Analytics</p>
+    </header>
+
+    <div class="content">
+        <div id="loading" style="margin-top: 30px; text-align: center;">
+            <i class="fa fa-spinner fa-spin" style="font-size:70px"></i>
+        </div>
+
+        <div class="hidden title">
+            <span class="txt-greeting-ig">
+                Hi
+            </span>
+            <span id="username"></span>!
+            <div class="txt-greeting-2-lt">
+                Welcome to the SuccessKPI Conversation Analytics Installation
+            </div>
+        </div>
+
+        <ul class="hidden progress-bar">
+            <li class="active current">
+                <span class="txt-start">Start</span>
+            </li>
+            <li class="">
+                <span class="txt-install">Install</span>
+            </li>
+            <li class="">
+                <span class="txt-summary">Summary</span>
+            </li>
+        </ul>
+
+        <main class="hidden">
+            <div id="available" class="hidden">
+                <p class="success">
+                    <span class="txt-product-available">Product Available</span> <i
+                        class="fas fa-check-circle enlarge"></i>
+                </p>
+                <p>
+                    <span class="txt-available-message">We're ready to set you up. Please click the Start button.</span>
+                </p>
+                <button id="next" onclick="goToPage('./install')" class="btn-info right">
+                    <span class="txt-start">Start</span> <i class="button-icon fas fa-chevron-right"></i></button>
+            </div>
+
+            <div id="unavailable" class="hidden">
+                <p class="fail">
+                    <span class="txt-product-not-available">Product not avaiable.</span> <i
+                        class="fas fa-times-circle enlarge"></i>
+                </p>
+                <p>
+                    <span class="txt-not-available-message">
+                        We're sorry but your PureCloud org does not have the SuccessKPI Product enabled.
+                        Please contact the authorities.
+                    </span>
+                </p>
+            </div>
+        </main>
+    </div>
+    <footer>
+        <img src="logo.png" alt="Logo">
+    </footer>
+
+    <!-- Client Instances and PureCloud API will be encapsulated in the wizardApp module -->
+    <script type="module">
+        import WizardApp from './scripts/wizard-app.js';
+        import SuccessKpiApp from './scripts/successkpi-app.js';
+        let registrationObj = new Object();
+        let successKpiApp = new SuccessKpiApp();
+        let meGroup = null;
+
+        // Initiate the App
+        let myApp = new WizardApp();
+        myApp.start()
+
+
+            // Check Product Availability and display appropriate message
+            .then(() => {
+                return myApp.validateProductAvailability();
+            })
+            .then((isAvailable) => {
+                // alert(isAvailable)
+                if (isAvailable) {
+                    $("#available").removeClass("hidden");
+                    console.log('available')
+                } else {
+                    $("#unavailable").removeClass("hidden");
+                    console.log('unavailable')
+                }
+                return myApp.getUserDetails();
+
+            }).then((user) => {
+                // alert(JSON.stringify(user))
+                registrationObj.userId = user.id;
+                registrationObj.userName = user.name;
+                registrationObj.userDivisionId = user.division.id;
+                registrationObj.userEmail = user.email;
+                if (user.groups.length > 0) {
+                    meGroup = user.groups[0]['id']
+                }
+                // if (email == null && typeof (user) == 'object') {
+                //   localStorage.setItem("email", user.email)
+                //}
+                // Check if there is an existing installation and redirect to manage.html if so
+                return myApp.getExistingGroups();
+
+            }).then((group) => {
+                //  console.log('group.results', group)
+                if (typeof (group.results) != 'undefined' && group.results != null)
+                    registrationObj.group = group.results.slice(0, 2);
+                else
+                    registrationObj.group = [];
+                return myApp.getOrganization()
+            }).then((org) => {
+                registrationObj.orgId = org.id;
+                registrationObj.orgName = org.name;
+                return successKpiApp.logout();
+            }).then((logout) => {
+                console.log('logout', logout)
+                return myApp.isExisting();
+            }).
+            then((exists) => {
+                console.log('exists', exists)
+                if (exists) {
+                    window.localStorage.setItem("email", registrationObj.userEmail)
+                    delete registrationObj.group;
+                    window.localStorage.setItem("g_obj", JSON.stringify(registrationObj))
+                    window.localStorage.setItem("_gid", meGroup)
+                    goToPage('../../index');
+                } else {
+                    localStorage.removeItem('userToken');
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('mstrIdToken');
+                    localStorage.removeItem('mstrAuthToken');
+                    localStorage.removeItem("language");
+                    localStorage.removeItem("_&rp&");
+                    localStorage.removeItem("_&gr&");
+                    // Get the user information to display on the screen
+                    return myApp.getUserDetails();
+                }
+            }).then((user) => {
+                if (user) {
+                    // Display welcome message after everything has been loaded
+                    $("main").removeClass("hidden");
+                    $(".progress-bar").removeClass("hidden");
+                    $("#loading").addClass("hidden");
+                    $(".title").removeClass("hidden");
+                    $("#username").text(user.name);
+                }
+            })
+
+            .catch((e) => console.log(e));
+    </script>
+
+    <!-- <script src="./scripts/bubbles.js"></script> -->
+</body>
+
+</html>
