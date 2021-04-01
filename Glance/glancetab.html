@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>WWE Glance Integration Tab</title>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+		<!-- JQuery 2.x from CDN -->
+<!-- 		<script src="jquery-2.1.4.min.js"></script> -->
+		
+		<!-- Bootstrap 3.x from CDN -->
+<!-- 		<link rel="stylesheet" href="bootstrap.min.css"> -->
+<!-- 		<link rel="stylesheet" href="bootstrap-theme.min.css"> -->
+<!-- 		<script src="bootstrap.min.js"></script> -->
+		
+			
+		<!-- JQuery 2.x from CDN -->
+		<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+		
+		<!-- Bootstrap 3.x from CDN -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+		<!-- Genesys WWE Service Client API -->
+		<script src="wwe-service-client-api.js"></script>
+
+		<script>
+	
+			function launchCobrowseWindow() {
+				var sessionId = $("#cobrowseSessionId").val();
+
+				if ( sessionId == undefined || sessionId == "" ) {
+					alert("Please enter a session id to join a cobrowse session");
+					return;
+				}
+				
+				var url = "https://www.glance.net/cobrowse/AgentView.aspx?SessionKey=" + sessionId + "&wait=1";
+				window.open(url);
+			}
+			
+			$(document).ready(function(){
+				$("#cobrowseBtn").click(launchCobrowseWindow);
+			});							
+		</script>
+	</head>
+	<body>
+		<div class="container-fluid">
+			
+			<div class="row" style="border-bottom: 1px solid #ccc">
+				<div class="col-sm-12">
+					<div class="pull-left"><strong>Glance</strong></div>
+					<div class="pull-right"><img src="G2_logo.png" style="height:28px; width:28px"/></div>
+					<hr/>
+				</div>
+			</div>
+			<div class="row">
+				&nbsp;
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<form class="form-inline">
+						<div class="form-group">
+							<label class="sr-only" for="cobrowseSessionId">Co-browse Session Id</label>
+							<input type="text" class="form-control" id="cobrowseSessionId" placeholder="Session Id">
+						</div>
+						<button type="button" class="btn btn-primary" id="cobrowseBtn">Cobrowse</button>
+<!--
+						<button type="button" class="btn btn-primary">Show</button>
+						<button type="button" class="btn btn-primary">View</button>
+-->
+					</form>
+				</div>
+			</div>
+														
+		</div>
+	</body>
+</html>
