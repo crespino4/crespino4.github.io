@@ -1,0 +1,40 @@
+{
+  "chatBots": [
+    {
+      "id": "1111A",
+      "name": "CookieOrderBotLexStyle",
+      "versions": [
+        {
+          "version": "Delta",
+          "supportedLanguages": [
+            "en-us",
+            "es"
+          ],
+          "intents": [
+            {
+              "name": "OrderCookie",
+              "slots": {
+                "typeCookie": {
+                  "name": "typeCookie",
+                  "type": "string"
+                },
+                "numCookies": {
+                  "name": "numCookies",
+                  "type": "integer"
+                },
+                "deliveryDay": {
+                  "name": "deliveryDay",
+                  "type": "datetime"
+                },
+                "deliveryTime": {
+                  "name": "deliveryTime",
+                  "type": "datetime"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
