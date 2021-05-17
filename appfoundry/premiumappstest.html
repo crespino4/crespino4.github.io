@@ -80,6 +80,7 @@
         $(document).ready(function() {
             $("#applicationSort").click(sortApplicationsByNameAsc);
             $("#vendorSort").click(sortApplicationsByVendorAsc);
+            $("#createDateSort").click(sortApplicationsByCreateDateAsc);
             $("#applyFilter").click(applyFilter);
             getAppList(1);
         });
@@ -111,6 +112,14 @@
                 if ( filters.chkFreeTrial != undefined && (application.purchaseTypes == undefined || !application.purchaseTypes.includes('FreeTrial')))
                     add = false;
 
+                if ( application.metadata == undefined ) {
+                    application.metadata = {};
+                }
+
+                if ( application.metadata.dateCreated == undefined ) {
+                    application.metadata.dateCreated = "undefined"
+                }
+                
                 if ( add == true )
                     filteredApplications.push(application);
             });
@@ -168,7 +177,7 @@
         function buildAppTable() {
             $("#applicationCount").html(applications.length);
 
-            var tableRow = '<tr><th scope="row">{{name.en-us}}</tn><td>{{companyName.en-us}}</td><td><a target="appfoundry" href="' + appfoundryBaseURL + '{{id}}">Listing {{id}}</a></td></tr>';
+            var tableRow = '<tr><th scope="row">{{name.en-us}}</tn><td>{{companyName.en-us}}</td><td>{{metadata.dateCreated}}</td><td><a target="appfoundry" href="' + appfoundryBaseURL + '{{id}}">Listing {{id}}</a></td></tr>';
             var template = Handlebars.compile(tableRow);
 
             var table = $("#appsTableBody");
@@ -184,16 +193,21 @@
             if ( sorting )
                 return;
 
-            sorting = true;
+            try {
+                sorting = true;
 
-            applications.sort(function (a, b) {
-                var x = a["name"]["en-us"].toUpperCase(); var y = b["name"]["en-us"].toUpperCase();
-                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-            });
+                applications.sort(function (a, b) {
+                    var x = a["name"]["en-us"].toUpperCase();
+                    var y = b["name"]["en-us"].toUpperCase();
+                    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                });
 
-            buildAppTable();
-            $("#applicationSort").off('click');
-            $("#applicationSort").click(sortApplicationsByNameDesc);
+                buildAppTable();
+                $("#applicationSort").off('click');
+                $("#applicationSort").click(sortApplicationsByNameDesc);
+            } catch (e) {
+                console.log("Error in sortApplicationsByNameAsc(): " + e);
+            }
 
             sorting = false;
         }
@@ -202,16 +216,20 @@
             if ( sorting )
                 return;
 
-            sorting = true;
+            try {
+                sorting = true;
 
-            applications.sort(function (a, b) {
-                var x = a["name"]["en-us"].toUpperCase(); var y = b["name"]["en-us"].toUpperCase();
-                return ((x > y) ? -1 : ((x < y) ? 1 : 0));
-            });
+                applications.sort(function (a, b) {
+                    var x = a["name"]["en-us"].toUpperCase(); var y = b["name"]["en-us"].toUpperCase();
+                    return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+                });
 
-            buildAppTable();
-            $("#applicationSort").off('click');
-            $("#applicationSort").click(sortApplicationsByNameAsc);
+                buildAppTable();
+                $("#applicationSort").off('click');
+                $("#applicationSort").click(sortApplicationsByNameAsc);
+            } catch (e) {
+                console.log("Error in sortApplicationsByNameDesc(): " + e);
+            }
 
             sorting = false;
         }
@@ -220,16 +238,20 @@
             if ( sorting )
                 return;
 
-            sorting = true;
+            try {
+                sorting = true;
 
-            applications.sort(function (a, b) {
-                var x = a["companyName"]["en-us"].toUpperCase(); var y = b["companyName"]["en-us"].toUpperCase();
-                return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-            });
+                applications.sort(function (a, b) {
+                    var x = a["companyName"]["en-us"].toUpperCase(); var y = b["companyName"]["en-us"].toUpperCase();
+                    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                });
 
-            buildAppTable();
-            $("#vendorSort").off('click');
-            $("#vendorSort").click(sortApplicationsByVendorDesc);
+                buildAppTable();
+                $("#vendorSort").off('click');
+                $("#vendorSort").click(sortApplicationsByVendorDesc);
+            } catch (e) {
+                console.log("Error in sortApplicationsByVendorAsc(): " + e);
+            }
 
             sorting = false;
         }
@@ -238,16 +260,72 @@
             if ( sorting )
                 return;
 
-            sorting = true;
+            try {
+                sorting = true;
 
-            applications.sort(function (a, b) {
-                var x = a["companyName"]["en-us"].toUpperCase(); var y = b["companyName"]["en-us"].toUpperCase();
-                return ((x > y) ? -1 : ((x < y) ? 1 : 0));
-            });
+                applications.sort(function (a, b) {
+                    var x = a["companyName"]["en-us"].toUpperCase(); var y = b["companyName"]["en-us"].toUpperCase();
+                    return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+                });
 
-            buildAppTable();
-            $("#vendorSort").off('click');
-            $("#vendorSort").click(sortApplicationsByVendorAsc);
+                buildAppTable();
+                $("#vendorSort").off('click');
+                $("#vendorSort").click(sortApplicationsByVendorAsc);
+            } catch (e) {
+                console.log("Error in sortApplicationsByVendorDesc(): " + e);
+            }
+
+            sorting = false;
+        }
+
+        function sortApplicationsByCreateDateAsc() {
+            if ( sorting )
+                return;
+
+            try {
+                sorting = true;
+
+                applications.sort(function (a, b) {
+                    if ( a["metadata"]["createDate"] === undefined ||
+                        b["metadata"]["createDate"] === undefined )
+                        return false;
+
+                    var x = a["metadata"]["dateCreated"].toUpperCase(); var y = b["metadata"]["dateCreated"].toUpperCase();
+                    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+                });
+
+                buildAppTable();
+                $("#createDateSort").off('click');
+                $("#createDateSort").click(sortApplicationsByVendorDesc);
+            } catch (e) {
+                console.log("Error in sortApplicationsByCreateDateAsc(): " + e);
+            }
+
+            sorting = false;
+        }
+
+        function sortApplicationsByCreateDateDesc() {
+            if ( sorting )
+                return;
+
+            try {
+                sorting = true;
+
+                applications.sort(function (a, b) {
+                    if ( a["metadata"]["createDate"] === undefined ||
+                         b["metadata"]["createDate"] === undefined )
+                        return true;
+
+                    var x = a["metadata"]["createDate"].toUpperCase(); var y = b["metadata"]["createDate"].toUpperCase();
+                    return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+                });
+
+                buildAppTable();
+                $("#createDateSort").off('click');
+                $("#createDateSort").click(sortApplicationsByVendorAsc);
+            } catch (e) {
+                console.log("Error in sortApplicationsByCreateDateDesc(): " + e);
+            }
 
             sorting = false;
         }
@@ -335,6 +413,7 @@
                             <tr>
                                 <th scope="col" style="color: #FFFFFF"><span id="applicationSort">Application</span></th>
                                 <th scope="col" style="color: #FFFFFF"><span id="vendorSort">Vendor</span></th>
+                                <th scope="col" style="color: #FFFFFF"><span id="createDateSort">Created Date</span></th>
                                 <th scope="col" style="color: #FFFFFF">Listing</th>
                             </tr>
                         </thead>
