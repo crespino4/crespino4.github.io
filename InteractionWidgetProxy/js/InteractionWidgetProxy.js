@@ -3,7 +3,7 @@
  */
 
 const clientId = 'b457d6c8-feb8-40f7-aff4-94d9cba953b5';
-const redirectUri = window.location.protocol + "////" + window.location.hostname + window.location.pathname;
+const redirectUri = window.location.protocol + "//" + window.location.hostname + window.location.pathname;
 const appUrl = "https://wikipedia.org"
 
 
