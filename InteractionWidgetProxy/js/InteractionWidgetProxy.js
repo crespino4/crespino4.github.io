@@ -170,17 +170,24 @@ function initializeApplication() {
                 'Bootstrap Complete', {
                     id: lifecycleStatusMessageId,
                     type: 'success'
+                }
+            );
+
+            // Look to see if a proxy.URL attribute exists in the customer participant data
+            // If so redirect to that URL
+            var customer = data.participants.find((participant) => participant.purpose === "customer")
+            if ( customer !== undefined ) {
+                var proxyUrl = customer.attributes["proxy.URL"];
+                if ( proxyUrl !== undefined ) {
+                    window.location.href = proxyUrl;
+                }
             }
 
-            // TODO: Redirect Here
-            // window.location.href = appUrl;
-        );
-
-        logLifecycleEvent('Notified Genesys Cloud of Successful App Bootstrap', false);
-    }).catch((err) => {
-        // Handle failure response
-        console.log(err);
-    });
+            logLifecycleEvent('Notified Genesys Cloud of Successful App Bootstrap', false);
+        }).catch((err) => {
+            // Handle failure response
+            console.log(err);
+        });
 }
 
 function parseAppParameters(queryString) {
