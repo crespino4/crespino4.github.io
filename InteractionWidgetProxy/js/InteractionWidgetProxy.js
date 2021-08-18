@@ -26,8 +26,10 @@ var me = null;
 //       So we have to check if we were able to parse out the environment or not.
 var integrationQueryString = "";
 if ( window.location.search.length !== 0 ) {
+    document.querySelector("#status").innerHTML = "Authenticating...";
     integrationQueryString = window.location.search.substring(1);
 } else if ( window.location.hash.length !== 0 ) {
+    document.querySelector("#status").innerHTML = "Authenticated!";
     integrationQueryString = window.location.hash.substring(1);
 }
 var appParams = parseAppParameters(integrationQueryString);
@@ -131,6 +133,8 @@ function initializeApplication() {
             // User Authenticated
             console.log("User Authenticated: " + JSON.stringify(data));
 
+            document.querySelector("#status").innerHTML = "Querying User...";
+
             // Make request to GET /api/v2/users/me?expand=presence
             return usersApi.getUsersMe({ 'expand': ["presence","authorization"] });
         })
@@ -139,6 +143,8 @@ function initializeApplication() {
             me = userMe;
 
             document.querySelector("#username").innerHTML = me.username;
+
+            document.querySelector("#status").innerHTML = "Querying Conversation...";
 
             console.log("Getting initial conversation details for conversation ID: " + appParams.pcConversationId);
             return conversationsApi.getConversation(appParams.pcConversationId);
@@ -156,6 +162,8 @@ function initializeApplication() {
                 }
             );
 
+            document.querySelector("#status").innerHTML = "Looking for Proxy URL...";
+
             // Look to see if a proxy.URL attribute exists in the customer participant data
             // If so redirect to that URL
             var customer = data.participants.find((participant) => participant.purpose === "customer")
@@ -168,6 +176,9 @@ function initializeApplication() {
 
             logLifecycleEvent('Notified Genesys Cloud of Successful App Bootstrap', false);
         }).catch((err) => {
+
+            document.querySelector("#status").innerHTML = "Error, See Console";
+
             // Handle failure response
             console.log(err);
         });
@@ -181,7 +192,6 @@ function parseAppParameters(queryString) {
         pcLangTag: null,
         pcConversationId: null
     };
-
 
     if ( queryString.length != 0 ) {
         const pairs = queryString.split('&');
