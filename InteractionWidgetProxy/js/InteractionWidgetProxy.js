@@ -1,11 +1,7 @@
 /*
  * NOTE: This sample use ES6
  */
-
-const clientId = 'b457d6c8-feb8-40f7-aff4-94d9cba953b5';
 const redirectUri = window.location.protocol + "//" + window.location.hostname + window.location.pathname;
-const appUrl = "https://wikipedia.org"
-
 
 // PureCloud Platform API
 const platformClient = require('platformClient');
@@ -53,10 +49,10 @@ console.log("PureCloud ClientApp About: " + window.purecloud.apps.ClientApp.abou
 document.querySelector("#pcConversationId").innerHTML = appParams.pcConversationId;
 document.querySelector("#pcEnvironment").innerHTML = appParams.pcEnvironment;
 document.querySelector("#pcLangTag").innerHTML = appParams.pcLangTag;
+document.querySelector("#pcClientId").innerHTML = appParams.pcClientId;
 
-//if ( window.location.hash.length !== 0 ) {
-    initializeApplication();
-//}
+initializeApplication();
+
 //
 // Bootstrap Listener
 //
@@ -123,19 +119,6 @@ function logLifecycleEvent(logText, incommingEvent) {
     console.log(logText)
 };
 
-// Handler for every Websocket message
-function onSocketMessage(event){
-    console.log("WebSocket Event Received: " + event.data);
-    let data = JSON.parse(event.data);
-    let topic = data.topicName;
-    let eventBody = data.eventBody;
-
-    if ( topic === topicName && eventBody.id === appParams.pcConversationId ) {
-        console.log("Received an event for a Conversation ID that is recognized");
-        document.querySelector("#conversationEvent").innerHTML = JSON.stringify(eventBody, null, 3);
-    }
-};
-
 function initializeApplication() {
     console.log("Performing application bootstrapping");
 
@@ -143,7 +126,7 @@ function initializeApplication() {
     //
     // Note: Pass the query string parameters in the 'state' parameter so that they are returned
     //       to us after the implicit grant redirect.
-    client.loginImplicitGrant(clientId, redirectUri, { state: integrationQueryString })
+    client.loginImplicitGrant(appParams.pcClientId, redirectUri, { state: integrationQueryString })
         .then((data) => {
             // User Authenticated
             console.log("User Authenticated: " + JSON.stringify(data));
@@ -213,6 +196,8 @@ function parseAppParameters(queryString) {
                 appParams.pcEnvironment = currParam[1];
             } else if (currParam[0] === 'pcConversationId') {
                 appParams.pcConversationId = currParam[1];
+            } else if (currParam[0] === 'pcClientId') {
+                appParams.pcClientId = currParam[1];
             } else if (currParam[0] === 'state') {
                 console.log("Found 'state' query parameter from implicit grant redirect");
                 var stateValue = currParam[1];
