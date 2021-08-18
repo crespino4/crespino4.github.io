@@ -3,7 +3,7 @@
  */
 
 const clientId = 'b457d6c8-feb8-40f7-aff4-94d9cba953b5';
-const redirectUri = 'https://crespino4.github.io/gc_interactionapp/interactionapp.html';
+const redirectUri = 'https://crespino4.github.io/InteractionWidgetProxy/InteractionWidgetProxy.html';
 const appUrl = "https://wikipedia.org"
 
 
