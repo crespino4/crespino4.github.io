@@ -105,9 +105,11 @@
             applications.forEach(function(application){
                 add = true;
 
-                if ( filters.chkPremium != undefined && (application.licensing == undefined || application.licensing.ownership != 'genesys'))
+                // If we want premium apps then licensing needs to come from Genesys
+                if ( filters.chkPremium != undefined && (application.licensing != undefined && application.licensing.ownership != 'genesys'))
                     add = false;
 
+                // If we want Core then licensing should not be Genesys
                 if ( filters.chkCore != undefined && (application.licensing == undefined || application.licensing.ownership == 'genesys'))
                     add = false;
 
