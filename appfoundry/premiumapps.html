@@ -108,6 +108,9 @@
                 if ( filters.chkPremium != undefined && (application.licensing == undefined || application.licensing.ownership != 'genesys'))
                     add = false;
 
+                if ( filters.chkCore != undefined && (application.licensing == undefined || application.licensing.ownership == 'genesys'))
+                    add = false;
+
                 if ( filters.chkFreeTrial != undefined && (application.purchaseTypes == undefined || !application.purchaseTypes.includes('FreeTrial')))
                     add = false;
 
@@ -303,6 +306,12 @@
                                     <input class="form-check-input" type="checkbox" name="chkPremium" id="chkPremium" value="checked">
                                     <label class="form-check-label" for="chkPremium">
                                         Premium
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="chkPremium" id="chkCore" value="checked">
+                                    <label class="form-check-label" for="chkCore">
+                                        Core
                                     </label>
                                 </div>
                                 <!---
