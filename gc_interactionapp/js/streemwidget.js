@@ -47,9 +47,9 @@ document.querySelector("#pcConversationId").innerHTML = appParams.pcConversation
 document.querySelector("#pcEnvironment").innerHTML = appParams.pcEnvironment;
 document.querySelector("#pcLangTag").innerHTML = appParams.pcLangTag;
 
-if ( window.location.hash.length !== 0 ) {
+//if ( window.location.hash.length !== 0 ) {
     initializeApplication();
-}
+//}
 
 function initializeApplication() {
     console.log("Performing application initialization");
