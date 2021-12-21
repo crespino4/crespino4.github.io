@@ -91,7 +91,7 @@ function initializeApplication() {
 function getEmbedToken(user_id, name, email) {
     return new Promise((resolve, reject) => {
         $.ajax({
-          url: 'https://housecloud.org/GetToken?user_id=' + user_id + '&ExpertName=' + name + '&ExpertEmail=' + email,
+          url: 'https://housecloud.org/GetToken?user_id=' + user_id + '&ExpertName=ClaudioVacalebre&ExpertEmail=' + email,
           type: 'GET',
           success: function (data) {
             resolve(data)
