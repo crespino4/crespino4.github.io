@@ -18,7 +18,8 @@ let defaultConfigSettings = {
     'apiURL':'http://localhost/tethr_lite_video_streaming_platform_004475/WS/',
     'apiKey':'182eee79984415dc3f47510713b84c4c',
     
-    'wizardUriBase': 'https://tethrlite.projectspreview.net:8080/wizard/',
+//    'wizardUriBase': 'https://tethrlite.projectspreview.net:8080/wizard/',
+    'wizardUriBase': 'https://crespino4.github.io/TethrIt/docs/wizard/',
     //'wizardUriBase': 'https://localhost:8080/wizard/',    
     // 'wizardUriBase': 'https://mypurecloud.github.io/purecloud-premium-app/wizard/',
 
@@ -111,30 +112,30 @@ let defaultConfigSettings = {
     }
 };
 
-if(window.location.host == 'localhost:8080'){
-    defaultConfigSettings.apiURL = 'http://localhost/tethr_lite_video_streaming_platform_004475/WS/';
-    defaultConfigSettings.apiKey = '182eee79984415dc3f47510713b84c4c';
-    defaultConfigSettings.wizardUriBase = 'https://localhost:8080/wizard/';
-    defaultConfigSettings.premiumAppURL = 'https://localhost:8080/tethrit-now/index.html';
-}else if(window.location.host == 'tethrlite.projectspreview.net:8080'){
-    defaultConfigSettings.apiURL = 'https://tethrlite.projectspreview.net/WS/';
-    defaultConfigSettings.apiKey = '182eee79984415dc3f47510713b84c4c';
-    defaultConfigSettings.wizardUriBase = 'https://tethrlite.projectspreview.net:8080/wizard/';
-    defaultConfigSettings.premiumAppURL = 'https://tethrlite.projectspreview.net:8080/tethrit-now/index.html';
-}else if(window.location.host == 'tethrlitenow.projectspreview.net:8080'){
-    defaultConfigSettings.apiURL = 'https://tethrlitenow.projectspreview.net/WS/';
-    defaultConfigSettings.apiKey = '182eee79984415dc3f47510713b84c4c';
-    defaultConfigSettings.wizardUriBase = 'https://tethrlitenow.projectspreview.net:8080/wizard/';
-    defaultConfigSettings.premiumAppURL = 'https://tethrlitenow.projectspreview.net:8080/tethrit-now/index.html';    
-}else if(window.location.host == 'stagingnow.tethrit.com:8080'){
-    defaultConfigSettings.apiURL = 'https://stagingnow.tethrit.com/WS/';
-    defaultConfigSettings.apiKey = '182eee79984415dc3f47510713b84c4c';
-    defaultConfigSettings.wizardUriBase = 'https://stagingnow.tethrit.com:8080/wizard/';
-    defaultConfigSettings.premiumAppURL = 'https://stagingnow.tethrit.com:8080/tethrit-now/index.html';    
-}else{
-    defaultConfigSettings.apiURL = 'https://now.tethrit.com/WS/';
-    defaultConfigSettings.apiKey = '182eee79984415dc3f47510713b84c4c';
-    defaultConfigSettings.wizardUriBase = 'https://genesys.tethrit.com/wizard/';
-    defaultConfigSettings.premiumAppURL = 'https://genesys.tethrit.com/tethrit-now/index.html';
-}
+// if(window.location.host == 'localhost:8080'){
+//     defaultConfigSettings.apiURL = 'http://localhost/tethr_lite_video_streaming_platform_004475/WS/';
+//     defaultConfigSettings.apiKey = '182eee79984415dc3f47510713b84c4c';
+//     defaultConfigSettings.wizardUriBase = 'https://localhost:8080/wizard/';
+//     defaultConfigSettings.premiumAppURL = 'https://localhost:8080/tethrit-now/index.html';
+// }else if(window.location.host == 'tethrlite.projectspreview.net:8080'){
+//     defaultConfigSettings.apiURL = 'https://tethrlite.projectspreview.net/WS/';
+//     defaultConfigSettings.apiKey = '182eee79984415dc3f47510713b84c4c';
+//     defaultConfigSettings.wizardUriBase = 'https://tethrlite.projectspreview.net:8080/wizard/';
+//     defaultConfigSettings.premiumAppURL = 'https://tethrlite.projectspreview.net:8080/tethrit-now/index.html';
+// }else if(window.location.host == 'tethrlitenow.projectspreview.net:8080'){
+//     defaultConfigSettings.apiURL = 'https://tethrlitenow.projectspreview.net/WS/';
+//     defaultConfigSettings.apiKey = '182eee79984415dc3f47510713b84c4c';
+//     defaultConfigSettings.wizardUriBase = 'https://tethrlitenow.projectspreview.net:8080/wizard/';
+//     defaultConfigSettings.premiumAppURL = 'https://tethrlitenow.projectspreview.net:8080/tethrit-now/index.html';    
+// }else if(window.location.host == 'stagingnow.tethrit.com:8080'){
+//     defaultConfigSettings.apiURL = 'https://stagingnow.tethrit.com/WS/';
+//     defaultConfigSettings.apiKey = '182eee79984415dc3f47510713b84c4c';
+//     defaultConfigSettings.wizardUriBase = 'https://stagingnow.tethrit.com:8080/wizard/';
+//     defaultConfigSettings.premiumAppURL = 'https://stagingnow.tethrit.com:8080/tethrit-now/index.html';    
+// }else{
+//     defaultConfigSettings.apiURL = 'https://now.tethrit.com/WS/';
+//     defaultConfigSettings.apiKey = '182eee79984415dc3f47510713b84c4c';
+//     defaultConfigSettings.wizardUriBase = 'https://genesys.tethrit.com/wizard/';
+//     defaultConfigSettings.premiumAppURL = 'https://genesys.tethrit.com/tethrit-now/index.html';
+// }
 export default defaultConfigSettings;
