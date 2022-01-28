@@ -2,7 +2,7 @@ let defaultConfigSettings = {
     
     clientIDs: {        
         //'mypurecloud.com': 'bda3d1f2-eb18-4804-9ec9-5673e2a4b5f4'
-        'mypurecloud.com': 'e7de8a75-62bb-43eb-9063-38509f8c21af'
+        'mypurecloud.com': 'a87e4172-6d4a-430f-bc87-7a18ba0534c4'
 
 
         // 'mypurecloud.ie': '939ab4dd-109f-4120-ba9f-051b973b9ecc',
@@ -13,7 +13,7 @@ let defaultConfigSettings = {
     },
 
     //clientID: 'bda3d1f2-eb18-4804-9ec9-5673e2a4b5f4',
-    clientID: 'e7de8a75-62bb-43eb-9063-38509f8c21af',
+    clientID: 'a87e4172-6d4a-430f-bc87-7a18ba0534c4',
 
     'apiURL':'http://localhost/tethr_lite_video_streaming_platform_004475/WS/',
     'apiKey':'182eee79984415dc3f47510713b84c4c',
