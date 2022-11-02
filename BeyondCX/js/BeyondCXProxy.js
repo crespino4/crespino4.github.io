@@ -50,6 +50,7 @@ console.log("PureCloud ClientApp About: " + window.purecloud.apps.ClientApp.abou
 
 document.querySelector("#pcEnvironment").innerHTML = appParams.pcEnvironment;
 document.querySelector("#pcLangTag").innerHTML = appParams.pcLangTag;
+document.querySelector("#pcClientId").innerHTML = appParams.pcClientId;
 
 initializeApplication();
 
@@ -168,7 +169,7 @@ function initializeApplication() {
 }
 
 function parseAppParameters(queryString) {
-    console.log("Interaction Widget Proxy Query String: " + queryString);
+    console.log("Beyond CX Proxy Query String: " + queryString);
 
     let appParams = {
         pcEnvironment: null,
@@ -187,6 +188,8 @@ function parseAppParameters(queryString) {
                 appParams.pcLangTag = currParam[1];
             } else if (currParam[0] === 'pcEnvironment') {
                 appParams.pcEnvironment = currParam[1];
+            } else if (currParam[0] === 'pcClientId') {
+                appParams.pcClientId = currParam[1];
             } else if (currParam[0] === 'state') {
                 console.log("Found 'state' query parameter from implicit grant redirect");
                 var stateValue = currParam[1];
