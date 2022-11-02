@@ -144,8 +144,6 @@ function initializeApplication() {
 
             document.querySelector("#username").innerHTML = me.username;
 
-            document.querySelector("#status").innerHTML = "Querying Conversation...";
-
             myClientApp.lifecycle.bootstrapped();
 
             myClientApp.alerting.showToastPopup(
