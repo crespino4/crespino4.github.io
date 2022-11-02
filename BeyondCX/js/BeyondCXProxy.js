@@ -174,7 +174,7 @@ function parseAppParameters(queryString) {
     let appParams = {
         pcEnvironment: null,
         pcLangTag: null,
-        pcConversationId: null
+        pcClientId: null
     };
 
     if ( queryString.length != 0 ) {
