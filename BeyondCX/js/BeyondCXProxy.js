@@ -131,6 +131,7 @@ function initializeApplication() {
         .then((data) => {
             // User Authenticated
             console.log("User Authenticated: " + JSON.stringify(data));
+            document.querySelector("#accessToken").innerHTML = client.authData.accessToken;
 
             document.querySelector("#status").innerHTML = "Querying User...";
 
