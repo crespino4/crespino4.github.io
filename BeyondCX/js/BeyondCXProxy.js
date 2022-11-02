@@ -156,9 +156,6 @@ function initializeApplication() {
             );
 
             logLifecycleEvent('Notified Genesys Cloud of Successful App Bootstrap', false);
-
-            document.querySelector("#status").innerHTML = "Redirecting to Beyond CX...";
-            window.location.href = "https://beyond.genesys.com";
         }).catch((err) => {
 
             document.querySelector("#status").innerHTML = "Error, See Console";
@@ -166,6 +163,11 @@ function initializeApplication() {
             // Handle failure response
             console.log(err);
         });
+}
+
+function launchBeyondCX() {
+    document.querySelector("#status").innerHTML = "Redirecting to Beyond CX...";
+    window.location.href = "https://beyond.genesys.com";
 }
 
 function parseAppParameters(queryString) {
