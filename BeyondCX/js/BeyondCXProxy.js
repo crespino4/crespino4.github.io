@@ -145,6 +145,7 @@ function initializeApplication() {
             document.querySelector("#username").innerHTML = me.username;
 
             myClientApp.lifecycle.bootstrapped();
+            document.querySelector("#status").innerHTML = "Bootstrapping Complete!";
 
             myClientApp.alerting.showToastPopup(
                 lifecycleStatusMessageTitle,
