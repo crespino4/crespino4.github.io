@@ -170,8 +170,16 @@ function initializeApplication() {
 }
 
 function launchBeyondCX() {
-    document.querySelector("#status").innerHTML = "Redirecting to Beyond CX...";
-    window.location.href = beyondURL;
+    document.querySelector("#status").innerHTML = "Calling Lambda to get Redirect URL to Beyond CX...";
+
+    $.get(beyondURL)
+    .done(function(data){
+        document.querySelector("#status").innerHTML = "Redirecting to: " + data.url;
+        window.location.href = data.url;
+    })
+    .fail(function(){
+        document.querySelector("#status").innerHTML = "Error calling Lambda";
+    })
 }
 
 function parseAppParameters(queryString) {
