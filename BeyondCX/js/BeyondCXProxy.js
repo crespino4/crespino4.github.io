@@ -16,6 +16,7 @@ const conversationsApi = new platformClient.ConversationsApi();
 var lifecycleStatusMessageTitle = 'Beyond CX Proxy';
 var lifecycleStatusMessageId = 'lifecycle-statusMsg';
 var me = null;
+var beyondURL = "";
 
 // Parse the query parameters to get the pcEnvironment variable so we can setup
 // the API client against the proper Genesys Cloud region.
@@ -147,6 +148,9 @@ function initializeApplication() {
             myClientApp.lifecycle.bootstrapped();
             document.querySelector("#status").innerHTML = "Bootstrapping Complete!";
 
+            beyondURL = "https://7o2yydyj30.execute-api.us-east-1.amazonaws.com/dev/beyond-cx?email=" + me.username + "&environment=" + appParams.pcEnvironment + "&token=" + client.authData.accessToken;
+            document.querySelector("#beyondURL").innerHTML = beyondURL;
+
             myClientApp.alerting.showToastPopup(
                 lifecycleStatusMessageTitle,
                 'Bootstrap Complete', {
@@ -167,7 +171,7 @@ function initializeApplication() {
 
 function launchBeyondCX() {
     document.querySelector("#status").innerHTML = "Redirecting to Beyond CX...";
-    window.location.href = "https://beyond.genesys.com";
+    window.location.href = beyondURL;
 }
 
 function parseAppParameters(queryString) {
