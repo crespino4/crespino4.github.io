@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Interaction Widget</title>
+
+		<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="//sdk-cdn.mypurecloud.com/client-apps/1.3.0/purecloud-client-app-sdk.js"></script>
+        <script src="//sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
+
+    </head>
+    <body>
+        <h1 id="title" width="100%" align="center">Interaction Widget Proxy</h1>
+        <h2 id="status" width="100%" align="center">Status</h2>
+        <p>User: <span id="username"></span></p>
+        <p>pcConversationId: <span id="pcConversationId"></span></p>
+        <p>pcEnvironment: <span id="pcEnvironment"></span></p>
+        <p>pcLangTag: <span id="pcLangTag"></span></p>
+        <p>pcClientId: <span id="pcClientId"></span></p>
+
+        <p width="100%">Conversation Event: </p>
+        <pre id="conversationEvent"></pre>
+		
+	    <script src="js/InteractionWidgetProxy.js"></script>
+    </body>
+</html>
