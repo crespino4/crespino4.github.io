@@ -252,35 +252,45 @@ function getExternalContacts(extOrg) {
 function GetTransferTarget(target) {
     console.log("Get Transfer Target: " + target);
     var opts = null;
+    const regexPattern = /.*-.*-(.*)/;
 
     if (target.startsWith('Number')) {
-        opts = {
-            "address": "+17854770504"
-        }
+        var number = regexPattern.match(target);
+        if ( number !== null ) {
+            opts = {
+                "address": number[0]
+            }
+        };
     } else if (target.startsWith('Queue')) {
-        let qopts = { 
-            'pageSize': 25, // Number | Page size [max value is 100]
-            'pageNumber': 1, // Number | Page number [max value is 5]
-            'sortBy': "name", // String | Sort by
-            'sortOrder': "asc", // String | Sort order
-            'name': "Customer Service" // String | Name
-          };
-          
-          routingApi.getRoutingQueuesDivisionviews(qopts)
-            .then((data) => {
-              console.log(`getRoutingQueuesDivisionviews success! data: ${JSON.stringify(data, null, 2)}`);
-              xferTargetId = data.entities[0].id;
-              opts = {
-                "queueId": data.entities[0].id
-              }
-            })
-            .catch((err) => {
-              console.log('There was a failure calling getRoutingQueuesDivisionviews');
-              console.error(err);
-            });
+        var queueName = regexPatter.match(target);
+        if ( queueName !== null ) {
+            let qopts = { 
+                'pageSize': 25, // Number | Page size [max value is 100]
+                'pageNumber': 1, // Number | Page number [max value is 5]
+                'sortBy': "name", // String | Sort by
+                'sortOrder': "asc", // String | Sort order
+                'name': "Customer Service" // String | Name
+            };
+            
+            routingApi.getRoutingQueuesDivisionviews(qopts)
+                .then((data) => {
+                console.log(`getRoutingQueuesDivisionviews success! data: ${JSON.stringify(data, null, 2)}`);
+                xferTargetId = data.entities[0].id;
+                opts = {
+                    "queueId": data.entities[0].id
+                }
+                })
+                .catch((err) => {
+                console.log('There was a failure calling getRoutingQueuesDivisionviews');
+                console.error(err);
+                });
+        }
     } else if (target.startsWith('User')) {
-        opts = {
-            "address": "jim.crespino@genesys.com"
+        var userName = regexPatter.match(target);
+        if ( userName !== null ) {
+            opts = {
+                "address": userName
+            }
         }
     }
 
@@ -304,7 +314,7 @@ function TransferConversation(opts) {
     let conversationId = conversation.id; // String | conversation ID
     let participantId = participant.id;
 
-    apiInstance.postConversationParticipantReplace(conversationId, participantId, opts)
+    conversationApi.postConversationParticipantReplace(conversationId, participantId, opts)
       .then(() => {
         console.log('postConversationParticipantReplace returned successfully.');
       })
