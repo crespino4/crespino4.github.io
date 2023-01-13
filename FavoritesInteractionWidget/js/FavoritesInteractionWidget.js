@@ -188,6 +188,7 @@ function initializeApplication() {
 
             // Handle failure response
             console.log(err);
+            showToast(err.message);
         });
 }
 
@@ -216,6 +217,7 @@ function getExternalOrganization() {
     .catch((err) => {
       console.log('There was a failure calling getExternalcontactsOrganizations');
       console.error(err);
+      showToast(err.message);
     });
 }
   
@@ -246,6 +248,7 @@ function getExternalContacts(extOrg) {
       .catch((err) => {
         console.log('There was a failure calling getExternalcontactsOrganizationContacts');
         console.error(err);
+        showToast(err.message);
       });
 }
 
@@ -283,8 +286,9 @@ function GetTransferTarget(target) {
                     TransferConversation(opts);
                 })
                 .catch((err) => {
-                console.log('There was a failure calling getRoutingQueuesDivisionviews');
-                console.error(err);
+                    console.log('There was a failure calling getRoutingQueuesDivisionviews');
+                    console.error(err);
+                    showToast(err.message);
                 });
         }
     } else if (target.startsWith('User')) {
@@ -295,6 +299,8 @@ function GetTransferTarget(target) {
             }
             TransferConversation(opts);
         }
+    } else {
+        showToast("Unrecognized Transfer Target.  Valid targets are [Queue, Number, User]");
     }
 }
 
@@ -320,7 +326,18 @@ function TransferConversation(opts) {
       .catch((err) => {
         console.log('There was a failure calling postConversationParticipantReplace');
         console.error(err);
+        showToast(err.message);
       });        
+}
+
+function showToast(message) {
+    myClientApp.alerting.showToastPopup(
+        lifecycleStatusMessageTitle,
+        message, 
+        {
+            id: lifecycleStatusMessageId
+        }
+    );
 }
 
 function parseAppParameters(queryString) {
