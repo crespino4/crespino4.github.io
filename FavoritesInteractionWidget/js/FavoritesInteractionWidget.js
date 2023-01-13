@@ -308,7 +308,7 @@ function TransferConversation(opts) {
                 return true;
             }
         }
-    }).id;
+    });
     
     let conversationId = conversation.id; // String | conversation ID
     let participantId = participant.id;
