@@ -260,6 +260,7 @@ function GetTransferTarget(target) {
             opts = {
                 "address": number[1]
             }
+            TransferConversation(opts);
         };
     } else if (target.startsWith('Queue')) {
         var queueName = target.match(regexPattern);
@@ -274,11 +275,12 @@ function GetTransferTarget(target) {
             
             routingApi.getRoutingQueuesDivisionviews(qopts)
                 .then((data) => {
-                console.log(`getRoutingQueuesDivisionviews success! data: ${JSON.stringify(data, null, 2)}`);
-                xferTargetId = data.entities[0].id;
-                opts = {
-                    "queueId": data.entities[0].id
-                }
+                    console.log(`getRoutingQueuesDivisionviews success! data: ${JSON.stringify(data, null, 2)}`);
+                    xferTargetId = data.entities[0].id;
+                    opts = {
+                        "queueId": data.entities[0].id
+                    }
+                    TransferConversation(opts);
                 })
                 .catch((err) => {
                 console.log('There was a failure calling getRoutingQueuesDivisionviews');
@@ -291,11 +293,8 @@ function GetTransferTarget(target) {
             opts = {
                 "address": userName[1]
             }
+            TransferConversation(opts);
         }
-    }
-
-    if ( opts !== null ) {
-        TransferConversation(opts);
     }
 }
 
