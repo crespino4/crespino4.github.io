@@ -262,7 +262,7 @@ function GetTransferTarget(target) {
             }
         };
     } else if (target.startsWith('Queue')) {
-        var queueName = regexPatter.match(target);
+        var queueName = regexPattern.match(target);
         if ( queueName !== null ) {
             let qopts = { 
                 'pageSize': 25, // Number | Page size [max value is 100]
@@ -286,7 +286,7 @@ function GetTransferTarget(target) {
                 });
         }
     } else if (target.startsWith('User')) {
-        var userName = regexPatter.match(target);
+        var userName = regexPattern.match(target);
         if ( userName !== null ) {
             opts = {
                 "address": userName
