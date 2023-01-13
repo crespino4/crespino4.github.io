@@ -252,17 +252,17 @@ function getExternalContacts(extOrg) {
 function GetTransferTarget(target) {
     console.log("Get Transfer Target: " + target);
     var opts = null;
-    const regexPattern = /.*-.*-(.*)/;
+    const regexPattern = new RegExp(".*-.*-(.*)");
 
     if (target.startsWith('Number')) {
-        var number = regexPattern.match(target);
+        var number = target.match(regexPattern);
         if ( number !== null ) {
             opts = {
                 "address": number[0]
             }
         };
     } else if (target.startsWith('Queue')) {
-        var queueName = regexPattern.match(target);
+        var queueName = target.match(regexPattern);
         if ( queueName !== null ) {
             let qopts = { 
                 'pageSize': 25, // Number | Page size [max value is 100]
@@ -286,7 +286,7 @@ function GetTransferTarget(target) {
                 });
         }
     } else if (target.startsWith('User')) {
-        var userName = regexPattern.match(target);
+        var userName = target.match(regexPattern);
         if ( userName !== null ) {
             opts = {
                 "address": userName
