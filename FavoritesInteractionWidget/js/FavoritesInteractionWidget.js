@@ -73,12 +73,12 @@ myClientApp.lifecycle.addBootstrapListener(() => {
 function onAppFocus () {
     logLifecycleEvent('App Lifecycle Event: focus', true);
 
-    myClientApp.alerting.showToastPopup(
-        lifecycleStatusMessageTitle,
-        'App Focused', {
-            id: lifecycleStatusMessageId
-        }
-    );
+    // myClientApp.alerting.showToastPopup(
+    //     lifecycleStatusMessageTitle,
+    //     'App Focused', {
+    //         id: lifecycleStatusMessageId
+    //     }
+    // );
 }
 myClientApp.lifecycle.addFocusListener(onAppFocus);
 
@@ -88,12 +88,12 @@ myClientApp.lifecycle.addFocusListener(onAppFocus);
 function onAppBlur () {
     logLifecycleEvent('App Lifecycle Event: blur', true);
 
-    myClientApp.alerting.showToastPopup(
-        lifecycleStatusMessageTitle,
-        'App Blurred', {
-            id: lifecycleStatusMessageId
-        }
-    );
+    // myClientApp.alerting.showToastPopup(
+    //     lifecycleStatusMessageTitle,
+    //     'App Blurred', {
+    //         id: lifecycleStatusMessageId
+    //     }
+    // );
 }
 myClientApp.lifecycle.addBlurListener(onAppBlur);
 
@@ -109,14 +109,14 @@ myClientApp.lifecycle.addStopListener(() => {
 
     myClientApp.lifecycle.stopped();
 
-    myClientApp.alerting.showToastPopup(
-        lifecycleStatusMessageTitle,
-        'App Stopped', {
-            id: lifecycleStatusMessageId,
-            type: 'error',
-            showCloseButton: true
-        }
-    );
+    // myClientApp.alerting.showToastPopup(
+    //     lifecycleStatusMessageTitle,
+    //     'App Stopped', {
+    //         id: lifecycleStatusMessageId,
+    //         type: 'error',
+    //         showCloseButton: true
+    //     }
+    // );
 
     logLifecycleEvent('Notified Genesys Cloud of Successful App Stop', false);
 });
@@ -159,13 +159,13 @@ function initializeApplication() {
 
             myClientApp.lifecycle.bootstrapped();
 
-            myClientApp.alerting.showToastPopup(
-                lifecycleStatusMessageTitle,
-                'Bootstrap Complete', {
-                    id: lifecycleStatusMessageId,
-                    type: 'success'
-                }
-            );
+            // myClientApp.alerting.showToastPopup(
+            //     lifecycleStatusMessageTitle,
+            //     'Bootstrap Complete', {
+            //         id: lifecycleStatusMessageId,
+            //         type: 'success'
+            //     }
+            // );
 
             // document.querySelector("#status").innerHTML = "Looking for Proxy URL...";
 
