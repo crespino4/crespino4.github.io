@@ -2,18 +2,20 @@
  * NOTE: This sample use ES6
  */
 const redirectUri = window.location.protocol + "//" + window.location.hostname + window.location.pathname;
+console.log("***** RedirectURI *****: " + redirectUri);
 
 // PureCloud Platform API
 const platformClient = require('platformClient');
 const client = platformClient.ApiClient.instance;
-client.setPersistSettings(true, 'InteractionWidgetProxy');
+client.setPersistSettings(true, 'FavoritesInteractionWidget');
 
 // Specific Platform API Instances
 const usersApi = new platformClient.UsersApi();
 const notificationsApi = new platformClient.NotificationsApi();
 const conversationsApi = new platformClient.ConversationsApi();
+const extContactsApi = new platformClient.ExternalContactsApi();
 
-var lifecycleStatusMessageTitle = 'Interaction Widget Proxy';
+var lifecycleStatusMessageTitle = 'Favorites Interaction Widget';
 var lifecycleStatusMessageId = 'lifecycle-statusMsg';
 var me = null;
 
@@ -162,19 +164,21 @@ function initializeApplication() {
                 }
             );
 
-            document.querySelector("#status").innerHTML = "Looking for Proxy URL...";
+            // document.querySelector("#status").innerHTML = "Looking for Proxy URL...";
 
-            // Look to see if a proxy.URL attribute exists in the customer participant data
-            // If so redirect to that URL
-            var customer = data.participants.find((participant) => participant.purpose === "customer")
-            if ( customer !== undefined ) {
-                var proxyUrl = customer.attributes["proxy.URL"];
-                if ( proxyUrl !== undefined ) {
-                    window.location.href = proxyUrl;
-                }
-            }
+            // // Look to see if a proxy.URL attribute exists in the customer participant data
+            // // If so redirect to that URL
+            // var customer = data.participants.find((participant) => participant.purpose === "customer")
+            // if ( customer !== undefined ) {
+            //     var proxyUrl = customer.attributes["proxy.URL"];
+            //     if ( proxyUrl !== undefined ) {
+            //         window.location.href = proxyUrl;
+            //     }
+            // }
 
             logLifecycleEvent('Notified Genesys Cloud of Successful App Bootstrap', false);
+
+            getExternalOrganization();
         }).catch((err) => {
 
             document.querySelector("#status").innerHTML = "Error, See Console";
@@ -182,6 +186,56 @@ function initializeApplication() {
             // Handle failure response
             console.log(err);
         });
+}
+
+function getExternalOrganization() {
+    console.log("Getting External Organization named 'Favorites'");
+    
+    let opts = { 
+      'pageSize': 20, // Number | Page size (limited to fetching first 1,000 records; pageNumber * pageSize must be <= 1,000)
+      'pageNumber': 1, // Number | Page number (limited to fetching first 1,000 records; pageNumber * pageSize must be <= 1,000)
+      'q': "Favorites", // String | Search query
+      'expand': ["expand_example"] // [String] | which fields, if any, to expand
+    };
+  
+    extContactsApi.getExternalcontactsOrganizations(opts)
+    .then((data) => {
+      console.log(`getExternalcontactsOrganizations success! data: ${JSON.stringify(data, null, 2)}`);
+      var extOrg = data.entities.find((element, index) => {
+        return element.name === "Favorites";
+      })
+      
+      if ( extOrg !== undefined ) {
+        getExternalContacts(extOrg);
+      }
+    })
+    .catch((err) => {
+      console.log('There was a failure calling getExternalcontactsOrganizations');
+      console.error(err);
+    });
+}
+  
+function getExternalContacts(extOrg) {
+    console.log("Getting External Contacts as 'Favorites'"); 
+    
+    let externalOrganizationId = extOrg.id
+    let opts = { 
+      'pageSize': 20, // Number | Page size (limited to fetching first 1,000 records; pageNumber * pageSize must be <= 1,000)
+      'pageNumber': 1
+    };
+    
+    extContactsApi.getExternalcontactsOrganizationContacts(externalOrganizationId, opts)
+      .then((data) => {
+        console.log(`getExternalcontactsOrganizationContacts success! data: ${JSON.stringify(data, null, 2)}`);
+        
+        data.entities.forEach((element, index) => {
+          console.log(element.firstName + " - " + element.lastName);
+        });    
+      })
+      .catch((err) => {
+        console.log('There was a failure calling getExternalcontactsOrganizationContacts');
+        console.error(err);
+      });
 }
 
 function parseAppParameters(queryString) {
