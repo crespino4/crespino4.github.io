@@ -269,7 +269,7 @@ function GetTransferTarget(target) {
                 'pageNumber': 1, // Number | Page number [max value is 5]
                 'sortBy': "name", // String | Sort by
                 'sortOrder': "asc", // String | Sort order
-                'name': "Customer Service" // String | Name
+                'name': queueName // String | Name
             };
             
             routingApi.getRoutingQueuesDivisionviews(qopts)
