@@ -313,7 +313,7 @@ function TransferConversation(opts) {
     let conversationId = conversation.id; // String | conversation ID
     let participantId = participant.id;
 
-    conversationApi.postConversationParticipantReplace(conversationId, participantId, opts)
+    conversationsApi.postConversationParticipantReplace(conversationId, participantId, opts)
       .then(() => {
         console.log('postConversationParticipantReplace returned successfully.');
       })
