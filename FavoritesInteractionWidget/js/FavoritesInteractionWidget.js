@@ -14,10 +14,12 @@ const usersApi = new platformClient.UsersApi();
 const notificationsApi = new platformClient.NotificationsApi();
 const conversationsApi = new platformClient.ConversationsApi();
 const extContactsApi = new platformClient.ExternalContactsApi();
+const routingApi = new platformClient.RoutingApi();
 
 var lifecycleStatusMessageTitle = 'Favorites Interaction Widget';
 var lifecycleStatusMessageId = 'lifecycle-statusMsg';
 var me = null;
+var conversation = null;
 
 // Parse the query parameters to get the pcEnvironment variable so we can setup
 // the API client against the proper Genesys Cloud region.
@@ -153,6 +155,7 @@ function initializeApplication() {
         }).then((data) => {
             console.log("Conversation details for " + appParams.pcConversationId + ": " + JSON.stringify(data));
             //document.querySelector("#conversationEvent").innerHTML = JSON.stringify(data, null, 3);
+            conversation = data;
 
             myClientApp.lifecycle.bootstrapped();
 
@@ -237,13 +240,78 @@ function getExternalContacts(extOrg) {
         
         $("button").click(function(){
             console.log("Button Clicked: " + this.innerHTML);
-
+            GetTransferTarget(this.innerHTML);
         });
       })
       .catch((err) => {
         console.log('There was a failure calling getExternalcontactsOrganizationContacts');
         console.error(err);
       });
+}
+
+function GetTransferTarget(target) {
+    console.log("Get Transfer Target: " + target);
+    var opts = null;
+
+    if (target.startsWith('Number')) {
+        opts = {
+            "address": "+17854770504"
+        }
+    } else if (target.startsWith('Queue')) {
+        let qopts = { 
+            'pageSize': 25, // Number | Page size [max value is 100]
+            'pageNumber': 1, // Number | Page number [max value is 5]
+            'sortBy': "name", // String | Sort by
+            'sortOrder': "asc", // String | Sort order
+            'name': "Customer Service" // String | Name
+          };
+          
+          routingApi.getRoutingQueuesDivisionviews(qopts)
+            .then((data) => {
+              console.log(`getRoutingQueuesDivisionviews success! data: ${JSON.stringify(data, null, 2)}`);
+              xferTargetId = data.entities[0].id;
+              opts = {
+                "queueId": data.entities[0].id
+              }
+            })
+            .catch((err) => {
+              console.log('There was a failure calling getRoutingQueuesDivisionviews');
+              console.error(err);
+            });
+    } else if (target.startsWith('User')) {
+        opts = {
+            "address": "jim.crespino@genesys.com"
+        }
+    }
+
+    if ( opts !== null ) {
+        TransferConversation(opts);
+    }
+}
+
+function TransferConversation(opts) {
+    console.log("TransferConversation: " + JSON.stringify(opts));
+
+    var participant = conversation.participants.find((element, index) => {
+        if ( element.purpose === "agent" ) {
+            if (element.userId === me.id) {
+                console.log("Found participant for " + me.id + ": " + element.id);
+                return true;
+            }
+        }
+    }).id;
+    
+    let conversationId = conversation.id; // String | conversation ID
+    let participantId = participant.id;
+
+    apiInstance.postConversationParticipantReplace(conversationId, participantId, opts)
+      .then(() => {
+        console.log('postConversationParticipantReplace returned successfully.');
+      })
+      .catch((err) => {
+        console.log('There was a failure calling postConversationParticipantReplace');
+        console.error(err);
+      });        
 }
 
 function parseAppParameters(queryString) {
