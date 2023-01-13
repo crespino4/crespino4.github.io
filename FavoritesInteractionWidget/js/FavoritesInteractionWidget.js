@@ -232,8 +232,13 @@ function getExternalContacts(extOrg) {
         
         data.entities.forEach((element, index) => {
             console.log(element.firstName + " - " + element.lastName);
-            $('#favorites').append("<p>" + element.firstName + " - " + element.lastName + "</p>");
-        });    
+            $('#favorites').append("<p><button type='button'>" + element.firstName + " - " + element.lastName + "</button></p>");
+        });
+        
+        $("button").click(function(){
+            console.log("Button Clicked: " + this.innerHTML);
+
+        });
       })
       .catch((err) => {
         console.log('There was a failure calling getExternalcontactsOrganizationContacts');
