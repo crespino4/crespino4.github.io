@@ -244,6 +244,8 @@ function getExternalContacts(extOrg) {
             console.log("Button Clicked: " + this.innerHTML);
             GetTransferTarget(this.innerHTML);
         });
+
+        document.querySelector("#status").innerHTML = "";
       })
       .catch((err) => {
         console.log('There was a failure calling getExternalcontactsOrganizationContacts');
