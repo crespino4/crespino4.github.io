@@ -258,7 +258,7 @@ function GetTransferTarget(target) {
         var number = target.match(regexPattern);
         if ( number !== null ) {
             opts = {
-                "address": number[0]
+                "address": number[1]
             }
         };
     } else if (target.startsWith('Queue')) {
@@ -269,7 +269,7 @@ function GetTransferTarget(target) {
                 'pageNumber': 1, // Number | Page number [max value is 5]
                 'sortBy': "name", // String | Sort by
                 'sortOrder': "asc", // String | Sort order
-                'name': queueName // String | Name
+                'name': queueName[1] // String | Name
             };
             
             routingApi.getRoutingQueuesDivisionviews(qopts)
@@ -289,7 +289,7 @@ function GetTransferTarget(target) {
         var userName = target.match(regexPattern);
         if ( userName !== null ) {
             opts = {
-                "address": userName
+                "address": userName[1]
             }
         }
     }
