@@ -50,10 +50,10 @@ console.log("PureCloud ClientApp Environment: " + myClientApp.pcEnvironment);
 console.log("PureCloud ClientApp Version: " + window.purecloud.apps.ClientApp.version);
 console.log("PureCloud ClientApp About: " + window.purecloud.apps.ClientApp.about());
 
-document.querySelector("#pcConversationId").innerHTML = appParams.pcConversationId;
-document.querySelector("#pcEnvironment").innerHTML = appParams.pcEnvironment;
-document.querySelector("#pcLangTag").innerHTML = appParams.pcLangTag;
-document.querySelector("#pcClientId").innerHTML = appParams.pcClientId;
+// document.querySelector("#pcConversationId").innerHTML = appParams.pcConversationId;
+// document.querySelector("#pcEnvironment").innerHTML = appParams.pcEnvironment;
+// document.querySelector("#pcLangTag").innerHTML = appParams.pcLangTag;
+// document.querySelector("#pcClientId").innerHTML = appParams.pcClientId;
 
 initializeApplication();
 
@@ -144,7 +144,7 @@ function initializeApplication() {
             // Me Response
             me = userMe;
 
-            document.querySelector("#username").innerHTML = me.username;
+            //document.querySelector("#username").innerHTML = me.username;
 
             document.querySelector("#status").innerHTML = "Querying Conversation...";
 
@@ -152,7 +152,7 @@ function initializeApplication() {
             return conversationsApi.getConversation(appParams.pcConversationId);
         }).then((data) => {
             console.log("Conversation details for " + appParams.pcConversationId + ": " + JSON.stringify(data));
-            document.querySelector("#conversationEvent").innerHTML = JSON.stringify(data, null, 3);
+            //document.querySelector("#conversationEvent").innerHTML = JSON.stringify(data, null, 3);
 
             myClientApp.lifecycle.bootstrapped();
 
@@ -189,6 +189,7 @@ function initializeApplication() {
 }
 
 function getExternalOrganization() {
+    document.querySelector("#status").innerHTML = "Searching for 'Favorites' External Organization...";
     console.log("Getting External Organization named 'Favorites'");
     
     let opts = { 
@@ -216,6 +217,7 @@ function getExternalOrganization() {
 }
   
 function getExternalContacts(extOrg) {
+    document.querySelector("#status").innerHTML = "Searching for 'Favorites' External Contacts...";
     console.log("Getting External Contacts as 'Favorites'"); 
     
     let externalOrganizationId = extOrg.id
@@ -229,7 +231,8 @@ function getExternalContacts(extOrg) {
         console.log(`getExternalcontactsOrganizationContacts success! data: ${JSON.stringify(data, null, 2)}`);
         
         data.entities.forEach((element, index) => {
-          console.log(element.firstName + " - " + element.lastName);
+            console.log(element.firstName + " - " + element.lastName);
+            $('#favorites').append("<p>" + element.firstName + " - " + element.lastName + "</p>");
         });    
       })
       .catch((err) => {

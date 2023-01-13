@@ -12,15 +12,14 @@
     <body>
         <h1 id="title" width="100%" align="center">Favorites Interaction Widget</h1>
         <h2 id="status" width="100%" align="center">Status</h2>
-        <p>User: <span id="username"></span></p>
-        <p>pcConversationId: <span id="pcConversationId"></span></p>
-        <p>pcEnvironment: <span id="pcEnvironment"></span></p>
-        <p>pcLangTag: <span id="pcLangTag"></span></p>
-        <p>pcClientId: <span id="pcClientId"></span></p>
 
-        <p width="100%">Conversation Event: </p>
-        <pre id="conversationEvent"></pre>
-		
+        <p>This is an example of how to display a list of common "favorite" transfer targets.</p>
+        <p>The list of corporate favorites is controlled using External Organizations and Contacts.</p>
+        <p>Create an External Organization named "Favorites".  Then within that organization create as many External Contacts as you'd like to represent the items that should be listed as "Favorites" to the agent.</p>
+        <p>For a Queue favorite enter "Queue" as the first name and the name of the queue as the last name</p>
+
+        <div id="favorites"></div>
+
 	    <script src="js/FavoritesInteractionWidget.js"></script>
     </body>
 </html>
