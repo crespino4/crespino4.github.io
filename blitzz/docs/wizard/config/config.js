@@ -2,7 +2,7 @@ export default {
     clientID: '1da5ad3b-5250-49c9-97c5-6cddea1e48be',
 
     wizardUriBase: 'https://crespino4.github.io/blitzz/docs/wizard/',
-    //wizardUriBase: 'https://install-genesys.blitzz.co/',
+    //JC4 wizardUriBase: 'https://install-genesys.blitzz.co/',
     // wizardUriBase: 'https://mypurecloud.github.io/purecloud-premium-app/wizard/',
 
     // The actual URL of the landing page of your web app or your web site (when wizard has been run).
@@ -17,17 +17,20 @@ export default {
     //            Once your premium app is approved an integration type will be created
     //            by the Genesys Cloud product team and you can update the name at that time.
     // previously - defined as appName
-    premiumAppIntegrationTypeId: 'premium-app-blitzz',
+    premiumAppIntegrationTypeId: 'premium-app-example',
+    // JC4 premiumAppIntegrationTypeId: 'premium-app-blitzz',
 
     // Optional - Some Premium Applications leverage both a premium app and a premium widget
-    premiumWidgetIntegrationTypeId: 'premium-widget-blitzz',
+    premiumWidgetIntegrationTypeId: 'embedded-client-app-interaction-widget',
+    // JC4 premiumWidgetIntegrationTypeId: 'premium-widget-blitzz',
 
     // The minimum permission required for a user to access the Premium App.
     // NOTE: During initial development please use the default permission 
     //      'integration:examplePremiumApp:view'. Once your premium app is approved,
     //      the unique integration domain will be generated and this must be updated.
     // previously - defined as viewPermission
-    premiumAppViewPermission: 'integration:blitzz:view',
+    premiumAppViewPermission: 'integration:examplePremiumApp:view',
+    // JC4 premiumAppViewPermission: 'integration:blitzz:view',
     // Permissions required for running the Wizard App
     // all, premium, wizard, none (default)
     checkInstallPermissions: 'none',
