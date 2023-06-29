@@ -1,7 +1,8 @@
 export default {
     clientID: '1da5ad3b-5250-49c9-97c5-6cddea1e48be',
 
-    wizardUriBase: 'https://install-genesys.blitzz.co/',
+    wizardUriBase: 'https://crespino4.github.io/docs/wizard/',
+    //wizardUriBase: 'https://install-genesys.blitzz.co/',
     // wizardUriBase: 'https://mypurecloud.github.io/purecloud-premium-app/wizard/',
 
     // The actual URL of the landing page of your web app or your web site (when wizard has been run).
