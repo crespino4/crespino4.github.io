@@ -100,13 +100,12 @@ export default {
         ],
         'app-instance': [
             {
-                'name': 'Visual Remote Assistant',
+                'name': 'Visual Remote Assistant (Standalone)',
                 'url': 'https://genesys-ga.blitzz.co/auth?conversationId={{pcConversationId}}&environment={{pcEnvironment}}&langTag={{pcLangTag}}',
                 'type': 'standalone',
                 'sandbox': 'allow-forms,allow-modals,allow-popups,allow-presentation,allow-same-origin,allow-scripts,allow-downloads',
                 'permissions': 'camera,microphone,geolocation,clipboard-write,display-capture,fullscreen',
                 'groups': ['Agents'],
-                'communicationTypeFilter': 'chat, call',
                 'advanced': {
                    'lifecycle': {},
                     "icon": {
@@ -117,7 +116,7 @@ export default {
         ],
         'interaction-widget': [
             {
-                'name': 'Visual Remote Assistant',
+                'name': 'Visual Remote Assistant (Widget)',
                 'url': 'https://genesys-ga.blitzz.co/auth?conversationId={{pcConversationId}}&environment={{pcEnvironment}}&langTag={{pcLangTag}}',
                 'sandbox': 'allow-forms,allow-modals,allow-popups,allow-presentation,allow-same-origin,allow-scripts,allow-downloads',
                 'permissions': 'camera,microphone,geolocation,clipboard-write,display-capture,fullscreen',
