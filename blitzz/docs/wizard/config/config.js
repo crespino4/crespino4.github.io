@@ -1,7 +1,7 @@
 export default {
     clientID: '1da5ad3b-5250-49c9-97c5-6cddea1e48be',
 
-    wizardUriBase: 'https://crespino4.github.io/docs/wizard/',
+    wizardUriBase: 'https://crespino4.github.io/blitzz/docs/wizard/',
     //wizardUriBase: 'https://install-genesys.blitzz.co/',
     // wizardUriBase: 'https://mypurecloud.github.io/purecloud-premium-app/wizard/',
 
