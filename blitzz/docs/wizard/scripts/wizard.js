@@ -136,7 +136,7 @@ export default {
      * @returns {Promise<boolean>}
      */
     async isExisting() {
-        let exists = false;
+        let exists = true;
 
         try {
             const installedObjects = await getInstalledObjects();
@@ -144,7 +144,7 @@ export default {
 
             installedObjects.forEach(item => {
                 // if it's just an array
-                exists = exists && (item.length > 0 ? true : exists);
+                exists = exists && (item.length > 0 ? true : false);
             });
 
             return exists;
