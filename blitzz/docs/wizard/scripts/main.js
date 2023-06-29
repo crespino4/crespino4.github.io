@@ -385,8 +385,6 @@ async function onInitialPageEnter() {
       return;
     }
   }
-  // jc4 
-  debugger;
 
   // Check if there's an existing installation
   const integrationInstalled = await wizard.isExisting();
@@ -412,8 +410,6 @@ async function onInitialPageEnter() {
       );
       return;
     }
-    //jc4
-    debugger;
     goToPremiumApp();
   } else {
     // If integration is not yet installed, check that the user has necessary install permissions
