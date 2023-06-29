@@ -144,7 +144,7 @@ export default {
 
             installedObjects.forEach(item => {
                 // if it's just an array
-                exists = item.length > 0 ? true : exists;
+                exists = exists && (item.length > 0 ? true : exists);
             });
 
             return exists;
