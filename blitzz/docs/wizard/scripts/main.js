@@ -41,7 +41,8 @@ function goToPremiumApp() {
  */
 async function authenticateGenesysCloud(appParams) {
   // Set Genesys Cloud environment
-  client.setEnvironment(platformClient.PureCloudRegionHosts.us_west_2);
+  client.setEnvironment(pcEnvironment);
+  //JC4 client.setEnvironment(platformClient.PureCloudRegionHosts.us_west_2);
   // Authenticate with Genesys Cloud and get the state
   client.setPersistSettings(true, premiumAppIntegrationTypeId);
   const authData = await client.loginImplicitGrant(
