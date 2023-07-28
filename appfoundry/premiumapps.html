@@ -135,6 +135,8 @@
         }
 
         function getAppList(pageNumber) {
+            $("#applicationCount").html("Loading Applications - Page " + pageName + "...");
+
             var query = {
                 "platform":platform,
                 "pageSize": 50,
