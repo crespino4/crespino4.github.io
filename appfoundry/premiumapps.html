@@ -104,6 +104,8 @@
             if ( platform !== filters.radioPlatform) {
                 platform = filters.radioPlatform;
                 appfoundryBaseURL = "https://appfoundry.genesys.com/filter/" + platform + "/listing/";
+                var applications = [];
+                localStorage.setItem(localStorageAppList, JSON.stringify(applications));
                 getAppList(1);
                 return;
             }
