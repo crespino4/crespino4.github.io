@@ -187,7 +187,7 @@
         function buildAppTable() {
             $("#applicationCount").html(applications.length);
 
-            var tableRow = '<tr><th scope="row">{{name.en-us}}</tn><td>{{companyName.en-us}}</td><td><a target="appfoundry" href="' + appfoundryBaseURL + '{{id}}">Listing {{id}}</a></td><td>{{marketingInfo.campaignId}}<a href="https://genesys.lightning.force.com/lightning/r/Campaign/{{marketingInfo.campaignId}}/view"><image src=images/externallink.png></a></td></tr>';
+            var tableRow = '<tr><th scope="row">{{name.en-us}}</tn><td>{{companyName.en-us}}</td><td><a target="appfoundry" href="' + appfoundryBaseURL + '{{id}}">Listing {{id}}</a></td><td>{{marketingInfo.campaignId}}<a href="https://genesys.lightning.force.com/lightning/r/Campaign/{{marketingInfo.campaignId}}/view" target="_blank"><image src="images/externallink.png" style="width:20px;height:20px;"></a></td></tr>';
             var template = Handlebars.compile(tableRow);
 
             var table = $("#appsTableBody");
