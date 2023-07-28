@@ -214,7 +214,7 @@
             $("#applicationSort").off('click');
             $("#applicationSort").click(sortApplicationsByNameDesc);
             $("#applicationSort").html("^^ Application ^^");
-
+            $("#vendorSort").html("Vendor");
             sorting = false;
         }
 
@@ -233,6 +233,7 @@
             $("#applicationSort").off('click');
             $("#applicationSort").click(sortApplicationsByNameAsc);
             $("#applicationSort").html("vv Application vv");
+            $("#vendorSort").html("Vendor");
 
             sorting = false;
         }
@@ -252,6 +253,7 @@
             $("#vendorSort").off('click');
             $("#vendorSort").click(sortApplicationsByVendorDesc);
             $("#vendorSort").html("^^ Vendor ^^");
+            $("#applicationSort").html("Application");
 
             sorting = false;
         }
@@ -271,6 +273,7 @@
             $("#vendorSort").off('click');
             $("#vendorSort").click(sortApplicationsByVendorAsc);
             $("#vendorSort").html("vv Application vv");
+            $("#applicationSort").html("Application");
 
             sorting = false;
         }
