@@ -187,7 +187,7 @@
         function buildAppTable() {
             $("#applicationCount").html(applications.length);
 
-            var tableRow = '<tr><th scope="row">{{name.en-us}}<a target="_blank" href="' + appfoundryBaseURL + '{{id}}"><image src="images/externallink.png" style="width:20px;height:20px;"></a></tn><td>{{companyName.en-us}}</td><td>{{id}}</td><td>{{#if marketingInfo.campaignId}}{{marketingInfo.campaignId}}<a href="https://genesys.lightning.force.com/lightning/r/Campaign/{{marketingInfo.campaignId}}/view" target="_blank"><image src="images/externallink.png" style="width:20px;height:20px;"></a>{{/if}}</td></tr>';
+            var tableRow = '<tr><th scope="row">{{name.en-us}}<a target="_blank" href="' + appfoundryBaseURL + '{{id}}"><image src="images/externallink.png" style="width:20px;height:20px;"></a></tn><td>{{companyName.en-us}}</td><td>{{platform.name}}</td><td>{{#if marketingInfo.campaignId}}{{marketingInfo.campaignId}}<a href="https://genesys.lightning.force.com/lightning/r/Campaign/{{marketingInfo.campaignId}}/view" target="_blank"><image src="images/externallink.png" style="width:20px;height:20px;"></a>{{/if}}</td></tr>';
             var template = Handlebars.compile(tableRow);
 
             var table = $("#appsTableBody");
@@ -378,7 +378,7 @@
                     <tr>
                         <th scope="col" style="color: #FFFFFF"><span id="applicationSort">Application</span></th>
                         <th scope="col" style="color: #FFFFFF"><span id="vendorSort">Vendor</span></th>
-                        <th scope="col" style="color: #FFFFFF">Listing</th>
+                        <th scope="col" style="color: #FFFFFF">Platform</th>
                         <th scope="col" style="color: #FFFFFF">CID</th>
                     </tr>
                     </thead>
