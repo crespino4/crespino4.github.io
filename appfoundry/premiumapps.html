@@ -83,6 +83,7 @@
             $("#vendorSort").click(sortApplicationsByVendorAsc);
             $("#applyFilter").click(applyFilter);
             //getAppList(1);
+            localStorage.setItem(localStorageAppList, JSON.stringify(applications));
             applyFilter();
         });
 
