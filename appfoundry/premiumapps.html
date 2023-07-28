@@ -213,7 +213,7 @@
             buildAppTable();
             $("#applicationSort").off('click');
             $("#applicationSort").click(sortApplicationsByNameDesc);
-            $("#applicationSort").innerHTML("^^ Application ^^");
+            $("#applicationSort").html("^^ Application ^^");
 
             sorting = false;
         }
@@ -232,7 +232,7 @@
             buildAppTable();
             $("#applicationSort").off('click');
             $("#applicationSort").click(sortApplicationsByNameAsc);
-            $("#applicationSort").innerHTML("vv Application vv");
+            $("#applicationSort").html("vv Application vv");
 
             sorting = false;
         }
@@ -251,7 +251,7 @@
             buildAppTable();
             $("#vendorSort").off('click');
             $("#vendorSort").click(sortApplicationsByVendorDesc);
-            $("#vendorSort").innerHTML("^^ Vendor ^^");
+            $("#vendorSort").html("^^ Vendor ^^");
 
             sorting = false;
         }
@@ -270,7 +270,7 @@
             buildAppTable();
             $("#vendorSort").off('click');
             $("#vendorSort").click(sortApplicationsByVendorAsc);
-            $("#vendorSort").innerHTML("vv Application vv");
+            $("#vendorSort").html("vv Application vv");
 
             sorting = false;
         }
