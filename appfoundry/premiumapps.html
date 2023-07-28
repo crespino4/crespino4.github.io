@@ -72,7 +72,8 @@
     <script src="//cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
     <script>
-        var appfoundryBaseURL = "https://appfoundry.genesys.com/filter/genesyscloud/listing/"
+        var platform = "genesyscloud";
+        var appfoundryBaseURL = "https://appfoundry.genesys.com/filter/" + platform + "/listing/";
         var localStorageAppList = "AppFoundry_Applications";
         var applications = [];
         var sorting = false;
@@ -81,7 +82,8 @@
             $("#applicationSort").click(sortApplicationsByNameAsc);
             $("#vendorSort").click(sortApplicationsByVendorAsc);
             $("#applyFilter").click(applyFilter);
-            getAppList(1);
+            //getAppList(1);
+            applyFilter();
         });
 
         function objectifyForm(formArray) {//serialize data function
@@ -97,6 +99,13 @@
 
             var formvars = $('#formFilters').serializeArray();
             var filters = objectifyForm(formvars);
+
+            if ( platform !== filters.radioPlatform) {
+                platform = filters.radioPlatform;
+                appfoundryBaseURL = "https://appfoundry.genesys.com/filter/" + platform + "/listing/";
+                getAppList(1);
+                return;
+            }
 
             applications = JSON.parse(localStorage.getItem(localStorageAppList));
 
@@ -126,7 +135,7 @@
 
         function getAppList(pageNumber) {
             var query = {
-                "platform":"genesyscloud",
+                "platform":platform,
                 "pageSize": 50,
                 "pageNumber": pageNumber
             };
@@ -328,6 +337,24 @@
                                     <input class="form-check-input" type="checkbox" name="chkFreeTrial" id="chkFreeTrial" value="checked">
                                     <label class="form-check-label" for="chkFreeTrial">
                                         Free Trial
+                                    </label>
+                                </div>
+                                <div class="form-radio">
+                                    <input class="form-radio-input" type="radio" name="radioPlatform" id="radioGenesysCloud" value="genesyscloud" checked="true">
+                                    <label class="form-radio-label" for="radioGenesysCloud">
+                                        Genesys Cloud
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="radioPlatform" id="radioGenesysEngage" value="genesysengage">
+                                    <label class="form-check-label" for="radioPureConnect">
+                                        Genesys Engage
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="radioPlatform" id="radioPureConnect" value="pureconnect">
+                                    <label class="form-check-label" for="radioPureConnect">
+                                        PureConnect
                                     </label>
                                 </div>
                             </div>
