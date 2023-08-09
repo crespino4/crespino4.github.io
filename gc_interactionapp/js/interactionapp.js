@@ -146,6 +146,11 @@ function onSocketMessage(event){
         document.querySelector("#conversationEvent").innerHTML = JSON.stringify(eventBody, null, 3);
     }
 
+    if ( topic === topicTranscription )
+    {
+        console.log("Received a transcription event for a Conversation ID that is recognized");
+        document.querySelector("#transcriptionEvent").innerHTML = JSON.stringify(eventBody, null, 3);
+    }
 };
 
 function initializeApplication() {
