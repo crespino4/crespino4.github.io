@@ -18,6 +18,7 @@ const conversationsApi = new platformClient.ConversationsApi();
 var lifecycleStatusMessageTitle = 'Interaction App - Lifecycle Demo';
 var lifecycleStatusMessageId = 'lifecycleDemo-statusMsg';
 var topicName = "";
+var topicTranscription = "";
 var me = null;
 var socket = null;
 
@@ -144,6 +145,7 @@ function onSocketMessage(event){
         console.log("Received an event for a Conversation ID that is recognized");
         document.querySelector("#conversationEvent").innerHTML = JSON.stringify(eventBody, null, 3);
     }
+
 };
 
 function initializeApplication() {
@@ -177,9 +179,10 @@ function initializeApplication() {
         socket.onmessage = onSocketMessage;
 
         topicName = `v2.users.${me.id}.conversations`;
+        topicTranscription = `v2.conversations.${appParams.pcConversationId}.transcription`
 
         // Subscribe to conversation events in the queue.
-        let topic = [{"id": topicName}];
+        let topic = [{"id": topicName},{"id": topicTranscription}];
         return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
     }).then( () => {
         console.log("Getting initial conversation details for conversation ID: " + appParams.pcConversationId);
