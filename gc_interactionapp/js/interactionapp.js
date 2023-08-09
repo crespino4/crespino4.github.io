@@ -141,10 +141,10 @@ function onSocketMessage(event){
         document.querySelector("#conversationEvent").innerHTML = JSON.stringify(eventBody, null, 3);
     }
 
-    if ( topic === topicTranscription )
-    {
+    if ( topic === topicTranscription && eventBody.conversationId == appParams.pcConversationId ) {
         console.log("Received a transcription event for a Conversation ID that is recognized");
-        document.querySelector("#transcriptionEvent").innerHTML = JSON.stringify(eventBody, null, 3);
+        var transcript = "[" + eventBody.transcripts[0].channel + "]: " + eventBody.transcripts[0].alternatives[0].transcript;
+        document.querySelector("#transcriptionEvent").innerHTML = transcript;
     }
 };
 
