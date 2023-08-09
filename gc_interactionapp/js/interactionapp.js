@@ -51,11 +51,6 @@ console.log("PureCloud ClientApp Environment: " + myClientApp.pcEnvironment);
 console.log("PureCloud ClientApp Version: " + window.purecloud.apps.ClientApp.version);
 console.log("PureCloud ClientApp About: " + window.purecloud.apps.ClientApp.about());
 
-document.querySelect("#payment").onclick(takePayment);
-function takePayment() {
-    window.location.href=
-}
-
 document.querySelector("#pcConversationId").innerHTML = appParams.pcConversationId;
 document.querySelector("#pcEnvironment").innerHTML = appParams.pcEnvironment;
 document.querySelector("#pcLangTag").innerHTML = appParams.pcLangTag;
