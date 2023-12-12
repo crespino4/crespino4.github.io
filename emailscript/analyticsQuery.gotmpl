@@ -1,0 +1,37 @@
+{{- range . -}}
+{
+    "interval": "2023-11-06T00:00:00.000Z/2023-11-07T00:00:00.000Z",
+    "order": "asc",
+    "orderBy": "conversationStart",
+    "paging": {
+        "pageSize": 100,
+        "pageNumber": 1
+    },
+    "segmentFilters": [
+        {
+            "type": "or",
+            "predicates": [
+                {
+                    "type": "dimension",
+                    "dimension": "queueId",
+                    "operator": "matches",
+                    "value": "{{ .id }}"
+                }
+            ]
+        }
+    ],
+    "conversationFilters": [
+        {
+            "type": "or",
+            "predicates": [
+                {
+                    "type": "dimension",
+                    "dimension": "conversationEnd",
+                    "operator": "notExists",
+                    "value": null
+                }
+            ]
+        }
+    ]
+}
+{{- end -}}
