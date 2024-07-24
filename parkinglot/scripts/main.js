@@ -135,7 +135,7 @@ function buildParkedCallInformation(conversationsData){
         parkedCallDuration += minutesAgo + ' minute(s)';
 
         var customerParticipant = conversation.participants.find((participant) => {
-            return (participant.purpose == 'customer');
+            return ((participant.purpose == 'customer') || (participant.purpose == 'external'));
         });
 
         var acdParkedQueueParticipant = conversation.participants.find((participant) => {
