@@ -58,7 +58,7 @@ function addQueue(queue){
 function getParkedCallsFromQueue(){
     var queueList = document.getElementById('queueList');
     selectedQueueId = queueList.value;
-    selectedQueueName = queueList.text;
+    selectedQueueName = queueList.innerText;
 
     let intervalTo = moment().utc().add(1, 'h');
     let intervalFrom = intervalTo.clone().subtract(7, 'days');
