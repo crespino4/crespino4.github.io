@@ -8,7 +8,7 @@ const client = platformClient.ApiClient.instance;
 const redirectUri = window.location.href;
 const clientId = 'dc5c5c9f-5be7-40b2-b1d6-bee95d2eb0f0';
 
-var queueId = '';
+var selectedQueueId = '';
 
 // API instances
 const analyticsApi = new platformClient.AnalyticsApi();
@@ -56,7 +56,7 @@ function addQueue(queue){
  */
 function getParkedCallsFromQueue(queueId){
     var queueList = document.getElementById('queueList');
-    queueId = queueList.value;
+    selectedQueueId = queueList.value;
 
     let intervalTo = moment().utc().add(1, 'h');
     let intervalFrom = intervalTo.clone().subtract(7, 'days');
@@ -203,7 +203,7 @@ function refreshParkedCalls(){
  */
 function setQueueListener(){
     let channel = {};
-    let topicId = `v2.routing.queues.${queueId}.conversations.calls`;
+    let topicId = `v2.routing.queues.${selectedQueueId}.conversations.calls`;
 
     notificationsApi.postNotificationsChannels()
         .then((data) => {
