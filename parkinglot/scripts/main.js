@@ -134,8 +134,13 @@ function buildParkedCallInformation(conversationsData){
         if(hoursAgo >= 1) parkedCallDuration += hoursAgo + ' hour(s) ';
         parkedCallDuration += minutesAgo + ' minute(s)';
 
-        var customerParticipant = conversation.participants.find((participant) => participant.purpose == 'customer');
-        var acdParkedQueueParticipant = conversation.participants.find((participant) => (participant.purpose == 'acd') && (participant.queueuId == selectedQueueId) && (participant.endTime == undefined));;
+        var customerParticipant = conversation.participants.find((participant) => {
+            return (participant.purpose == 'customer');
+        });
+
+        var acdParkedQueueParticipant = conversation.participants.find((participant) => {
+            return ((participant.purpose == 'acd') && (participant.queueuId == selectedQueueId) && (participant.endTime == undefined));
+        });
 
         var parkedCall = {
             conversationId: conversation.conversationId,
