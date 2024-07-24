@@ -178,7 +178,7 @@ function refreshParkedCalls(){
     return getParkedCallsFromQueue()
         .then((conversations) => {
             // mutate the information from parked calls to prepare for viewing
-            parkedCalls = buildParkedCallInformation(conversations);
+            var parkedCalls = buildParkedCallInformation(conversations);
 
             // Show the parked call info on the document
             view.clearParkedCallContainer();
