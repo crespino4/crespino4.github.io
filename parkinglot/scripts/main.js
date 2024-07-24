@@ -137,8 +137,8 @@ function buildParkedCallInformation(conversationsData){
         var parkedCall = {
             conversationId: conversation.conversationId,
             acdParticipant: conversation.participants[conversation.participants.length - 1].participantId,
-            ani: conversation.participants[0].ani,
-            dnis: conversation.participants[0].dnis,
+            ani: conversation.participants[0].sessions[0].ani,
+            dnis: conversation.participants[0].sessions[0].dnis,
             duration: parkedCallDuration
         };
 
