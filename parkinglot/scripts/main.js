@@ -54,7 +54,7 @@ function addQueue(queue){
  * @param {String} queueId Genesys Cloud Queue ID
  * @returns {Promise} the api response
  */
-function getParkedCallsFromQueue(queueId){
+function getParkedCallsFromQueue(){
     var queueList = document.getElementById('queueList');
     selectedQueueId = queueList.value;
 
@@ -84,7 +84,7 @@ function getParkedCallsFromQueue(queueId){
                         'type': 'dimension',
                         'dimension': 'queueId',
                         'operator': 'matches',
-                        'value': queueId
+                        'value': selectedQueueId
                     }
                 ]
             }
@@ -176,7 +176,7 @@ function refreshParkedCalls(){
     view.showLoader('Gathering Parked Calls...');
     view.hideBlankParkedCalls();
 
-    return getParkedCallsFromQueue(queueId)
+    return getParkedCallsFromQueue()
         .then((conversations) => {
             // mutate the information from parked calls to prepare for viewing
             return buildParkedCallInformation(conversations);
