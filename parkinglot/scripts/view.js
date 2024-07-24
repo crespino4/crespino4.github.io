@@ -1,7 +1,7 @@
-const parkedCallContainer = document.getElementById('parkedCall-container');
+const parkedCallContainer = document.getElementById('parkedcall-container');
 const loader = document.getElementById('loader-icon');
 const loaderText = document.getElementById('loader-text');
-const noparkedCallText = document.getElementById('no-parkedCalls');
+const noparkedCallText = document.getElementById('no-parkedcalls');
 
 let parkedCallBoxTemplate = document.createElement('template');
 parkedCallBoxTemplate.innerHTML =
@@ -41,19 +41,19 @@ export default {
         parkedCallContainer.appendChild(parkedCallView);
 
         // Get references to dynamic elements
-        let senderName = parkedCallViewElement.getElementsByClassName('sender-name')[0];
-        let senderparkedCall = parkedCallViewElement.getElementsByClassName('sender-parkedCall')[0];
+//        let senderName = parkedCallViewElement.getElementsByClassName('sender-name')[0];
+//        let senderparkedCall = parkedCallViewElement.getElementsByClassName('sender-parkedCall')[0];
         let parkedCallDuration = parkedCallViewElement.getElementsByClassName('parkedCall-duration')[0];
-        let parkedCallSubject = parkedCallViewElement.getElementsByClassName('parkedCall-subject')[0];
-        let parkedCallBody = parkedCallViewElement.getElementsByClassName('parkedCall-body')[0];
+//        let parkedCallSubject = parkedCallViewElement.getElementsByClassName('parkedCall-subject')[0];
+//        let parkedCallBody = parkedCallViewElement.getElementsByClassName('parkedCall-body')[0];
         let btnAssign = parkedCallViewElement.getElementsByClassName('btn-assign')[0];
         
         // Assign values
-        senderName.textContent = parkedCallData.senderName ? parkedCallData.senderName : null;
-        senderparkedCall.textContent = parkedCallData.senderparkedCall ? parkedCallData.senderparkedCall : null;
+//        senderName.textContent = parkedCallData.senderName ? parkedCallData.senderName : null;
+//        senderparkedCall.textContent = parkedCallData.senderparkedCall ? parkedCallData.senderparkedCall : null;
         parkedCallDuration.textContent = parkedCallData.parkedCallDuration ? parkedCallData.parkedCallDuration : null;
-        parkedCallSubject.textContent = parkedCallData.parkedCallSubject ? parkedCallData.parkedCallSubject : null;
-        parkedCallBody.textContent = parkedCallData.parkedCallBody ? parkedCallData.parkedCallBody : null;
+//        parkedCallSubject.textContent = parkedCallData.parkedCallSubject ? parkedCallData.parkedCallSubject : null;
+//        parkedCallBody.textContent = parkedCallData.parkedCallBody ? parkedCallData.parkedCallBody : null;
 
         // Assign onlcick action to button
         btnAssign.setAttribute('onclick', 
