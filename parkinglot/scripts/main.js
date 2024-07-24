@@ -144,7 +144,7 @@ function buildParkedCallInformation(conversationsData){
         }));
     }
 
-    return Promise.all(parkedCalls);
+    return parkedCalls;
 }
 
 /**
@@ -179,9 +179,8 @@ function refreshParkedCalls(){
     return getParkedCallsFromQueue()
         .then((conversations) => {
             // mutate the information from parked calls to prepare for viewing
-            return buildParkedCallInformation(conversations);
-        })
-        .then((parkedCalls) => {
+            parkedCalls = buildParkedCallInformation(conversations);
+
             // Show the parked call info on the document
             view.clearParkedCallContainer();
             view.hideLoader();
