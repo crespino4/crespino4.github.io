@@ -146,7 +146,7 @@ function buildParkedCallInformation(conversationsData){
 
         var parkedCall = {
             conversationId: conversation.conversationId,
-            acdParticipant: conversation.participants[conversation.participants.length - 1].participantId,
+            acdParticipant: acdParkedQueueParticipant.participantId,
             ani: customerParticipant.sessions[0].ani,
             dnis: customerParticipant.sessions[0].dnis,
             duration: parkedCallDuration
