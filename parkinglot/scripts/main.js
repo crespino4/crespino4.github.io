@@ -141,7 +141,7 @@ function buildParkedCallInformation(conversationsData){
         });
 
         var acdParkedQueueParticipant = conversation.participants.findLast((participant) => {
-            return ((participant.purpose == 'acd') && (participant.name == selectedQueueName));
+            return ((participant.purpose == 'acd') && (participant.participantName == selectedQueueName));
         });
 
         var parkedCall = {
