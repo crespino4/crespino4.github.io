@@ -78,7 +78,7 @@ function getParkedCallsFromQueue(queueId){
                         'type': 'dimension',
                         'dimension': 'mediaType',
                         'operator': 'matches',
-                        'value': 'call'
+                        'value': 'voice'
                     },
                     {
                         'type': 'dimension',
