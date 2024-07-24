@@ -33,7 +33,7 @@ export default {
      * Add an parkedCall box to the document
      * @param {Object} parkedCallData contains the parkedCall information
      */
-    addparkedCallBox(parkedCallData){
+    addParkedCallBox(parkedCallData){
         // Add the parkedCall box to the DOM
         let parkedCallView = document.importNode(parkedCallBoxTemplate.content, true);
         let parkedCallViewElement = parkedCallView.firstChild;
@@ -67,7 +67,7 @@ export default {
      * Hide an parkedCall box when user assigns it to agent
      * @param {String} id 
      */
-    hideparkedCallBox(id){
+    hideParkedCallBox(id){
         document.getElementById(id).style.display = 'none';
     },
 
@@ -94,7 +94,7 @@ export default {
     /**
      * Removes all parkedCall panels from the container
      */
-    clearparkedCallContainer(){
+    clearParkedCallContainer(){
         while(parkedCallContainer.firstChild) {
             parkedCallContainer.firstChild.remove();
         }
