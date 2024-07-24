@@ -130,9 +130,9 @@ function buildParkedCallInformation(conversationsData){
         let hoursAgo = Math.floor((durationMinutes / 60) % 24);
         let minutesAgo = Math.floor(durationMinutes % 60);
         let parkedCallDuration = '';
-        if(daysAgo >= 1) parkedCallDuration += daysAgo + 'day(s) ';
-        if(hoursAgo >= 1) parkedCallDuration += hoursAgo + 'hour(s) ';
-        parkedCallDuration += minutesAgo + 'minute(s)';
+        if(daysAgo >= 1) parkedCallDuration += daysAgo + ' day(s) ';
+        if(hoursAgo >= 1) parkedCallDuration += hoursAgo + ' hour(s) ';
+        parkedCallDuration += minutesAgo + ' minute(s)';
 
         var parkedCall = {
             conversationId: conversation.conversationId,
