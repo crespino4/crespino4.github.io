@@ -8,7 +8,7 @@ const client = platformClient.ApiClient.instance;
 const redirectUri = window.location.href;
 const clientId = 'dc5c5c9f-5be7-40b2-b1d6-bee95d2eb0f0';
 
-const queueId = '';
+var queueId = '';
 
 // API instances
 const analyticsApi = new platformClient.AnalyticsApi();
