@@ -41,7 +41,7 @@ export default {
 //        let senderparkedCall = parkedCallViewElement.getElementsByClassName('sender-parkedCall')[0];
         let parkedCallDuration = parkedCallViewElement.getElementsByClassName('parkedCall-duration')[0];
         let parkedCallANI = parkedCallViewElement.getElementsByClassName('parkedCall-ani')[0];
-        let parkedCallDDNIS = parkedCallViewElement.getElementsByClassName('parkedCall-dnis')[0];
+        let parkedCallDNIS = parkedCallViewElement.getElementsByClassName('parkedCall-dnis')[0];
 //        let parkedCallSubject = parkedCallViewElement.getElementsByClassName('parkedCall-subject')[0];
 //        let parkedCallBody = parkedCallViewElement.getElementsByClassName('parkedCall-body')[0];
         let btnAssign = parkedCallViewElement.getElementsByClassName('btn-assign')[0];
