@@ -103,14 +103,14 @@ export default {
     /**
      * Show message that informs that there are no available parkedCalls
      */
-    showBlankparkedCalls(){
+    showBlankParkedCalls(){
         noparkedCallText.style.display = 'block';
     },
 
     /**
      * Hide message that informs that there are no available parkedCalls
      */
-    hideBlankparkedCalls(){
+    hideBlankParkedCalls(){
         noparkedCallText.style.display = 'none';
     },
 };
