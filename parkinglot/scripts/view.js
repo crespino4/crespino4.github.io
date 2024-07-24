@@ -57,7 +57,7 @@ export default {
 
         // Assign onlcick action to button
         btnAssign.setAttribute('onclick', 
-            'assignparkedCallToAgent(' + 
+            'assignParkedCallToAgent(' + 
                 `"${parkedCallData.conversationId}",` +
                 `"${parkedCallData.acdParticipant}",` +
             ')'); 
