@@ -12,13 +12,9 @@ parkedCallBoxTemplate.innerHTML =
         <p>
             On Queue: <small><span class="parkedCall-duration">31m</span></small>
             <br>
-            From: <strong><span class="sender-name">John Smith</span></strong> <small><span class="sender-parkedCall">parkedCall@parkedCall.com</span></small> 
+            ANI: <strong><span class="parkedCall-ani">tel:</span></strong>
             <br>
-            Subject: <strong><span class="parkedCall-subject">Subject</span></strong>
-            <br>
-            <div class="parkedCall-body">
-                Body of parkedCall
-            </div>
+            DNIS: <strong><span class="parkedCall-dnis">tel:</span></strong>
         </p>
         </div>
         <div>
@@ -44,6 +40,8 @@ export default {
 //        let senderName = parkedCallViewElement.getElementsByClassName('sender-name')[0];
 //        let senderparkedCall = parkedCallViewElement.getElementsByClassName('sender-parkedCall')[0];
         let parkedCallDuration = parkedCallViewElement.getElementsByClassName('parkedCall-duration')[0];
+        let parkedCallANI = parkedCallViewElement.getElementsByClassName('parkedCall-ani')[0];
+        let parkedCallDDNIS = parkedCallViewElement.getElementsByClassName('parkedCall-dnis')[0];
 //        let parkedCallSubject = parkedCallViewElement.getElementsByClassName('parkedCall-subject')[0];
 //        let parkedCallBody = parkedCallViewElement.getElementsByClassName('parkedCall-body')[0];
         let btnAssign = parkedCallViewElement.getElementsByClassName('btn-assign')[0];
@@ -51,7 +49,9 @@ export default {
         // Assign values
 //        senderName.textContent = parkedCallData.senderName ? parkedCallData.senderName : null;
 //        senderparkedCall.textContent = parkedCallData.senderparkedCall ? parkedCallData.senderparkedCall : null;
-        parkedCallDuration.textContent = parkedCallData.parkedCallDuration ? parkedCallData.parkedCallDuration : null;
+        parkedCallANI.textContent = parkedCallData.ani ? parkedCallData.ani : null;
+        parkedCallDNIS.textContent = parkedCallData.dnis ? parkedCallData.dnis : null;
+        parkedCallDuration.textContent = parkedCallData.duration ? parkedCallData.duration : null;
 //        parkedCallSubject.textContent = parkedCallData.parkedCallSubject ? parkedCallData.parkedCallSubject : null;
 //        parkedCallBody.textContent = parkedCallData.parkedCallBody ? parkedCallData.parkedCallBody : null;
 
