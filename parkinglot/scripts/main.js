@@ -9,6 +9,7 @@ const redirectUri = window.location.href;
 const clientId = 'dc5c5c9f-5be7-40b2-b1d6-bee95d2eb0f0';
 
 var selectedQueueId = '';
+var selectedQueueName = '';
 
 // API instances
 const analyticsApi = new platformClient.AnalyticsApi();
@@ -57,6 +58,7 @@ function addQueue(queue){
 function getParkedCallsFromQueue(){
     var queueList = document.getElementById('queueList');
     selectedQueueId = queueList.value;
+    selectedQueueName = queueList.text;
 
     let intervalTo = moment().utc().add(1, 'h');
     let intervalFrom = intervalTo.clone().subtract(7, 'days');
@@ -138,8 +140,8 @@ function buildParkedCallInformation(conversationsData){
             return ((participant.purpose == 'customer') || (participant.purpose == 'external'));
         });
 
-        var acdParkedQueueParticipant = conversation.participants.find((participant) => {
-            return ((participant.purpose == 'acd') && (participant.queueuId == selectedQueueId) && (participant.endTime == undefined));
+        var acdParkedQueueParticipant = conversation.participants.findLast((participant) => {
+            return ((participant.purpose == 'acd') && (participant.name == selectedQueueName));
         });
 
         var parkedCall = {
