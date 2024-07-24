@@ -123,25 +123,24 @@ function buildParkedCallInformation(conversationsData){
         if (conversation.participants[conversation.participants.length - 1]
             .purpose != 'acd') continue;
 
-        parkedCalls.push(new Promise((resolve, reject) => {
-            // Default Values
-            let senderName = '<No Name>';
-            let senderEmail = '<No Email>';
-            let emailSubject = '<No Subject>';
-            let emailBody = '<No Body>';
+        // Get duration from conversation start
+        let durationMinutes = moment.duration(
+            moment().utc().diff(moment(conversation.conversationStart))).as('minutes');
+        let daysAgo = Math.floor(durationMinutes / (60 * 24));
+        let hoursAgo = Math.floor((durationMinutes / 60) % 24);
+        let minutesAgo = Math.floor(durationMinutes % 60);
+        let parkedCallDuration = '';
+        if(daysAgo >= 1) parkedCallDuration += daysAgo + 'day(s) ';
+        if(hoursAgo >= 1) parkedCallDuration += hoursAgo + 'hour(s) ';
+        parkedCallDuration += minutesAgo + 'minute(s)';
 
-            // Get duration from conversation start
-            let durationMinutes = moment.duration(
-                moment().utc().diff(moment(conversation.conversationStart))).as('minutes');
-            let daysAgo = Math.floor(durationMinutes / (60 * 24));
-            let hoursAgo = Math.floor((durationMinutes / 60) % 24);
-            let minutesAgo = Math.floor(durationMinutes % 60);
-            let parkedCallDuration = '';
-            if(daysAgo >= 1) parkedCallDuration += daysAgo + 'day(s) ';
-            if(hoursAgo >= 1) parkedCallDuration += hoursAgo + 'hour(s) ';
-            parkedCallDuration += minutesAgo + 'minute(s)';
+        var parkedCall = {
+            conversationId: conversation.conversationId,
+            acdParticipant: conversation.participants[conversation.participants.length - 1].participantId,
+            duration: parkedCallDuration
+        };
 
-        }));
+        parkedCalls.push(parkedCall);
     }
 
     return parkedCalls;
