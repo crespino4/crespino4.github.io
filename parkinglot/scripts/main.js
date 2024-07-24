@@ -157,7 +157,8 @@ function assignParkedCallToAgent(conversationId, acdParticipantId){
     view.showLoader('Assigning Parked Call...');
 
     let body = {
-        'userId': userId,
+        'transferType': 'Attended',
+        'userId': userId
     };
     conversationsApi.postConversationParticipantReplace(conversationId, acdParticipantId, body)
         .then(() => {
