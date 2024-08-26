@@ -4,9 +4,12 @@
 const redirectUri = window.location.protocol + "//" + window.location.hostname + window.location.pathname;
 console.log("***** RedirectURI *****: " + redirectUri);
 
-// PureCloud Platform API
+// PureCloud Platform SDK
 const platformClient = require('platformClient');
 const client = platformClient.ApiClient.instance;
+
+// Set to store OAuth access token in local storage to prevent user from being
+// prompted for user credentials multiple times during use of the widget.
 client.setPersistSettings(true, 'FavoritesInteractionWidget');
 
 // Specific Platform API Instances
@@ -21,10 +24,10 @@ var lifecycleStatusMessageId = 'lifecycle-statusMsg';
 var me = null;
 var conversation = null;
 
-// Parse the query parameters to get the pcEnvironment variable so we can setup
+// Parse the query parameters to get the values we can use to setup
 // the API client against the proper Genesys Cloud region.
 //
-// Note: Genesys Cloud will send us pcEnvironment, pcLangTag, and pcConversationId
+// Note: Genesys Cloud will send us gcHostOrigin, gcTargetEnv, gcLangTag, and gcConversationId
 //       when the iframe is first initialized.  However, we'll come through this code
 //       again after the implicit grant redirect, and those parameters won't be there
 //       So we have to check if we were able to parse out the environment or not.
@@ -38,24 +41,19 @@ if ( window.location.search.length !== 0 ) {
 }
 var appParams = parseAppParameters(integrationQueryString);
 
-console.log("Initializing platform client for region: " + appParams.pcEnvironment);
-client.setEnvironment(appParams.pcEnvironment);
-
 // Create instance of Client App SDK
 let myClientApp = new window.purecloud.apps.ClientApp({
-    pcEnvironment: appParams.pcEnvironment
+    gcHostOriginQueryParam: appParams.gcHostOrigin,
+    gcTargetEnvQueryParam: appParams.gcTargetEnv
 });
 
-// Log the PureCloud environment (i.e. AWS Region)
-console.log("PureCloud API Client Environment: " + client.environment);
-console.log("PureCloud ClientApp Environment: " + myClientApp.pcEnvironment);
-console.log("PureCloud ClientApp Version: " + window.purecloud.apps.ClientApp.version);
-console.log("PureCloud ClientApp About: " + window.purecloud.apps.ClientApp.about());
+console.log("Initializing platform client for region returned by Client App SDK: " + myClientApp.gcEnvironment);
+client.setEnvironment(myClientApp.gcEnvironment);
 
-// document.querySelector("#pcConversationId").innerHTML = appParams.pcConversationId;
-// document.querySelector("#pcEnvironment").innerHTML = appParams.pcEnvironment;
-// document.querySelector("#pcLangTag").innerHTML = appParams.pcLangTag;
-// document.querySelector("#pcClientId").innerHTML = appParams.pcClientId;
+// Log the PureCloud environment (i.e. AWS Region)
+console.log("Genesys Cloud Client App SDK Environment: " + window.purecloud.apps.ClientApp.gcEnvironment);
+console.log("Genesys Cloud Client App SDK Version: " + window.purecloud.apps.ClientApp.version);
+console.log("Genesys Cloud Client App SDK About: " + window.purecloud.apps.ClientApp.about());
 
 initializeApplication();
 
@@ -132,7 +130,7 @@ function initializeApplication() {
     //
     // Note: Pass the query string parameters in the 'state' parameter so that they are returned
     //       to us after the implicit grant redirect.
-    client.loginImplicitGrant(appParams.pcClientId, redirectUri, { state: integrationQueryString })
+    client.loginImplicitGrant(appParams.clientId, redirectUri, { state: integrationQueryString })
         .then((data) => {
             // User Authenticated
             console.log("User Authenticated: " + JSON.stringify(data));
@@ -346,9 +344,11 @@ function parseAppParameters(queryString) {
     console.log("Interaction Widget Proxy Query String: " + queryString);
 
     let appParams = {
-        pcEnvironment: null,
-        pcLangTag: null,
-        pcConversationId: null
+        gcHostOrigin: null,
+        gcTargetEnv: null,
+        gcLangTag: null,
+        gcConversationId: null,
+        clientId: null
     };
 
     if ( queryString.length != 0 ) {
@@ -358,14 +358,21 @@ function parseAppParameters(queryString) {
         {
             var currParam = pairs[i].split('=');
 
-            if (currParam[0] === 'pcLangTag') {
-                appParams.pcLangTag = currParam[1];
-            } else if (currParam[0] === 'pcEnvironment') {
-                appParams.pcEnvironment = currParam[1];
-            } else if (currParam[0] === 'pcConversationId') {
-                appParams.pcConversationId = currParam[1];
-            } else if (currParam[0] === 'pcClientId') {
-                appParams.pcClientId = currParam[1];
+            if (currParam[0] === 'gcLangTag') {
+                appParams.gcLangTag = currParam[1];
+                console.log("Query Parameter gcLangTag = " + appParams.gcLangTag);
+            } else if (currParam[0] === 'gcHostOrigin') {
+                appParams.gcHostOrigin = currParam[1];
+                console.log("Query Parameter gcHostOrigin = " + appParams.gcHostOrigin);
+            } else if (currParam[0] === 'gcTargetEnv') {
+                appParams.gcTargetEnv = currParam[1];
+                console.log("Query Parameter gcTargetEnv = " + appParams.gcTargetEnv);
+            } else if (currParam[0] === 'gcConversationId') {
+                appParams.gcConversationId = currParam[1];
+                console.log("Query Parameter gcConversationId = " + appParams.gcConversationId);
+            } else if (currParam[0] === 'ClientId') {
+                appParams.clientId = currParam[1];
+                console.log("Query Parameter ClientId = " + appParams.clientId);
             } else if (currParam[0] === 'state') {
                 console.log("Found 'state' query parameter from implicit grant redirect");
                 var stateValue = currParam[1];
