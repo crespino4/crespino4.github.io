@@ -51,9 +51,9 @@ console.log("Initializing platform client for region returned by Client App SDK:
 client.setEnvironment(myClientApp.gcEnvironment);
 
 // Log the Genesys Cloud environment (i.e. AWS Region)
-console.log("Genesys Cloud Client App SDK Environment: " + window.purecloud.apps.ClientApp.gcEnvironment);
-console.log("Genesys Cloud Client App SDK Version: " + window.purecloud.apps.ClientApp.version);
-console.log("Genesys Cloud Client App SDK About: " + window.purecloud.apps.ClientApp.about());
+console.log("Genesys Cloud Client App SDK Environment: " + myClientApp.gcEnvironment);
+console.log("Genesys Cloud Client App SDK Version: " + myClientApp.version);
+console.log("Genesys Cloud Client App SDK About: " + myClientApp.about());
 
 initializeApplication();
 
