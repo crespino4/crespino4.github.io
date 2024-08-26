@@ -32,7 +32,7 @@ function getQueues(){
         'pageSize': 25, // Number | Page size
         'pageNumber': 1, // Number | Page number
         'sortBy': 'name', // String | Sort by
-        'name': 'Parking*'
+        'name': '*Parking*'
     };
 
     return routingApi.getRoutingQueues(opts)
