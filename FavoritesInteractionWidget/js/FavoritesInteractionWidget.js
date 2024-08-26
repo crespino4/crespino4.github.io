@@ -1,36 +1,18 @@
 /*
  * NOTE: This sample use ES6
  */
+
+// Set redirect URI in case user must login and we need to get back here
 const redirectUri = window.location.protocol + "//" + window.location.hostname + window.location.pathname;
 console.log("***** RedirectURI *****: " + redirectUri);
 
-// Genesys Cloud Platform SDK
-const platformClient = require('platformClient');
-const client = platformClient.ApiClient.instance;
-
-// Set to store OAuth access token in local storage to prevent user from being
-// prompted for user credentials multiple times during use of the widget.
-client.setPersistSettings(true, 'FavoritesInteractionWidget');
-
-// Specific Platform API Instances
-const usersApi = new platformClient.UsersApi();
-const notificationsApi = new platformClient.NotificationsApi();
-const conversationsApi = new platformClient.ConversationsApi();
-const extContactsApi = new platformClient.ExternalContactsApi();
-const routingApi = new platformClient.RoutingApi();
-
-var lifecycleStatusMessageTitle = 'Favorites Interaction Widget';
-var lifecycleStatusMessageId = 'lifecycle-statusMsg';
-var me = null;
-var conversation = null;
-
 // Parse the query parameters to get the values we can use to setup
-// the API client against the proper Genesys Cloud region.
+// the SDK clients against the proper Genesys Cloud region.
 //
 // Note: Genesys Cloud will send us gcHostOrigin, gcTargetEnv, gcLangTag, and gcConversationId
 //       when the iframe is first initialized.  However, we'll come through this code
 //       again after the implicit grant redirect, and those parameters won't be there
-//       So we have to check if we were able to parse out the environment or not.
+//       so we need to get the query parameters based on where they exist.
 var integrationQueryString = "";
 if ( window.location.search.length !== 0 ) {
     document.querySelector("#status").innerHTML = "Authenticating...";
@@ -41,18 +23,39 @@ if ( window.location.search.length !== 0 ) {
 }
 var appParams = parseAppParameters(integrationQueryString);
 
-// Create instance of Client App SDK
+// Create and initialize an instance of Client App SDK
 let myClientApp = new window.purecloud.apps.ClientApp({
     gcHostOrigin: appParams.gcHostOrigin,
     gcTargetEnv: appParams.gcTargetEnv
 });
 
+// Log the Genesys Cloud environment (i.e. AWS Region) and Client Apps SDK version
+console.log("Genesys Cloud Client App SDK Environment: " + myClientApp.gcEnvironment);
+console.log("Genesys Cloud Client App SDK Version: " + myClientApp.version);
+
+// Create Genesys Cloud Platform SDK instance
+const platformClient = require('platformClient');
+const client = platformClient.ApiClient.instance;
+
+// Point the Platform SDK to make SDK requests to the proper region for the org
 console.log("Initializing platform client for region returned by Client App SDK: " + myClientApp.gcEnvironment);
 client.setEnvironment(myClientApp.gcEnvironment);
 
-// Log the Genesys Cloud environment (i.e. AWS Region)
-console.log("Genesys Cloud Client App SDK Environment: " + myClientApp.gcEnvironment);
-console.log("Genesys Cloud Client App SDK Version: " + myClientApp.version);
+// Set to store OAuth access token in local storage to prevent user from being
+// prompted for user credentials multiple times during use of the widget.
+client.setPersistSettings(true, 'FavoritesInteractionWidget');
+
+// Specific Platform SDK items utilized by this application
+const usersApi = new platformClient.UsersApi();
+const notificationsApi = new platformClient.NotificationsApi();
+const conversationsApi = new platformClient.ConversationsApi();
+const extContactsApi = new platformClient.ExternalContactsApi();
+const routingApi = new platformClient.RoutingApi();
+
+var lifecycleStatusMessageTitle = 'Favorites Interaction Widget';
+var lifecycleStatusMessageId = 'lifecycle-statusMsg';
+var me = null;
+var conversation = null;
 
 initializeApplication();
 
