@@ -53,7 +53,6 @@ client.setEnvironment(myClientApp.gcEnvironment);
 // Log the Genesys Cloud environment (i.e. AWS Region)
 console.log("Genesys Cloud Client App SDK Environment: " + myClientApp.gcEnvironment);
 console.log("Genesys Cloud Client App SDK Version: " + myClientApp.version);
-console.log("Genesys Cloud Client App SDK About: " + myClientApp.about());
 
 initializeApplication();
 
