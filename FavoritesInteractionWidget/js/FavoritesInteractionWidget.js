@@ -4,7 +4,7 @@
 const redirectUri = window.location.protocol + "//" + window.location.hostname + window.location.pathname;
 console.log("***** RedirectURI *****: " + redirectUri);
 
-// PureCloud Platform SDK
+// Genesys Cloud Platform SDK
 const platformClient = require('platformClient');
 const client = platformClient.ApiClient.instance;
 
@@ -50,7 +50,7 @@ let myClientApp = new window.purecloud.apps.ClientApp({
 console.log("Initializing platform client for region returned by Client App SDK: " + myClientApp.gcEnvironment);
 client.setEnvironment(myClientApp.gcEnvironment);
 
-// Log the PureCloud environment (i.e. AWS Region)
+// Log the Genesys Cloud environment (i.e. AWS Region)
 console.log("Genesys Cloud Client App SDK Environment: " + window.purecloud.apps.ClientApp.gcEnvironment);
 console.log("Genesys Cloud Client App SDK Version: " + window.purecloud.apps.ClientApp.version);
 console.log("Genesys Cloud Client App SDK About: " + window.purecloud.apps.ClientApp.about());
@@ -359,19 +359,19 @@ function parseAppParameters(queryString) {
             var currParam = pairs[i].split('=');
 
             if (currParam[0] === 'gcLangTag') {
-                appParams.gcLangTag = currParam[1];
+                appParams.gcLangTag = decodeURIComponent(currParam[1]);
                 console.log("Query Parameter gcLangTag = " + appParams.gcLangTag);
             } else if (currParam[0] === 'gcHostOrigin') {
-                appParams.gcHostOrigin = currParam[1];
+                appParams.gcHostOrigin = decodeURIComponent(currParam[1]);
                 console.log("Query Parameter gcHostOrigin = " + appParams.gcHostOrigin);
             } else if (currParam[0] === 'gcTargetEnv') {
-                appParams.gcTargetEnv = currParam[1];
+                appParams.gcTargetEnv = decodeURIComponent(currParam[1]);
                 console.log("Query Parameter gcTargetEnv = " + appParams.gcTargetEnv);
             } else if (currParam[0] === 'gcConversationId') {
-                appParams.gcConversationId = currParam[1];
+                appParams.gcConversationId = decodeURIComponent(currParam[1]);
                 console.log("Query Parameter gcConversationId = " + appParams.gcConversationId);
             } else if (currParam[0] === 'ClientId') {
-                appParams.clientId = currParam[1];
+                appParams.clientId = decodeURIComponent(currParam[1]);
                 console.log("Query Parameter ClientId = " + appParams.clientId);
             } else if (currParam[0] === 'state') {
                 console.log("Found 'state' query parameter from implicit grant redirect");
