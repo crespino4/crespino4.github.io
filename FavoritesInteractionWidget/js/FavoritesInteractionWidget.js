@@ -148,10 +148,10 @@ function initializeApplication() {
 
             document.querySelector("#status").innerHTML = "Querying Conversation...";
 
-            console.log("Getting initial conversation details for conversation ID: " + appParams.pcConversationId);
-            return conversationsApi.getConversation(appParams.pcConversationId);
+            console.log("Getting initial conversation details for conversation ID: " + appParams.gcConversationId);
+            return conversationsApi.getConversation(appParams.gcConversationId);
         }).then((data) => {
-            console.log("Conversation details for " + appParams.pcConversationId + ": " + JSON.stringify(data));
+            console.log("Conversation details for " + appParams.gcConversationId + ": " + JSON.stringify(data));
             //document.querySelector("#conversationEvent").innerHTML = JSON.stringify(data, null, 3);
             conversation = data;
 
