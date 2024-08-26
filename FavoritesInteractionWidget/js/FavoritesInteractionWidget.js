@@ -43,8 +43,8 @@ var appParams = parseAppParameters(integrationQueryString);
 
 // Create instance of Client App SDK
 let myClientApp = new window.purecloud.apps.ClientApp({
-    gcHostOriginQueryParam: appParams.gcHostOrigin,
-    gcTargetEnvQueryParam: appParams.gcTargetEnv
+    gcHostOrigin: appParams.gcHostOrigin,
+    gcTargetEnv: appParams.gcTargetEnv
 });
 
 console.log("Initializing platform client for region returned by Client App SDK: " + myClientApp.gcEnvironment);
