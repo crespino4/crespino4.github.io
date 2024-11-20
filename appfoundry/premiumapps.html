@@ -188,7 +188,7 @@
             $("#applicationCount").html(applications.length);
 
 //            var tableRow = '<tr><td scope="row"><a target="_blank" href="' + appfoundryBaseURL + '{{id}}"><image src="images/externallink.png" style="width:20px;height:20px;"></a></td><td scope="row">{{name.en-us}}</td><td>{{companyName.en-us}}</td><td>{{platform.name}}</td><td>{{marketingInfo.campaignId}}</td><td>{{#if marketingInfo.campaignId}}<a href="https://genesys.lightning.force.com/lightning/r/Campaign/{{marketingInfo.campaignId}}/view" target="_blank"><image src="images/externallink.png" style="width:20px;height:20px;"></a>{{/if}}</td></tr>';
-            var tableRow = '<tr><td scope="row">{{id}}</td><td scope="row">{{name.en-us}}</td><td>{{companyName.en-us}}</td><td>{{platform.name}}</td><td>{{marketingInfo.campaignId}}</td><td>{{categories}}</td><td>{{metadata.dateCreated}}</td><td></td></tr>';
+            var tableRow = '<tr><td scope="row">{{id}}</td><td>{{metadata.dateCreated}}</td><td scope="row">{{name.en-us}}</td><td>{{companyName.en-us}}</td><td>{{platform.name}}</td><td>{{appType}}</td><td>{{registryInfo.id}}</td><td>{{marketingInfo.campaignId}}</td><td>{{categories}}</td><td></td></tr>';
             var template = Handlebars.compile(tableRow);
 
             var table = $("#appsTableBody");
@@ -385,12 +385,14 @@
                     <thead class="thead-dark">
                     <tr>
                         <th scope="col" style="color: #FFFFFF">ID</th>
+                        <th scope="col" style="color: #FFFFFF">Date Created</th>
                         <th scope="col" style="color: #FFFFFF"><span id="applicationSort">Application</span></th>
                         <th scope="col" style="color: #FFFFFF"><span id="vendorSort">Vendor</span></th>
                         <th scope="col" style="color: #FFFFFF">Platform</th>
+                        <th scope="col" style="color: #FFFFFF">Type</th>
+                        <th scope="col" style="color: #FFFFFF">Registry</th>
                         <th scope="col" style="color: #FFFFFF">CID</th>
                         <th scope="col" style="color: #FFFFFF">Categories</th>
-                        <th scope="col" style="color: #FFFFFF">Date Created</th>
                         <th scope="col" style="color: #FFFFFF"></th>
                     </tr>
                     </thead>
