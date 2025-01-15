@@ -70,6 +70,7 @@
     <script src="//cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="//stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src=https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js></script>
 
     <script>
         var platform = "";
@@ -82,6 +83,8 @@
             $("#applicationSort").click(sortApplicationsByNameAsc);
             $("#vendorSort").click(sortApplicationsByVendorAsc);
             $("#applyFilter").click(applyFilter);
+            $("#exportToExcel").click(exportToExcel);
+
             //getAppList(1);
             localStorage.setItem(localStorageAppList, JSON.stringify(applications));
             applyFilter();
@@ -278,6 +281,33 @@
 
             sorting = false;
         }
+
+        function exportToExcel() {   
+            var strJSON = '';
+            var excelRow = '{"Date Created": "{{metadata.dateCreated}}", "Name": "{{name.en-us}}", "Partner": "{{companyName.en-us}}", "Type": "{{appType}}", "Registry": "{{registryInfo.id}}","Billing App Id":"{{metadata.billingAppId}}", "Licensing": "{{licensing.ownership}}", "Campaign ID":"{{marketingInfo.campaignId}}", "Categies": "{{categories}}"}';
+            var template = Handlebars.compile(excelRow);
+            var isFirst = true;
+            applications.forEach(function(application){
+                var tr = template(application);
+                if (isFirst) {
+                    strJSON = '[' + tr;
+                    isFirst = false;
+                } else {
+                    strJSON += ',' + tr;
+                }
+            });
+            strJSON += ']';
+            var jsonData = JSON.parse(strJSON);
+            const worksheet = XLSX.utils.json_to_sheet(jsonData);
+            worksheet['!autofilter'] = { ref: "A1:E1" };
+ 
+            if (!worksheet["!cols"]) worksheet["!cols"] = [];
+            if (!worksheet["!cols"][0]) worksheet["!cols"][0] = { wch: 30 };
+            if (!worksheet["!cols"][1]) worksheet["!cols"][1] = { wch: 30 };
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Applications");
+            XLSX.writeFile(workbook, "Applications.xlsx", { compression: true });
+        }
     </script>
 </head>
 <body>
@@ -374,6 +404,9 @@
                         </form>
                         <div class="form-group">
                             <button id="applyFilter" class="btn btn-block btn-primary">Apply</button>
+                        </div>
+                        <div class="form-group">
+                            <button id="exportToExcel" class="btn btn-block btn-primary">Export to Excel</button>
                         </div>
                     </div>
                 </div>
