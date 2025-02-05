@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkgcx_media_switcher=self.webpackChunkgcx_media_switcher||[]).push([[8741],{1122:(e,i,r)=>{r.r(i),r.d(i,{gux_list_divider_legacy:()=>t});var s=r(7442);const t=class{constructor(e){(0,s.r)(this,e)}render(){return(0,s.h)("span",{role:"presentation",class:"gux-list-item gux-divider",tabindex:-1})}};t.style=":host{position:relative;display:flex;height:1px;padding:0;margin:16px 0;line-height:32px;pointer-events:none;cursor:pointer;background-color:#c8cfda}"}}]);
+//# sourceMappingURL=8741.e4d8574d.chunk.js.map
