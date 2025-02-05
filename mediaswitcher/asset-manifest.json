@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/mediaswitcher/static/css/main.e6bc38c4.css",
-    "main.js": "/mediaswitcher/static/js/main.5307a53e.js",
+    "main.js": "/mediaswitcher/static/js/main.8e34a8cf.js",
     "static/css/9804.441379b9.chunk.css": "/mediaswitcher/static/css/9804.441379b9.chunk.css",
     "static/js/9804.7d1dc2b0.chunk.js": "/mediaswitcher/static/js/9804.7d1dc2b0.chunk.js",
     "static/css/4152.24d456cc.chunk.css": "/mediaswitcher/static/css/4152.24d456cc.chunk.css",
@@ -138,7 +138,7 @@
     "static/js/3970.dc72254c.chunk.js": "/mediaswitcher/static/js/3970.dc72254c.chunk.js",
     "static/js/2388.2f9b0197.chunk.js": "/mediaswitcher/static/js/2388.2f9b0197.chunk.js",
     "static/js/9931.c0757622.chunk.js": "/mediaswitcher/static/js/9931.c0757622.chunk.js",
-    "static/js/5206.fa027613.chunk.js": "/mediaswitcher/static/js/5206.fa027613.chunk.js",
+    "static/js/5206.8fb03182.chunk.js": "/mediaswitcher/static/js/5206.8fb03182.chunk.js",
     "static/js/8370.82edae3c.chunk.js": "/mediaswitcher/static/js/8370.82edae3c.chunk.js",
     "static/js/2769.c288aacd.chunk.js": "/mediaswitcher/static/js/2769.c288aacd.chunk.js",
     "static/js/2229.d9c0e23c.chunk.js": "/mediaswitcher/static/js/2229.d9c0e23c.chunk.js",
@@ -179,7 +179,7 @@
     "static/media/roboto-v20-latin-regular.woff2": "/mediaswitcher/static/media/roboto-v20-latin-regular.176f8f5bd5f02b3abfcf.woff2",
     "index.html": "/mediaswitcher/index.html",
     "main.e6bc38c4.css.map": "/mediaswitcher/static/css/main.e6bc38c4.css.map",
-    "main.5307a53e.js.map": "/mediaswitcher/static/js/main.5307a53e.js.map",
+    "main.8e34a8cf.js.map": "/mediaswitcher/static/js/main.8e34a8cf.js.map",
     "9804.441379b9.chunk.css.map": "/mediaswitcher/static/css/9804.441379b9.chunk.css.map",
     "9804.7d1dc2b0.chunk.js.map": "/mediaswitcher/static/js/9804.7d1dc2b0.chunk.js.map",
     "4152.24d456cc.chunk.css.map": "/mediaswitcher/static/css/4152.24d456cc.chunk.css.map",
@@ -316,7 +316,7 @@
     "3970.dc72254c.chunk.js.map": "/mediaswitcher/static/js/3970.dc72254c.chunk.js.map",
     "2388.2f9b0197.chunk.js.map": "/mediaswitcher/static/js/2388.2f9b0197.chunk.js.map",
     "9931.c0757622.chunk.js.map": "/mediaswitcher/static/js/9931.c0757622.chunk.js.map",
-    "5206.fa027613.chunk.js.map": "/mediaswitcher/static/js/5206.fa027613.chunk.js.map",
+    "5206.8fb03182.chunk.js.map": "/mediaswitcher/static/js/5206.8fb03182.chunk.js.map",
     "8370.82edae3c.chunk.js.map": "/mediaswitcher/static/js/8370.82edae3c.chunk.js.map",
     "2769.c288aacd.chunk.js.map": "/mediaswitcher/static/js/2769.c288aacd.chunk.js.map",
     "2229.d9c0e23c.chunk.js.map": "/mediaswitcher/static/js/2229.d9c0e23c.chunk.js.map",
@@ -338,6 +338,6 @@
   },
   "entrypoints": [
     "static/css/main.e6bc38c4.css",
-    "static/js/main.5307a53e.js"
+    "static/js/main.8e34a8cf.js"
   ]
 }
