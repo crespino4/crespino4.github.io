@@ -152,11 +152,9 @@ function handleAppEvent(msg){
     console.log('App Event: ', msg);
     let event = msg.eventBody;
 
-    if(event.eventType == 'AppEvent'){
-        if(event.appEventBody.eventType == 'AppEvent'){
-            if(event.appEventBody.eventName == 'AppEvent'){
-                console.log('App Event: ', event.appEventBody.eventData);
-            }
+    if(event.type == 'app'){
+        if(event.lastEvent.eventType == 'crespino_app_event'){
+            console.log('App Event: ', event);
         }
     }
 }
@@ -195,7 +193,7 @@ function initializeApplication() {
             
             var externalContactId = getParticipantProperty('customer', 'externalContactId');
             setAppEventListener(externalContactId);
-            
+
             myClientApp.lifecycle.bootstrapped();
 
             // myClientApp.alerting.showToastPopup(
