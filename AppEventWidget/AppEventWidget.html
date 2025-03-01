@@ -12,16 +12,13 @@
     <body>
         <h1 id="title" width="100%" align="center">GPE App Event Widget</h1>
         <p>Customer Name: <span id="externalContactName"></span></p>
-        <form>
-            <label for="externalContactMobileNumber">Mobile Number:</label>
-            <input type="text" id="externalContactMobileNumber" name="externalContactMobileNumber"><br><br>
-            <label for="message">SMS Message:</label>
-            <textarea id="message" name="message" rows="4" cols="50">
-                Please click on this link to simulate a customer action https://crespino4.github.io/AppEventWidget/index.html
-            </textarea>
-            <input type="submit" value="Send SMS">
-        </form>
-		
+        <label for="externalContactMobileNumber">Mobile Number:</label>
+        <input type="text" id="externalContactMobileNumber" name="externalContactMobileNumber"><br><br>
+        <label for="message">SMS Message:</label>
+        <textarea id="message" name="message" rows="4" cols="50">
+            Please click on this link to simulate a customer action https://crespino4.github.io/AppEventWidget/index.html
+        </textarea>
+		<button type="button" id="sendSMS">Send SMS</button>
 	    <script src="js/AppEventWidget.js"></script>
     </body>
 </html>
