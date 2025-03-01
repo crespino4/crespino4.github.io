@@ -12,10 +12,12 @@ client.setPersistSettings(true, 'AppEventWidget');
 const usersApi = new platformClient.UsersApi();
 const notificationsApi = new platformClient.NotificationsApi();
 const conversationsApi = new platformClient.ConversationsApi();
+const externalContactsApi = new platformClient.ExternalContactsApi();
 
 var lifecycleStatusMessageTitle = 'App Event Widget';
 var lifecycleStatusMessageId = 'lifecycle-statusMsg';
 var me = null;
+var conversation = null;
 
 // Parse the query parameters to get the pcEnvironment variable so we can setup
 // the API client against the proper Genesys Cloud region.
@@ -118,6 +120,47 @@ function logLifecycleEvent(logText, incommingEvent) {
     console.log(logText)
 };
 
+function setAppEventListener(externalContactId){
+    let channel = {};
+    let topicId = `v2.externalcontacts.contacts.${externalContactId}.journey.sessions`;
+
+    notificationsApi.postNotificationsChannels()
+        .then((data) => {
+            channel = data;
+
+            return notificationsApi.putNotificationsChannelSubscriptions(
+                channel.id, [{'id': topicId}]);
+        })
+        .then(() => {
+            console.log('Subscribed to AppEvents for External Contact!');
+
+            let webSocket = new WebSocket(channel.connectUri);
+            webSocket.onmessage = function(event){
+                let msg = JSON.parse(event.data);
+                if(msg.topicName == topicId){
+                    handleAppEvent(msg);
+                }
+            };
+        })
+        .catch((err) => {
+            console.log('There was a failure.');
+            console.error(err);
+        });
+}
+
+function handleAppEvent(msg){
+    console.log('App Event: ', msg);
+    let event = msg.eventBody;
+
+    if(event.eventType == 'AppEvent'){
+        if(event.appEventBody.eventType == 'AppEvent'){
+            if(event.appEventBody.eventName == 'AppEvent'){
+                console.log('App Event: ', event.appEventBody.eventData);
+            }
+        }
+    }
+}
+
 function initializeApplication() {
     console.log("AppEventWidget - Performing application bootstrapping");
 
@@ -147,6 +190,11 @@ function initializeApplication() {
             return conversationsApi.getConversation(appParams.pcConversationId);
         }).then((data) => {
             console.log("AppEventWidget - Conversation details for " + appParams.pcConversationId + ": " + JSON.stringify(data));
+          
+            conversation = data;
+            
+            var externalContactId = getParticipantProperty('customer', 'externalContactId');
+            setAppEventListener(externalContactId);
             
             myClientApp.lifecycle.bootstrapped();
 
@@ -163,6 +211,11 @@ function initializeApplication() {
             // Handle failure response
             console.log(err);
         });
+}
+
+function getParticipantProperty(participantType, property) {
+    var participant = conversation.participants.find((participant) => participant.purpose === participantType);
+    return participant[property];
 }
 
 function parseAppParameters(queryString) {
