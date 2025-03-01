@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>GPE App Event Widget</title>
+
+		<script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="//sdk-cdn.mypurecloud.com/client-apps/1.3.0/purecloud-client-app-sdk.js"></script>
+        <script src="//sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
+
+    </head>
+    <body>
+        <h1 id="title" width="100%" align="center">GPE App Event Widget</h1>
+        <p>Customer Name: <span id="externalContactName"></span></p>
+        <form>
+            <label for="externalContactMobileNumber">Mobile Number:</label>
+            <input type="text" id="externalContactMobileNumber" name="externalContactMobileNumber"><br><br>
+            <label for="message">SMS Message:</label>
+            <textarea id="message" name="message" rows="4" cols="50">
+                Please click on this link to simulate a customer action https://crespino4.github.io/AppEventWidget/index.html
+            </textarea>
+            <input type="submit" value="Send SMS">
+        </form>
+		
+	    <script src="js/AppEventWidget.js"></script>
+    </body>
+</html>
