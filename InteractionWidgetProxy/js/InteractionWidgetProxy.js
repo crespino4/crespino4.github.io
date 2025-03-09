@@ -164,7 +164,7 @@ function initializeApplication() {
             // If so redirect to that URL
             var customer = data.participants.find((participant) => participant.purpose === "customer")
             if ( customer !== undefined ) {
-                externalContactId = participant.externalContactId;
+                externalContactId = customer.externalContactId;
 
                 var proxyUrl = customer.attributes["proxy.URL"];
                 if ( proxyUrl !== undefined ) {
