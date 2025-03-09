@@ -188,7 +188,7 @@ function initializeApplication() {
 
             topicConversation = `v2.users.${me.id}.conversations`;
             topicTranscription = `v2.conversations.${appParams.pcConversationId}.transcription`
-            topicJourney = `/api/v2/externalcontacts/contacts/${externalContactId}/journey/sessions`
+            topicJourney = `v2.externalcontacts.contacts.${externalContactId}.journey.sessions`
 
             // Subscribe to conversation events in the queue.
             let topic = [{"id": topicConversation},{"id": topicTranscription},{"id": topicJourney}];
