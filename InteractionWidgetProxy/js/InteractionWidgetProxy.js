@@ -241,13 +241,13 @@ function onSocketMessage(event){
 
         let sessionId = "sessionId_example"; // String | ID of the session.
 
-        journeyApi.getJourneySession(eventBody.id)
+        journeyApi.getJourneySessionEvents(eventBody.id, {'eventType': "com.genesys.journey.AppEvent"})
         .then((data) => {
-            console.log(`getJourneySession success! data: ${JSON.stringify(data, null, 3)}`);
+            console.log(`getJourneySessionEvents success! data: ${JSON.stringify(data, null, 3)}`);
             document.querySelector("#appEvent").innerHTML = JSON.stringify(data, null, 3);
         })
         .catch((err) => {
-            console.log('There was a failure calling getJourneySession');
+            console.log('There was a failure calling getJourneySessionEvents');
             console.error(err);
         });
     }
