@@ -235,7 +235,7 @@ function onSocketMessage(event){
         document.querySelector("#transcriptionEvent").innerHTML = transcript;
     }
 
-    if ( topic === topicJourney && eventBody.externalContactId == externalContactId ) {
+    if ( topic === topicJourney && eventBody.externalContact.id == externalContactId ) {
         console.log("Received an app event for an External Contact ID that is recognized");
         document.querySelector("#appEvent").innerHTML = JSON.stringify(eventBody, null, 3);
     }
