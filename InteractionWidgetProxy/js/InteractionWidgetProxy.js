@@ -238,6 +238,18 @@ function onSocketMessage(event){
     if ( topic === topicJourney && eventBody.externalContact.id == externalContactId ) {
         console.log("Received an app event for an External Contact ID that is recognized");
         document.querySelector("#appEvent").innerHTML = JSON.stringify(eventBody, null, 3);
+
+        let sessionId = "sessionId_example"; // String | ID of the session.
+
+        journeyApi.getJourneySession(eventBody.id)
+        .then((data) => {
+            console.log(`getJourneySession success! data: ${JSON.stringify(data, null, 3)}`);
+            document.querySelector("#appEvent").innerHTML = JSON.stringify(data, null, 3);
+        })
+        .catch((err) => {
+            console.log('There was a failure calling getJourneySession');
+            console.error(err);
+        });
     }
 
 };
