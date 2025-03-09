@@ -12,10 +12,13 @@ client.setPersistSettings(true, 'InteractionWidgetProxy');
 const usersApi = new platformClient.UsersApi();
 const notificationsApi = new platformClient.NotificationsApi();
 const conversationsApi = new platformClient.ConversationsApi();
+const journeyApi = new platformClient.JourneyApi();
 
 var lifecycleStatusMessageTitle = 'Interaction Widget Proxy';
 var lifecycleStatusMessageId = 'lifecycle-statusMsg';
 var me = null;
+var currentConversation = null;
+var externalContactId = null;
 
 // Parse the query parameters to get the pcEnvironment variable so we can setup
 // the API client against the proper Genesys Cloud region.
@@ -150,8 +153,48 @@ function initializeApplication() {
             return conversationsApi.getConversation(appParams.pcConversationId);
         }).then((data) => {
             console.log("Conversation details for " + appParams.pcConversationId + ": " + JSON.stringify(data));
-            document.querySelector("#conversationEvent").innerHTML = JSON.stringify(data, null, 3);
 
+            currentConversation = data;
+
+            document.querySelector("#conversationEvent").innerHTML = JSON.stringify(currentConversation, null, 3);
+
+            document.querySelector("#status").innerHTML = "Looking for Proxy URL...";
+
+            // Look to see if a proxy.URL attribute exists in the customer participant data
+            // If so redirect to that URL
+            var customer = data.participants.find((participant) => participant.purpose === "customer")
+            if ( customer !== undefined ) {
+                externalContactId = participant.externalContactId;
+
+                var proxyUrl = customer.attributes["proxy.URL"];
+                if ( proxyUrl !== undefined ) {
+                    window.location.href = proxyUrl;
+                }
+            }
+
+            // If there was a proxy.URL attribute then we should never get here because of the redirect
+
+            return journeyApi.getExternalcontactsContactJourneySessions(externalContactId, {})
+        }).then((data) => {
+            console.log(`getExternalcontactsContactJourneySessions success! data: ${JSON.stringify(data, null, 2)}`);
+
+            return notificationsApi.postNotificationsChannels();
+        }).then((channel) => {
+            // Channel Created
+
+            // Setup WebSocket on Channel
+            socket = new WebSocket(channel.connectUri);
+            socket.onmessage = onSocketMessage;
+
+            topicConversation = `v2.users.${me.id}.conversations`;
+            topicTranscription = `v2.conversations.${appParams.pcConversationId}.transcription`
+            topicJourney = `/api/v2/externalcontacts/contacts/${externalContactId}/journey/sessions`
+
+            // Subscribe to conversation events in the queue.
+            let topic = [{"id": topicConversation},{"id": topicTranscription},{"id": topicJourney}];
+
+            return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
+        }).then( () => {
             myClientApp.lifecycle.bootstrapped();
 
             myClientApp.alerting.showToastPopup(
@@ -162,27 +205,42 @@ function initializeApplication() {
                 }
             );
 
-            document.querySelector("#status").innerHTML = "Looking for Proxy URL...";
-
-            // Look to see if a proxy.URL attribute exists in the customer participant data
-            // If so redirect to that URL
-            var customer = data.participants.find((participant) => participant.purpose === "customer")
-            if ( customer !== undefined ) {
-                var proxyUrl = customer.attributes["proxy.URL"];
-                if ( proxyUrl !== undefined ) {
-                    window.location.href = proxyUrl;
-                }
-            }
-
             logLifecycleEvent('Notified Genesys Cloud of Successful App Bootstrap', false);
         }).catch((err) => {
-
             document.querySelector("#status").innerHTML = "Error, See Console";
 
             // Handle failure response
             console.log(err);
         });
 }
+
+// Handler for every Websocket message
+function onSocketMessage(event){
+    console.log("WebSocket Event Received: " + event.data);
+    let data = JSON.parse(event.data);
+    let topic = data.topicName;
+    let eventBody = data.eventBody;
+
+    if ( topic === topicConversation && eventBody.id === currentConversation.id ) {
+        console.log("Received an event for a Conversation ID that is recognized");
+
+        currentConversation = eventBody;
+
+        document.querySelector("#conversationEvent").innerHTML = JSON.stringify(currentConversation, null, 3);
+    }
+
+    if ( topic === topicTranscription && eventBody.conversationId == currentConversation.id ) {
+        console.log("Received a transcription event for a Conversation ID that is recognized");
+        var transcript = "[" + eventBody.transcripts[0].channel + "]: " + eventBody.transcripts[0].alternatives[0].transcript;
+        document.querySelector("#transcriptionEvent").innerHTML = transcript;
+    }
+
+    if ( topic === topicJourney && eventBody.externalContactId == externalContactId ) {
+        console.log("Received an app event for an External Contact ID that is recognized");
+        document.querySelector("#appEvent").innerHTML = JSON.stringify(eventBody, null, 3);
+    }
+
+};
 
 function parseAppParameters(queryString) {
     console.log("Interaction Widget Proxy Query String: " + queryString);
