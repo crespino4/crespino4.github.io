@@ -147,7 +147,7 @@ async function initializeApplication() {
 
         console.log("Getting initial conversation details for conversation ID: " + appParams.pcConversationId);
 
-        currentConversation = conversationsApi.getConversation(appParams.pcConversationId);
+        currentConversation = await conversationsApi.getConversation(appParams.pcConversationId);
         console.log("Conversation details for " + appParams.pcConversationId + ": " + JSON.stringify(currentConversation));
 
         document.querySelector("#conversationEvent").innerHTML = JSON.stringify(currentConversation, null, 3);
@@ -169,7 +169,7 @@ async function initializeApplication() {
         if ( customer !== undefined ) {
             externalContactId = customer.externalContactId;
         }
-        
+
         response = await journeyApi.getExternalcontactsContactJourneySessions(externalContactId, {});
         console.log(`getExternalcontactsContactJourneySessions success! data: ${JSON.stringify(response, null, 2)}`);
 
