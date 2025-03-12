@@ -173,7 +173,7 @@ async function initializeApplication() {
         response = await journeyApi.getExternalcontactsContactJourneySessions(externalContactId, {});
         console.log(`getExternalcontactsContactJourneySessions success! data: ${JSON.stringify(response, null, 2)}`);
 
-        var channel = notificationsApi.postNotificationsChannels();
+        var channel = await notificationsApi.postNotificationsChannels();
 
         // Setup WebSocket on Channel
         socket = new WebSocket(channel.connectUri);
