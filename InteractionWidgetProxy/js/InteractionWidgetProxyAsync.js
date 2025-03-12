@@ -129,15 +129,13 @@ async function initializeApplication() {
 
     try {
 
-        var response = null;
-
         // Perform Implicit Grant Authentication
         //
         // Note: Pass the query string parameters in the 'state' parameter so that they are returned
         //       to us after the implicit grant redirect.
         
-        response = await client.loginImplicitGrant(appParams.pcClientId, redirectUri, { state: integrationQueryString });
-        console.log("User Authenticated: " + JSON.stringify(response));
+        var loginResponse = await client.loginImplicitGrant(appParams.pcClientId, redirectUri, { state: integrationQueryString });
+        console.log("User Authenticated: " + JSON.stringify(loginResponse));
 
         document.querySelector("#status").innerHTML = "Querying User...";
 
