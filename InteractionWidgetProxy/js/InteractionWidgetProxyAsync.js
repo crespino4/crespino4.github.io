@@ -124,98 +124,91 @@ function logLifecycleEvent(logText, incommingEvent) {
     console.log(logText)
 };
 
-function initializeApplication() {
+async function initializeApplication() {
     console.log("Performing application bootstrapping");
 
-    // Perform Implicit Grant Authentication
-    //
-    // Note: Pass the query string parameters in the 'state' parameter so that they are returned
-    //       to us after the implicit grant redirect.
-    client.loginImplicitGrant(appParams.pcClientId, redirectUri, { state: integrationQueryString })
-        .then((data) => {
-            // User Authenticated
-            console.log("User Authenticated: " + JSON.stringify(data));
+    try {
 
-            document.querySelector("#status").innerHTML = "Querying User...";
+        var response = null;
 
-            // Make request to GET /api/v2/users/me?expand=presence
-            return usersApi.getUsersMe({ 'expand': ["presence","authorization"] });
-        })
-        .then((userMe) => {
-            // Me Response
-            me = userMe;
+        // Perform Implicit Grant Authentication
+        //
+        // Note: Pass the query string parameters in the 'state' parameter so that they are returned
+        //       to us after the implicit grant redirect.
+        
+        response = await client.loginImplicitGrant(appParams.pcClientId, redirectUri, { state: integrationQueryString });
+        console.log("User Authenticated: " + JSON.stringify(response));
 
-            document.querySelector("#username").innerHTML = me.username;
+        document.querySelector("#status").innerHTML = "Querying User...";
 
-            document.querySelector("#status").innerHTML = "Querying Conversation...";
+        // Make request to GET /api/v2/users/me?expand=presence
+        me = await usersApi.getUsersMe({ 'expand': ["presence","authorization"] });
+        document.querySelector("#username").innerHTML = me.username;
 
-            console.log("Getting initial conversation details for conversation ID: " + appParams.pcConversationId);
-            return conversationsApi.getConversation(appParams.pcConversationId);
-        }).then((data) => {
-            console.log("Conversation details for " + appParams.pcConversationId + ": " + JSON.stringify(data));
+        document.querySelector("#status").innerHTML = "Querying Conversation...";
 
-            currentConversation = data;
+        console.log("Getting initial conversation details for conversation ID: " + appParams.pcConversationId);
 
-            document.querySelector("#conversationEvent").innerHTML = JSON.stringify(currentConversation, null, 3);
+        currentConversation = conversationsApi.getConversation(appParams.pcConversationId);
+        console.log("Conversation details for " + appParams.pcConversationId + ": " + JSON.stringify(currentConversation));
 
-            document.querySelector("#status").innerHTML = "Looking for Proxy URL...";
+        document.querySelector("#conversationEvent").innerHTML = JSON.stringify(currentConversation, null, 3);
 
-            // Look to see if a proxy.URL attribute exists in the customer participant data
-            // If so redirect to that URL
-            var customer = data.participants.find((participant) => participant.purpose === "customer")
-            if ( customer !== undefined ) {
-                externalContactId = customer.externalContactId;
+        document.querySelector("#status").innerHTML = "Looking for Proxy URL...";
 
-                var proxyUrl = customer.attributes["proxy.URL"];
-                if ( proxyUrl !== undefined ) {
-                    window.location.href = proxyUrl;
-                }
+        // Look to see if a proxy.URL attribute exists in the customer participant data
+        // If so redirect to that URL
+        var customer = data.participants.find((participant) => participant.purpose === "customer")
+        if ( customer !== undefined ) {
+            externalContactId = customer.externalContactId;
+
+            var proxyUrl = customer.attributes["proxy.URL"];
+            if ( proxyUrl !== undefined ) {
+                window.location.href = proxyUrl;
             }
+        }
 
-            // If there was a proxy.URL attribute then we should never get here because of the redirect
+        // If there was a proxy.URL attribute then we should never get here because of the redirect
 
-            return journeyApi.getExternalcontactsContactJourneySessions(externalContactId, {})
-        }).then((data) => {
-            console.log(`getExternalcontactsContactJourneySessions success! data: ${JSON.stringify(data, null, 2)}`);
+        response = await journeyApi.getExternalcontactsContactJourneySessions(externalContactId, {});
+        console.log(`getExternalcontactsContactJourneySessions success! data: ${JSON.stringify(response, null, 2)}`);
 
-            return notificationsApi.postNotificationsChannels();
-        }).then((channel) => {
-            // Channel Created
+        var channel = notificationsApi.postNotificationsChannels();
 
-            // Setup WebSocket on Channel
-            socket = new WebSocket(channel.connectUri);
-            socket.onmessage = onSocketMessage;
+        // Setup WebSocket on Channel
+        socket = new WebSocket(channel.connectUri);
+        socket.onmessage = onSocketMessage;
 
-            topicConversation = `v2.users.${me.id}.conversations`;
-            topicTranscription = `v2.conversations.${appParams.pcConversationId}.transcription`
-            topicJourney = `v2.externalcontacts.contacts.${externalContactId}.journey.sessions`
+        topicConversation = `v2.users.${me.id}.conversations`;
+        topicTranscription = `v2.conversations.${appParams.pcConversationId}.transcription`
+        topicJourney = `v2.externalcontacts.contacts.${externalContactId}.journey.sessions`
 
-            // Subscribe to conversation events in the queue.
-            let topic = [{"id": topicConversation},{"id": topicTranscription},{"id": topicJourney}];
+        // Subscribe to conversation events in the queue.
+        let topic = [{"id": topicConversation},{"id": topicTranscription},{"id": topicJourney}];
 
-            return notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
-        }).then( () => {
-            myClientApp.lifecycle.bootstrapped();
+        await notificationsApi.postNotificationsChannelSubscriptions(channel.id, topic);
 
-            myClientApp.alerting.showToastPopup(
-                lifecycleStatusMessageTitle,
-                'Bootstrap Complete', {
-                    id: lifecycleStatusMessageId,
-                    type: 'success'
-                }
-            );
+        myClientApp.lifecycle.bootstrapped();
 
-            logLifecycleEvent('Notified Genesys Cloud of Successful App Bootstrap', false);
-        }).catch((err) => {
-            document.querySelector("#status").innerHTML = "Error, See Console";
+        myClientApp.alerting.showToastPopup(
+            lifecycleStatusMessageTitle,
+            'Bootstrap Complete', {
+                id: lifecycleStatusMessageId,
+                type: 'success'
+            }
+        );
 
-            // Handle failure response
-            console.log(err);
-        });
+        logLifecycleEvent('Notified Genesys Cloud of Successful App Bootstrap', false);
+    } catch(err) {
+        document.querySelector("#status").innerHTML = "Error, See Console";
+
+        // Handle failure response
+        console.log(err);
+    }
 }
 
 // Handler for every Websocket message
-function onSocketMessage(event){
+async function onSocketMessage(event){
     console.log("WebSocket Event Received: " + event.data);
     let data = JSON.parse(event.data);
     let topic = data.topicName;
@@ -246,18 +239,17 @@ function onSocketMessage(event){
         // Get the event
         document.querySelector("#appEvent").innerHTML = JSON.stringify(eventBody, null, 3);
 
-        // The event doesn't include the custom attributes, so call the API to get that
-        journeyApi.getJourneySessionEvents(eventBody.id, {'eventType': "com.genesys.journey.AppEvent"})
-        .then((data) => {
+        try {
+            // The event doesn't include the custom attributes, so call the API to get that
+            var appEvents = await journeyApi.getJourneySessionEvents(eventBody.id, {'eventType': "com.genesys.journey.AppEvent"});
 
             // So the event from the session view to display the custom attributes
-            console.log(`getJourneySessionEvents success! data: ${JSON.stringify(data, null, 3)}`);
-            document.querySelector("#appEvent").innerHTML = JSON.stringify(data, null, 3);
-        })
-        .catch((err) => {
+            console.log(`getJourneySessionEvents success! data: ${JSON.stringify(appEvents, null, 3)}`);
+            document.querySelector("#appEvent").innerHTML = JSON.stringify(appEvents, null, 3);
+        } catch(err) {
             console.log('There was a failure calling getJourneySessionEvents');
             console.error(err);
-        });
+        };
     }
 
 };
