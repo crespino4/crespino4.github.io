@@ -156,10 +156,8 @@ async function initializeApplication() {
 
         // Look to see if a proxy.URL attribute exists in the customer participant data
         // If so redirect to that URL
-        var customer = data.participants.find((participant) => participant.purpose === "customer")
+        var customer = currentConversation.participants.find((participant) => participant.purpose === "customer")
         if ( customer !== undefined ) {
-            externalContactId = customer.externalContactId;
-
             var proxyUrl = customer.attributes["proxy.URL"];
             if ( proxyUrl !== undefined ) {
                 window.location.href = proxyUrl;
@@ -168,6 +166,10 @@ async function initializeApplication() {
 
         // If there was a proxy.URL attribute then we should never get here because of the redirect
 
+        if ( customer !== undefined ) {
+            externalContactId = customer.externalContactId;
+        }
+        
         response = await journeyApi.getExternalcontactsContactJourneySessions(externalContactId, {});
         console.log(`getExternalcontactsContactJourneySessions success! data: ${JSON.stringify(response, null, 2)}`);
 
