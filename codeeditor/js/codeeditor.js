@@ -47,7 +47,7 @@ client.setEnvironment(myClientApp.gcEnvironment);
 $(document).ready(function() {
     $("#btnExecute").click(function() {
         // Clear the output 
-        $("#output").html("");
+        $("#output").val("");
 
         var code = $("#code").val();
         eval(code);
