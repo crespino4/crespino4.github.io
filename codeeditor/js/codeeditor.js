@@ -44,14 +44,14 @@ const client = platformClient.ApiClient.instance;
 client.setPersistSettings(true, 'GenesysCloudCodeEditor');
 client.setEnvironment(myClientApp.gcEnvironment);
 
-$(document.ready(function() {
+$(document).ready(function() {
     $("#btnExecute").click(function() {
         var code = $("#code").val();
         eval(code);
     });
 
     initializeApplication();
-}));
+});
 
 async function initializeApplication() {
 
