@@ -4,6 +4,18 @@
 const clientId = 'bd1f02b0-bf28-47d4-9a5e-2ef05605d7c2';
 const redirectUri = window.location.protocol + "//" + window.location.hostname + window.location.pathname;
 
+if (typeof console  != "undefined") 
+    if (typeof console.log != 'undefined')
+        console.olog = console.log;
+    else
+        console.olog = function() {};
+
+console.log = function(message) {
+    console.olog(message);
+    $('#debugDiv').append('<p>' + message + '</p>');
+};
+console.error = console.debug = console.info =  console.log
+
 // Parse the query parameters to get the gcHostOrigin and gcTargetEnv variable so we can setup
 // the API client against the proper Genesys Cloud region.
 //
