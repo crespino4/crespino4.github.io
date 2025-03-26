@@ -11,7 +11,7 @@
 
     </head>
     <body>
-        <div class="container-fluid">
+        <div class="container-fluid" style="height: 100vh;">
             <div class="row">
                 <div class="col-sm">
                     <h1 id="title" width="100%" align="center">Genesys Cloud Code Editor</h1>
@@ -19,14 +19,14 @@
             </div>
             <div class="row">
                 <div class="col-sm">
-                   <button type="button" class="btn btn-primary">Execute</button>
+                   <button id="btnExecute" type="button" class="btn btn-primary">Execute</button>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm">
-                    <textarea class="form-control">console.log("Hello World);</textarea>
+            <div class="row" style="height: 100%;">
+                <div class="col-sm" style="height: 100%;">
+                    <textarea id="code" class="form-control">console.log("Hello World);</textarea>
                 </div>
-                <div class="col-sm">
+                <div class="col-sm" style="height: 100%;">
                     <div id="debugDiv"></div>
                 </div>
             </div>
