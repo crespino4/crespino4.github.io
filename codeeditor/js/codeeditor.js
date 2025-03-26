@@ -50,7 +50,13 @@ $(document).ready(function() {
         $("#output").html("");
 
         var code = $("#code").val();
-        eval(code);
+
+        try {
+            eval(code);
+            localStorage.setItem('lastCode', code);
+        } catch(err) {
+            console.log(err);
+        }
     });
 
     initializeApplication();
@@ -66,6 +72,11 @@ async function initializeApplication() {
         //       to us after the implicit grant redirect.
         
         var loginResponse = await client.loginImplicitGrant(clientId, redirectUri, { state: integrationQueryString });
+
+        var lastCode = localStorage.getItem('lastCode');
+        if ( lastCode != null ) {
+            $("#code").val(lastCode);
+        }
     } catch(err) {
         // Handle failure response
         console.log(err);
