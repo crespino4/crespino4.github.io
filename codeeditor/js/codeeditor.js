@@ -51,7 +51,7 @@ $(document.ready(function() {
     });
 
     initializeApplication();
-});
+}));
 
 async function initializeApplication() {
 
