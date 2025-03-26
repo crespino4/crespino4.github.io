@@ -12,7 +12,7 @@ if (typeof console  != "undefined")
 
 console.log = function(message) {
     console.olog(message);
-    $('#debugDiv').append('<p>' + message + '</p>');
+    $('#output').append('<pre>' + message + '</pre>');
 };
 console.error = console.debug = console.info =  console.log
 
@@ -46,6 +46,9 @@ client.setEnvironment(myClientApp.gcEnvironment);
 
 $(document).ready(function() {
     $("#btnExecute").click(function() {
+        // Clear the output 
+        $("#output").innerHTML = "";
+
         var code = $("#code").val();
         eval(code);
     });
