@@ -13,21 +13,16 @@
     </div>
 
     <script>
-        // Initialize the Client Apps SDK
-        var ClientApp = window.purecloud.apps.ClientApp;
-        var client = new ClientApp({
-            gcHostOriginQueryParam: 'gcHostOrigin',
-            gcTargetEnvQueryParam: 'gcTargetEnv'
-        });
-        
-        // Initialize the SDK
-        client.setPersistSettings(true, 'myApp');
         
         $(document).ready(function() {
             // Initialize the Client Apps SDK
-            const app = new window.purecloud.apps.ClientApp({
-                pcEnvironmentQueryParam: 'pcEnvironment'
+            const client = new window.purecloud.apps.ClientApp({
+                gcHostOriginQueryParam: 'gcHostOrigin',
+                gcTargetEnvQueryParam: 'gcTargetEnv'
             });
+
+            // Initialize the SDK
+            client.setPersistSettings(true, 'myApp');
 
             // Add localStorage event listener
             window.addEventListener('storage', function(e) {
