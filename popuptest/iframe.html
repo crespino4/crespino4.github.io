@@ -15,6 +15,8 @@
 
     <script>
         const popupURL = window.location.origin + window.location.pathname.replace("iframe.html", "popup.html") + window.location.search;
+        let authWindowRef, authTimerRef;
+        let authTimeout = 10000;
 
         $(document).ready(function() {
             // Initialize the Client Apps SDK
@@ -29,6 +31,9 @@
                     console.log('popuptest value changed:', e.newValue);
                     $("#message").html(e.newValue);
                 }
+
+                clearTimeout(authTimerRef);
+                authWindowRef.close();
             });            
 
             // Add window.postMessage event listener
@@ -42,6 +47,9 @@
                 // Handle the received message
                 console.log('Received message:', e.data);
                 $("#message").html(e.data);
+
+                clearTimeout(authTimerRef);
+                authWindowRef.close();
             });                        
 
             $('#buttonPopupSDK').click(function() {
@@ -55,9 +63,17 @@
                 // Handle button click
                 console.log('Native JS button clicked');
                 localStorage.setItem('popuptest', 'Waiting...');
-                window.open(popupURL, "popuptest", "rel=opener,width=500,height=500,left=100,top=100")
+                authWindowRef = window.open(popupURL, "popuptest", "rel=opener,width=500,height=500,left=100,top=100")
+                authTimerRef = setTimeout(handleAuthTimeout, authTimeout);
             });
         });
+
+        function handleAuthTimeout() {
+            console.log(`Authorization attempt has timed out`);
+            if (authWindowRef !== null) {
+                authWindowRef.close();
+            }
+        }
     </script>
 </body>
 </html>
