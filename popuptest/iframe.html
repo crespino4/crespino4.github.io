@@ -72,6 +72,7 @@
             console.log(`Authorization attempt has timed out`);
             if (authWindowRef !== null) {
                 authWindowRef.close();
+                $("#message").html("Popup Window Timeout");               
             }
         }
     </script>
