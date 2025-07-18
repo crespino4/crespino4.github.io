@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Popup Page</title>
+    <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.6.3/purecloud-client-apps-sdk.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head>
+<body>
+    <!-- Buttons container -->
+    <div style="margin: 20px;">
+        <p>Popup Test</p>
+        <button id="buttonPostMessage">Use PostMessage</button>
+        <button id="buttonLocalStorage">Use LocalStorage</button>
+    </div>
+
+    <script>
+        // Initialize the Client Apps SDK
+        const platformClient = require('platformClient');
+        const client = platformClient.ApiClient.instance;
+        
+        // Initialize the SDK
+        client.setPersistSettings(true, 'myApp');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the Client Apps SDK
+            const app = new window.purecloud.apps.ClientApp({
+                pcEnvironmentQueryParam: 'pcEnvironment'
+            });
+        });
+
+        $(document).ready(function() {
+            $('#buttonPostMessage').click(function() {
+                // Handle button click
+                console.log('postMessage button clicked');
+                window.opener.postMessage("Hello from Popup Window from postMessage()");
+            });
+
+            $('#buttonLocalStorage').click(function() {
+                // Handle button click
+                console.log('localStorage button clicked');
+                localStorage.setItem('popuptest', 'Hello from Popup Window from localStorage');
+            });
+        });
+    </script>
+</body>
+</html>

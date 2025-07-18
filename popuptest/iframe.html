@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IFrame Page</title>
+    <script src="https://sdk-cdn.mypurecloud.com/client-apps/2.6.3/purecloud-client-apps-sdk.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script></head>
+<body>
+    <!-- Buttons container -->
+    <div style="margin: 20px;">
+        <p>Popup Test</p>
+        <button id="buttonPopupSDK">Use SDK</button>
+        <button id="buttonPopupJS">Use Native Javascript</button>
+    </div>
+
+    <script>
+        // Initialize the Client Apps SDK
+        const platformClient = require('platformClient');
+        const client = platformClient.ApiClient.instance;
+        
+        // Initialize the SDK
+        client.setPersistSettings(true, 'myApp');
+        
+        $(document).ready(function() {
+            // Initialize the Client Apps SDK
+            const app = new window.purecloud.apps.ClientApp({
+                pcEnvironmentQueryParam: 'pcEnvironment'
+            });
+
+            // Add localStorage event listener
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'popuptest') {
+                    console.log('popuptest value changed:', e.newValue);
+                }
+            });            
+
+            // Add window.postMessage event listener
+            window.addEventListener('message', function(event) {
+                // Verify the origin for security
+                // if (event.origin !== window.location.origin) {
+                //     console.log('Received message from untrusted source');
+                //     return;
+                // }
+                
+                // Handle the received message
+                console.log('Received message:', event.data);
+            });                        
+
+            $('#buttonPopupSDK').click(function() {
+                // Handle button click
+                console.log('SDK button clicked');
+                client.coreUi.openWindow("popup.html");
+            });
+
+            $('#buttonPopupJS').click(function() {
+                // Handle button click
+                console.log('Native JS button clicked');
+                window.open("popup.html", "_blank", "width=500,height=500,left=100,top=100")
+            });
+        });
+    </script>
+</body>
+</html>
