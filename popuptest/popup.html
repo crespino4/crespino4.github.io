@@ -23,7 +23,9 @@
             $('#buttonPostMessage').click(function() {
                 // Handle button click
                 console.log('postMessage button clicked');
-                window.opener.postMessage("Hello from Popup Window from postMessage()", window.location.origin);
+
+                var win = window.opener !== null ? window.opener : window.parent;
+                win.postMessage("Hello from Popup Window from postMessage()", window.location.origin);
             });
 
             $('#buttonLocalStorage').click(function() {
