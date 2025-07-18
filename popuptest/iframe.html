@@ -10,6 +10,7 @@
         <p>Popup Test</p>
         <button id="buttonPopupSDK">Use SDK</button>
         <button id="buttonPopupJS">Use Native Javascript</button>
+        <p id="message">Waiting for message from popup...</p>
     </div>
 
     <script>
@@ -26,19 +27,21 @@
             window.addEventListener('storage', function(e) {
                 if (e.key === 'popuptest') {
                     console.log('popuptest value changed:', e.newValue);
+                    $("#message").html(e.newValue);
                 }
             });            
 
             // Add window.postMessage event listener
-            window.addEventListener('message', function(event) {
+            window.addEventListener('message', function(e) {
                 // Verify the origin for security
-                if (event.origin !== window.location.origin) {
+                if (e.origin !== window.location.origin) {
                     console.log('Received message from untrusted source');
                     return;
                 }
                 
                 // Handle the received message
-                console.log('Received message:', event.data);
+                console.log('Received message:', e.data);
+                $("#message").html(e.data);
             });                        
 
             $('#buttonPopupSDK').click(function() {
