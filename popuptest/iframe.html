@@ -14,8 +14,11 @@
 
     <script>
         // Initialize the Client Apps SDK
-        const platformClient = require('platformClient');
-        const client = platformClient.ApiClient.instance;
+        var ClientApp = window.purecloud.apps.ClientApp;
+        var client = new ClientApp({
+            gcHostOriginQueryParam: 'gcHostOrigin',
+            gcTargetEnvQueryParam: 'gcTargetEnv'
+        });
         
         // Initialize the SDK
         client.setPersistSettings(true, 'myApp');
