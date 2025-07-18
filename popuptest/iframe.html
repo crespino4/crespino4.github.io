@@ -47,12 +47,14 @@
             $('#buttonPopupSDK').click(function() {
                 // Handle button click
                 console.log('SDK button clicked');
+                localStorage.setItem('popuptest', 'Waiting...');
                 client.coreUi.openWindow(popupURL);
             });
 
             $('#buttonPopupJS').click(function() {
                 // Handle button click
                 console.log('Native JS button clicked');
+                localStorage.setItem('popuptest', 'Waiting...');
                 window.open(popupURL, "popuptest", "rel=opener,width=500,height=500,left=100,top=100")
             });
         });
