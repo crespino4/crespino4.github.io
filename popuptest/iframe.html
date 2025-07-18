@@ -13,7 +13,8 @@
     </div>
 
     <script>
-        
+        const popupURL = window.location.origin + window.location.pathname.replace("iframe.html", "popup.html") + window.location.search;
+
         $(document).ready(function() {
             // Initialize the Client Apps SDK
             const client = new window.purecloud.apps.ClientApp({
@@ -31,10 +32,10 @@
             // Add window.postMessage event listener
             window.addEventListener('message', function(event) {
                 // Verify the origin for security
-                // if (event.origin !== window.location.origin) {
-                //     console.log('Received message from untrusted source');
-                //     return;
-                // }
+                if (event.origin !== window.location.origin) {
+                    console.log('Received message from untrusted source');
+                    return;
+                }
                 
                 // Handle the received message
                 console.log('Received message:', event.data);
@@ -43,13 +44,13 @@
             $('#buttonPopupSDK').click(function() {
                 // Handle button click
                 console.log('SDK button clicked');
-                client.coreUi.openWindow("popup.html");
+                client.coreUi.openWindow(popupURL);
             });
 
             $('#buttonPopupJS').click(function() {
                 // Handle button click
                 console.log('Native JS button clicked');
-                window.open("popup.html", "_blank", "width=500,height=500,left=100,top=100")
+                window.open(popupURL, "_blank", "width=500,height=500,left=100,top=100")
             });
         });
     </script>
