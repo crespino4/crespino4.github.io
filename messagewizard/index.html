@@ -19,11 +19,9 @@
   <div class="container text-center">
     <div class="row">
       <div class="col">
-        <select id="queueList" onchange="refreshEmails();"></select>
+        <select id="queueList" onchange="refreshMessages();"></select>
       </div>
-      <a onclick="refreshEmails();" class="button is-primary is-outlined is-fullwidth">
-        <span>Refresh</span>&nbsp;<i class="fa fa-refresh" aria-hidden="true"></i>
-      </a>
+      <a onclick="refreshMessages();" class="button is-primary is-outlined is-fullwidth">Refresh</a>
     </div>
     <div class="row" id="loader-icon">
       <div class="col">
