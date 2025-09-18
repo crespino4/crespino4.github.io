@@ -1,4 +1,4 @@
-const emailContainer = document.getElementById('message-container');
+const messageContainer = document.getElementById('message-container');
 const loader = document.getElementById('loader-icon');
 const loaderText = document.getElementById('loader-text');
 const noEmailText = document.getElementById('no-messages');
