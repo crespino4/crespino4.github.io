@@ -1,0 +1,16 @@
+{
+  "name": "notificationlistener",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "purecloud-platform-client-v2": "^219.0.0",
+    "websocket": "^1.0.35",
+    "ws": "^8.18.1"
+  }
+}

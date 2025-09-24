@@ -119,7 +119,7 @@ function getUnansweredMessagesFromQueue(queueId){
  * @returns {Promise} array of the custom Message objects
  */
 function buildMessageInformation(conversationsData){
-    let Messages = [];
+    let messages = [];
     console.log(conversationsData);
     if(!conversationsData.conversations) return [];
 
@@ -128,7 +128,7 @@ function buildMessageInformation(conversationsData){
         if (conversation.participants[conversation.participants.length - 1]
             .purpose != 'acd') continue;
 
-        Messages.push(new Promise((resolve, reject) => {
+        messages.push(new Promise((resolve, reject) => {
             // Default Values
             let senderName = '<No Name>';
             let senderEmail = '<No Email>';
@@ -187,7 +187,7 @@ function buildMessageInformation(conversationsData){
         }));
     }
 
-    return Promise.all(emails);
+    return Promise.all(messages);
 }
 
 /**
