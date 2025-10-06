@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simple WAV Player</title>
+    <style>
+      :root { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; }
+      body { display: grid; place-items: center; min-height: 100dvh; margin: 0; padding: 2rem; }
+      .card { width: 100%; max-width: 520px; padding: 1.25rem; border: 1px solid #e5e7eb; border-radius: 1rem; box-shadow: 0 8px 24px rgba(0,0,0,.06); }
+      h1 { margin: 0 0 .75rem; font-size: 1.25rem; }
+      .row { display: flex; align-items: center; gap: 1rem; }
+      button { cursor: pointer; border: 1px solid #e5e7eb; border-radius: .75rem; padding: .5rem .9rem; font-size: 1rem; background: #fff; }
+      button:active { transform: translateY(1px); }
+      .hint { color: #6b7280; font-size: .9rem; margin-top: .75rem; }
+      audio { width: 100%; }
+    </style>
+  </head>
+  <body>
+    <div class="card" role="region" aria-label="Simple WAV audio player">
+      <h1>Simple WAV Player</h1>
+
+      <!-- Option A: Native controls only (super simple) -->
+      <!-- Replace example.wav with your actual file name/path -->
+      <audio id="player" src="./example.wav" preload="auto" controls></audio>
+
+      <!-- Option B: Custom buttons (optional). Keep the <audio> above. -->
+      <div class="row" style="margin-top: .75rem;">
+        <button id="playBtn" aria-label="Play">▶️ Play</button>
+        <button id="pauseBtn" aria-label="Pause">⏸️ Pause</button>
+        <button id="restartBtn" aria-label="Restart">⏮️ Restart</button>
+      </div>
+
+      <p class="hint">Place <code>example.wav</code> next to this HTML file, or update the <code>src</code> attribute to the correct path.</p>
+    </div>
+
+    <script>
+      const audio = document.getElementById('player');
+      const playBtn = document.getElementById('playBtn');
+      const pauseBtn = document.getElementById('pauseBtn');
+      const restartBtn = document.getElementById('restartBtn');
+
+      playBtn.addEventListener('click', () => audio.play());
+      pauseBtn.addEventListener('click', () => audio.pause());
+      restartBtn.addEventListener('click', () => { audio.currentTime = 0; audio.play(); });
+
+      // Note: Most browsers block autoplay with sound until the user interacts with the page.
+      // That's why we provide visible Play/Pause controls.
+      playBtn.click();
+    </script>
+  </body>
+</html>
