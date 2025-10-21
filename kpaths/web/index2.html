@@ -223,7 +223,7 @@
 
   <script>
     let TEXTS = {};
-    fetch('/mrn_00421687.json')
+    fetch('mrn_00421687.json')
         .then(r => r.json())
         .then(json => { TEXTS = json[0] || json; applyAll(); });
 
