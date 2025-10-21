@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KPATHS Mock UI (Standalone)</title>
+  <style>
+    /* === Minimal design system (Tailwind-like tokens) === */
+    :root {
+      --slate-50:#f8fafc; --slate-100:#f1f5f9; --slate-200:#e2e8f0; --slate-300:#cbd5e1;
+      --slate-500:#64748b; --slate-800:#1f2937; --white:#fff;
+      --cyan-50:#ecfeff; --cyan-600:#0891b2; --cyan-700:#0e7490;
+      --emerald-500:#10b981;
+      --radius-lg: 12px; --radius-xl: 16px; --shadow-sm: 0 1px 2px rgba(0,0,0,.06);
+      --ring: 0 0 0 3px rgba(8,145,178,.25);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color: var(--slate-800); background: var(--slate-50);}
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+    .header { position: sticky; top:0; z-index:20; background: var(--white); border-bottom:1px solid var(--slate-200);}
+    .row { display:flex; gap:16px; align-items:center; }
+    .search { width: 320px; border:1px solid var(--slate-300); border-radius: 12px; padding:8px 12px; font-size:14px; outline:none; }
+    .search:focus { box-shadow: var(--ring); border-color: var(--cyan-600); }
+    .btn { border:1px solid var(--slate-300); background: var(--white); border-radius:12px; padding:8px 12px; font-size:14px; cursor:pointer; }
+    .btn:hover { background: var(--slate-100);}
+    .chip { font-size:12px; color: var(--slate-500);}
+    .avatar { width:24px; height:24px; border-radius:999px; background: var(--slate-300);}
+    .brand-dot { width:32px; height:32px; border-radius:999px; background: var(--cyan-600);}
+    .banner { background: var(--cyan-700); color: white; }
+    .grid { display:grid; gap:16px; }
+    .grid-12 { grid-template-columns: repeat(12, minmax(0,1fr)); }
+    .card { background: var(--white); border:1px solid var(--slate-200); border-radius:16px; box-shadow: var(--shadow-sm); padding:16px; }
+    .pill { border-radius: 12px; background: rgba(255,255,255,0.1); padding:8px; font-size:12px; }
+    .sidebar button { width:100%; text-align:left; padding:8px 12px; border-radius:12px; font-size:14px; border:1px solid transparent; background: transparent; cursor:pointer; }
+    .sidebar button:hover { background: var(--slate-100);}
+    .sidebar .active { border-color: var(--cyan-600); background: var(--cyan-50); color: var(--cyan-700);}
+    .tabs button { padding:8px 12px; border-radius:12px; font-size:14px; border:1px solid var(--slate-200); background: var(--white); cursor:pointer; }
+    .tabs .active { border-color: var(--cyan-600); color: var(--cyan-700); box-shadow: var(--shadow-sm);}
+    table { width:100%; border-collapse: collapse; font-size: 14px;}
+    th, td { padding:8px 0; text-align:left; }
+    tbody tr { border-top:1px solid var(--slate-200);}
+    footer { background: var(--white); border-top:1px solid var(--slate-200);}
+    .muted { color: var(--slate-500); font-size:12px; }
+    .text-xs { font-size:12px; }
+    .text-sm { font-size:14px; }
+    .font-semibold { font-weight:600; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .mt-4 { margin-top:16px; }
+    .mb-1 { margin-bottom:4px; }
+    .mb-2 { margin-bottom:8px; }
+    .mb-3 { margin-bottom:12px; }
+    .py-3 { padding-top:12px; padding-bottom:12px; }
+    .py-6 { padding-top:24px; padding-bottom:24px; }
+    .px-4 { padding-left:16px; padding-right:16px; }
+    .rounded { border-radius: 999px; }
+    .dot { width:8px; height:8px; border-radius:999px; background: var(--cyan-600); display:inline-block; margin-top:4px; }
+    .quick-actions .btn { width:100%; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container py-3 row">
+      <div class="row" style="gap:8px;">
+        <div class="brand-dot" aria-hidden="true"></div>
+        <div>
+          <div class="font-semibold" style="letter-spacing:-0.01em;">Kaiser Permanente</div>
+          <div class="chip">KPATHS | Patient Access & Tracking</div>
+        </div>
+      </div>
+      <div class="row" style="margin-left:auto;">
+        <input class="search" type="search" placeholder="Search patients, MRN, orders…" />
+        <button class="btn">Help</button>
+        <div class="row btn" style="gap:8px;">
+          <div class="avatar" aria-hidden="true"></div>
+          <span class="text-sm">Crespino, Jim</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner -->
+  <section class="banner">
+    <div class="softphone">
+      <iframe id="softphone" allow="camera *; microphone *" src="https://apps.usw2.pure.cloud/crm/embeddableFramework.html" frameborder="0"></iframe>
+    </div>
+    <div class="container py-3 grid grid-12">
+      <div class="row" style="grid-column: span 12 / span 12; gap:12px; align-items:center;">
+        <div class="avatar" style="width:48px;height:48px; background: rgba(255,255,255,.2);" aria-hidden="true"></div>
+        <div>
+          <div class="font-semibold" style="font-size:18px;">GARCIA, MARIA L (MRN 00421687)</div>
+          <div class="text-sm" style="opacity:.9;">DOB 03/12/1984 • F • Allergies: Penicillin • PCP: Patel, R.</div>
+        </div>
+      </div>
+      <div class="grid" style="grid-column: span 12 / span 12; grid-template-columns: repeat(3,minmax(0,1fr)); gap:8px; margin-top:12px;">
+        <div class="pill">Location<br><span class="font-semibold">San Jose FAC</span></div>
+        <div class="pill">Encounter<br><span class="font-semibold">Urgent Care • Today</span></div>
+        <div class="pill">Status<br><span class="font-semibold">Roomed</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main -->
+  <main class="container py-6 grid grid-12" style="gap:16px;">
+    <!-- Sidebar -->
+    <aside style="grid-column: span 2 / span 2;">
+      <nav class="sidebar">
+        <button>Workspace</button>
+        <button class="active">Patients</button>
+        <button>Appointments</button>
+        <button>Orders</button>
+        <button>Results</button>
+        <button>Care Management</button>
+        <button>Billing</button>
+        <button>Admin</button>
+      </nav>
+
+      <div class="card mt-4 quick-actions">
+        <div class="muted mb-1">Quick actions</div>
+        <div class="grid" style="gap:8px;">
+          <button class="btn">New Order</button>
+          <button class="btn">Message Patient</button>
+          <button class="btn">Print AVS</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <section style="grid-column: span 10 / span 10;">
+      <div class="tabs row mb-3" style="gap:8px;">
+        <button class="active">Overview</button>
+        <button>Chart</button>
+        <button>Orders</button>
+        <button>Results</button>
+        <button>Care Team</button>
+      </div>
+
+      <div class="grid" style="grid-template-columns: repeat(12,minmax(0,1fr)); gap:16px;">
+        <div class="card" style="grid-column: span 12 / span 12; @media (min-width:1024px) { grid-column: span 7 / span 7;}">
+          <div class="row mb-3" style="justify-content:space-between;">
+            <h2 class="font-semibold">Today's Encounter</h2>
+            <span class="muted">Arrived 10:02 AM</span>
+          </div>
+          <div class="grid" style="grid-template-columns: repeat(3,minmax(0,1fr)); gap:12px; font-size:14px;">
+            <div style="background: var(--slate-100); border-radius:12px; padding:12px;">
+              <div class="muted">Chief Complaint</div>
+              <div class="font-semibold">Sore throat, fever</div>
+            </div>
+            <div style="background: var(--slate-100); border-radius:12px; padding:12px;">
+              <div class="muted">Triage Vitals</div>
+              <div class="font-semibold">T 101.4°F • HR 102 • SpO₂ 98%</div>
+            </div>
+            <div style="background: var(--slate-100); border-radius:12px; padding:12px;">
+              <div class="muted">Last COVID Test</div>
+              <div class="font-semibold">Negative (Sep 28)</div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <div class="muted mb-1">Timeline</div>
+            <ol style="list-style:none; padding:0; margin:0; display:grid; gap:8px; font-size:14px;">
+              <li class="row" style="gap:8px; align-items:flex-start;">
+                <span class="dot" aria-hidden="true"></span>
+                <div><span class="font-semibold">10:15</span> • Nurse assessment completed</div>
+              </li>
+              <li class="row" style="gap:8px; align-items:flex-start;">
+                <span class="dot" aria-hidden="true"></span>
+                <div><span class="font-semibold">10:32</span> • Rapid Strep ordered</div>
+              </li>
+              <li class="row" style="gap:8px; align-items:flex-start;">
+                <span class="dot" aria-hidden="true"></span>
+                <div><span class="font-semibold">10:47</span> • Provider in room</div>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="card" style="grid-column: span 12 / span 12;">
+          <h2 class="font-semibold mb-3">Medications</h2>
+          <ul style="list-style:none; padding:0; margin:0; display:grid; gap:8px; font-size:14px;">
+            <li class="row" style="justify-content:space-between;">
+              <span>Levothyroxine 75 mcg, 1 tab daily</span>
+              <button class="btn" style="padding:4px 8px; font-size:12px; color: var(--cyan-700); border-color: var(--slate-300);">Refill</button>
+            </li>
+            <li class="row" style="justify-content:space-between;">
+              <span>Lisinopril 10 mg, 1 tab daily</span>
+              <button class="btn" style="padding:4px 8px; font-size:12px; color: var(--cyan-700); border-color: var(--slate-300);">Refill</button>
+            </li>
+            <li class="row" style="justify-content:space-between;">
+              <span>Albuterol HFA, 2 puffs PRN</span>
+              <button class="btn" style="padding:4px 8px; font-size:12px; color: var(--cyan-700); border-color: var(--slate-300);">Refill</button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card" style="grid-column: span 12 / span 12;">
+          <div class="row mb-2" style="justify-content:space-between;">
+            <h2 class="font-semibold">Recent Results</h2>
+            <button class="btn" style="padding:4px 12px; font-size:14px;">View all</button>
+          </div>
+          <div style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr class="muted">
+                  <th>Test</th><th>Value</th><th>Ref</th><th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>CBC – WBC</td><td>6.2 x10^3/µL</td><td>4.5–11</td><td>Oct 02, 2025</td></tr>
+                <tr><td>CMP – Glucose</td><td>94 mg/dL</td><td>70–99</td><td>Sep 28, 2025</td></tr>
+                <tr><td>Rapid Strep A</td><td>Pending</td><td>–</td><td>Today</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container py-3 muted row" style="gap:12px;">
+      <span>© 2025 Kaiser Permanente (mock UI)</span>
+      <span>•</span>
+      <span>For concept/demo only. Not affiliated.</span>
+    </div>
+  </footer>
+</body>
+</html>
