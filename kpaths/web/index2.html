@@ -312,10 +312,90 @@
       renderArrays();
     }
 
-    // If you want to load from an external file instead:
-    // fetch('/path/to/texts.json').then(r => r.json()).then(json => { Object.assign(TEXTS, json); applyAll(); });
-
     document.addEventListener("DOMContentLoaded", applyAll);
+  </script>
+
+  <script>
+ // ------------ window.postMessage handlers -----------------
+    // Expose helpers to open/close the GC widget so messages can trigger them
+    function openGcWidget() {
+      const widget = document.getElementById('gcWidget');
+      if (!widget) return;
+      widget.classList.remove('hidden');
+      widget.classList.add('visible');
+    }
+    function closeGcWidget() {
+      const widget = document.getElementById('gcWidget');
+      if (!widget) return;
+      widget.classList.add('hidden');
+      widget.classList.remove('visible');
+    }
+
+    function safeParse(data) {
+      if (typeof data === 'string') {
+        try { return JSON.parse(data); } catch { return null; }
+      }
+      if (typeof data === 'object' && data !== null) return data;
+      return null;
+    }
+
+    const ALLOWED_TYPES = new Set(['screenPop','processCallLog','openCallLog','contactSearch']);
+
+    function handleMessage(event) {
+      // NOTE: In production, validate event.origin against an allowlist
+      const msg = safeParse(event.data);
+      if (!msg || !msg.type || !ALLOWED_TYPES.has(msg.type)) {
+        return;
+      }
+
+      // Optional correlation id for request/response pairing
+      const correlationId = msg.correlationId || null;
+
+      switch (msg.type) {
+        case 'screenPop': {
+          // Expected: {type:"screenPop", data:{searchString:searchString, interactionId:interaction}}
+          fetch(msg.data.searchString + '.json')
+            .then(r => r.json())
+            .then(json => { TEXTS = json[0] || json; applyAll(); });
+
+          // Visual nudge: briefly outline banner
+          const banner = document.querySelector('.banner .container');
+          if (banner) {
+            banner.style.boxShadow = '0 0 0 3px rgba(8,145,178,.35) inset';
+            setTimeout(() => banner.style.boxShadow = '', 900);
+          }
+          event.source && event.source.postMessage({ type:'ack', of:'screenPop', status:'ok', correlationId }, event.origin);
+          break;
+        }
+        case 'processCallLog': {
+          // Expected: { type:'processCallLog', log: { ... } }
+          // Demo: just stash on window and open the widget
+          window._lastCallLog = msg.log || {};
+          openGcWidget();
+          event.source && event.source.postMessage({ type:'ack', of:'processCallLog', status:'ok', correlationId }, event.origin);
+          break;
+        }
+        case 'openCallLog': {
+          // Expected: { type:'openCallLog' }
+          openGcWidget();
+          event.source && event.source.postMessage({ type:'ack', of:'openCallLog', status:'ok', correlationId }, event.origin);
+          break;
+        }
+        case 'contactSearch': {
+          // Expected: { type:'contactSearch', query: '...' }
+          const input = document.getElementById('globalSearch');
+          if (input && typeof msg.query === 'string') {
+            input.value = msg.query;
+            input.focus();
+          }
+          event.source && event.source.postMessage({ type:'ack', of:'contactSearch', status:'ok', correlationId }, event.origin);
+          break;
+        }
+      }
+    }
+
+    window.addEventListener('message', handleMessage);
+    // ----------------------------------------------------------
   </script>
 
   <script>
