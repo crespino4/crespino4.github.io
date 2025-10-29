@@ -1,7 +1,7 @@
 {
       "banner": {
-        "patientName": "Crespino, Jim (MRN 0012341234)",
-        "patientDetails": "DOB 11/04/1967 • M • Allergies: Morphine • PCP: Knopp, R.",
+        "patientName": "Doe, John (MRN 0012341234)",
+        "patientDetails": "DOB 11/04/1976 • M • Allergies: Morphine • PCP: Davis, R.",
         "location": { "label": "Location", "value": "San Jose FAC" },
         "encounter": { "label": "Encounter", "value": "Urgent Care • Today" },
         "status": { "label": "Status", "value": "Roomed" }
