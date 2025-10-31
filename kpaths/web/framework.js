@@ -104,21 +104,15 @@ window.Framework = {
         window.PureCloud.subscribe([
             {
                 type: 'UserAction', 
-                callback: function (category, data) {
-                    window.parent.postMessage(JSON.stringify({type:"userActionSubscription", data:{category:category, data:data}}), this.crmDomain);
-                }  
+                callback: this.userActionHandler 
             },
             {
                 type: "Interaction",
-                callback: function (category, data) {
-                    window.parent.postMessage(JSON.stringify({type:"interactionSubscription", data:{category:category, data:data}}), this.crmDomain);
-                }
+                callback: this.interactionHandler
             }, 
             {
                 type: "Notification",
-                callback: function (category, data) {
-                    window.parent.postMessage(JSON.stringify({type:"notificationSubscription", data:{category:category, data:data}}), this.crmDomain);
-                }
+                callback: this.notificationHandler
             }
         ]);
 
@@ -174,5 +168,14 @@ window.Framework = {
     contactSearch: (searchString, onSuccess, onFailure) => {
         contactSearchCallback = onSuccess;
         window.parent.postMessage(JSON.stringify({type:"contactSearch" , data:{searchString:searchString}}) , this.crmDomain);
+    },
+    userActionHandler: (category, data) =>{
+        window.parent.postMessage(JSON.stringify({type:"userActionSubscription", data:{category:category, data:data}}), this.crmDomain);
+    },
+    interactionHandler: (category, data) => {
+        window.parent.postMessage(JSON.stringify({type:"interactionSubscription", data:{category:category, data:data}}), this.crmDomain);
+    }, 
+    notificationHandler: (category, data) => {
+        window.parent.postMessage(JSON.stringify({type:"notificationSubscription", data:{category:category, data:data}}), this.crmDomain);
     }
 };
