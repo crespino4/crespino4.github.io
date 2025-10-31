@@ -139,6 +139,33 @@
         </div>
 
         <div class="grid" style="grid-template-columns: repeat(12,minmax(0,1fr)); gap:16px;">
+
+          <div class="card" style="grid-column: span 12 / span 12;">
+            <div class="row mb-2" style="justify-content:space-between;">
+              <h2 class="font-semibold" data-i18n="content.results.title">—</h2>
+              <button class="btn" style="padding:4px 12px; font-size:14px;" data-i18n="content.results.viewAllButton">—</button>
+            </div>
+            <div style="overflow-x:auto;">
+              <table>
+                <thead>
+                  <tr class="muted" id="resultsHeaders">
+                    <!-- headers rendered by JS -->
+                  </tr>
+                </thead>
+                <tbody id="resultsBody">
+                  <!-- rows rendered by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="grid-column: span 12 / span 12;">
+            <h2 class="font-semibold mb-3" data-i18n="content.medications.title">—</h2>
+            <ul id="medsList" style="list-style:none; padding:0; margin:0; display:grid; gap:8px; font-size:14px;">
+              <!-- medications rendered by JS -->
+            </ul>
+          </div>
+
           <div class="card lg-7" style="grid-column: span 12 / span 12;">
             <div class="row mb-3" style="justify-content:space-between;">
               <h2 class="font-semibold" data-i18n="content.encounter.title">—</h2>
@@ -167,31 +194,6 @@
             </div>
           </div>
 
-          <div class="card" style="grid-column: span 12 / span 12;">
-            <h2 class="font-semibold mb-3" data-i18n="content.medications.title">—</h2>
-            <ul id="medsList" style="list-style:none; padding:0; margin:0; display:grid; gap:8px; font-size:14px;">
-              <!-- medications rendered by JS -->
-            </ul>
-          </div>
-
-          <div class="card" style="grid-column: span 12 / span 12;">
-            <div class="row mb-2" style="justify-content:space-between;">
-              <h2 class="font-semibold" data-i18n="content.results.title">—</h2>
-              <button class="btn" style="padding:4px 12px; font-size:14px;" data-i18n="content.results.viewAllButton">—</button>
-            </div>
-            <div style="overflow-x:auto;">
-              <table>
-                <thead>
-                  <tr class="muted" id="resultsHeaders">
-                    <!-- headers rendered by JS -->
-                  </tr>
-                </thead>
-                <tbody id="resultsBody">
-                  <!-- rows rendered by JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
         </div>
       </section>
     </div>
