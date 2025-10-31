@@ -175,7 +175,7 @@
         }
 
         case "interactionSubscription": {
-          if (msg.data,category === 'change'){
+          if (msg.data.category === 'change'){
             if (currentMRN !== msg.data.data.new.attributes.mrn)  {
                 currentMRN = msg.data.interactionId.attributes.mrn || '';  
                 console.log('**************** MRN has changed to ', currentMRN);
