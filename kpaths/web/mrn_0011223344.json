@@ -1,7 +1,7 @@
 {
       "banner": {
-        "patientName": "Law, Allison (MRN 0012341234)",
-        "patientDetails": "DOB 02/18/1998 • F • Allergies: None • PCP: Davis, R.",
+        "patientName": "Miller, Beth (MRN 0012341238)",
+        "patientDetails": "DOB 01/01/1990 • F • Allergies: None • PCP: Davis, R.",
         "location": { "label": "Location", "value": "San Jose FAC" },
         "encounter": { "label": "Encounter", "value": "Urgent Care • Today" },
         "status": { "label": "Status", "value": "Roomed" }
