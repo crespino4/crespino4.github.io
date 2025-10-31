@@ -171,6 +171,7 @@
         }
 
         case 'userActionSubscription': {
+            break;
         }
 
         case "interactionSubscription": {
@@ -182,9 +183,13 @@
             .then(r => r.json())
             .then(json => { TEXTS = json[0] || json; applyAll(); });
           }
+          break;
         }
 
-        case "notificationSubscription": {}
+        case "notificationSubscription": {
+            break;
+        }
+      }
     }
 
     window.addEventListener('message', handleMessage);
