@@ -175,14 +175,16 @@
         }
 
         case "interactionSubscription": {
-          if (currentMRN !== msg.data.interactionId.attributes.mrn)  {
-            currentMRN = msg.data.interactionId.attributes.mrn || '';  
-            console.log('**************** MRN has changed to ', currentMRN);
-  
-            var screenpopDataFile = 'mrn_' + msg.data.interactionId.attributes.mrn + '.json';
-            fetch(screenpopDataFile)
-                .then(r => r.json())
-                .then(json => { TEXTS = json[0] || json; applyAll(); });
+          if (msg.data,category === 'change'){
+            if (currentMRN !== msg.data.data.new.attributes.mrn)  {
+                currentMRN = msg.data.interactionId.attributes.mrn || '';  
+                console.log('**************** MRN has changed to ', currentMRN);
+    
+                var screenpopDataFile = 'mrn_' + msg.data.interactionId.attributes.mrn + '.json';
+                fetch(screenpopDataFile)
+                    .then(r => r.json())
+                    .then(json => { TEXTS = json[0] || json; applyAll(); });
+            }
           }
           break;
         }
