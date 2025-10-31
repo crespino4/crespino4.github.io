@@ -113,7 +113,7 @@
       return null;
     }
 
-    const ALLOWED_TYPES = new Set(['screenPop','processCallLog','openCallLog','contactSearch']);
+    const ALLOWED_TYPES = new Set(['screenPop','processCallLog','openCallLog','contactSearch','userActionSubscription','interactionSubscription','notificationSubscription']);
 
     let currentMRN = '';
 
