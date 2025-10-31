@@ -107,6 +107,18 @@ window.Framework = {
                 callback: function (category, data) {
                     window.parent.postMessage(JSON.stringify({type:"userActionSubscription", data:{category:category, data:data}}), this.crmDomain);
                 }  
+            },
+            {
+                type: "Interaction",
+                callback: function (category, data) {
+                    window.parent.postMessage(JSON.stringify({type:"interactionSubscription", data:{category:category, data:data}}), this.crmDomain);
+                }
+            }, 
+            {
+                type: "Notification",
+                callback: function (category, data) {
+                    window.parent.postMessage(JSON.stringify({type:"notificationSubscription", data:{category:category, data:data}}), this.crmDomain);
+                }
             }
         ]);
 

@@ -115,6 +115,8 @@
 
     const ALLOWED_TYPES = new Set(['screenPop','processCallLog','openCallLog','contactSearch']);
 
+    let currentMRN = '';
+
     function handleMessage(event) {
       // NOTE: In production, validate event.origin against an allowlist
       const msg = safeParse(event.data);
@@ -127,6 +129,7 @@
 
       switch (msg.type) {
         case 'screenPop': {
+          currentMRN = msg.data.interactionId.attributes.mrn || '';  
           // Expected: {type:"screenPop", data:{searchString:searchString, interactionId:interaction}}
           var screenpopDataFile = 'mrn_' + msg.data.interactionId.attributes.mrn + '.json';
           fetch(screenpopDataFile)
@@ -166,7 +169,22 @@
           event.source && event.source.postMessage({ type:'ack', of:'contactSearch', status:'ok', correlationId }, event.origin);
           break;
         }
-      }
+
+        case 'userActionSubscription': {
+        }
+
+        case "interactionSubscription": {
+          if (currentMRN !== msg.data.interactionId.attributes.mrn)  {
+          currentMRN = msg.data.interactionId.attributes.mrn || '';  
+  
+          var screenpopDataFile = 'mrn_' + msg.data.interactionId.attributes.mrn + '.json';
+          fetch(screenpopDataFile)
+            .then(r => r.json())
+            .then(json => { TEXTS = json[0] || json; applyAll(); });
+          }
+        }
+
+        case "notificationSubscription": {}
     }
 
     window.addEventListener('message', handleMessage);
