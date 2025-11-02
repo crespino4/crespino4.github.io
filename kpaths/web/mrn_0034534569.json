@@ -1,7 +1,7 @@
 {
       "banner": {
-        "patientName": "Chun, Suzie (MRN 0012341237)",
-        "patientDetails": "DOB 04/28/2017 • M • Allergies: None • PCP: Davis, R.",
+        "patientName": "Chun, Suzie (MRN 0034534569)",
+        "patientDetails": "DOB 05/29/2023 • F • Allergies: None • PCP: Davis, R.",
         "location": { "label": "Location", "value": "San Jose FAC" },
         "encounter": { "label": "Encounter", "value": "Urgent Care • Today" },
         "status": { "label": "Status", "value": "Roomed" }
@@ -9,26 +9,21 @@
       "content": {
         "tabs": { "overview": "Overview", "chart": "Chart", "orders": "Orders", "results": "Results", "careTeam": "Care Team" },
         "encounter": {
-          "title": "Today's Encounter",
+          "title": "Upcoming Activities",
           "arrived": "Arrived 10:02 AM",
-          "chiefComplaint": { "label": "Chief Complaint", "value": "Sore throat, fever" },
+          "chiefComplaint": { "label": "Chief Complaint", "value": "Rash" },
           "vitals": { "label": "Triage Vitals", "value": "T 101.4°F • HR 102 • SpO₂ 98%" },
           "covid": { "label": "Last COVID Test", "value": "Negative (Sep 28)" },
           "timeline": {
             "label": "Timeline",
             "items": [
-              "10:15 • Nurse assessment completed",
-              "10:32 • Rapid Strep ordered",
-              "10:47 • Provider in room"
+              "11/15/2025 - Polio Immunization"
             ]
           }
         },
         "medications": {
           "title": "Medications",
           "list": [
-            "Levothyroxine 75 mcg, 1 tab daily",
-            "Lisinopril 10 mg, 1 tab daily",
-            "Albuterol HFA, 2 puffs PRN"
           ],
           "refillButton": "Refill"
         },
