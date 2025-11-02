@@ -26,9 +26,7 @@
         "medications": {
           "title": "Medications",
           "list": [
-            "Levothyroxine 75 mcg, 1 tab daily",
-            "Lisinopril 10 mg, 1 tab daily",
-            "Albuterol HFA, 2 puffs PRN"
+            "Metformin 500 mg, 1 tab daily"
           ],
           "refillButton": "Refill"
         },
