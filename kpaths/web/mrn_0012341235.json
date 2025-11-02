@@ -42,7 +42,7 @@
               ["HDL Cholesterol", "45 mg/dl", "40-70", "Oct 27, 2025"],
               ["LDL Cholesterol", "81.00 mg/dl", "0-100", "Oct 27, 2025"],
               ["VLDL Cholesterol", "30.00 mg/dl", "6-38", "Oct 27, 2025"],
-              ["LDL/HDL RATIO", "1.80", "2.5-3.5", "Oct 27, 2025"]
+              ["LDL/HDL RATIO", "1.80", "2.5-3.5", "Oct 27, 2025"],
               ["Total Cholesterol/HDL RATIO", "3.47", "3.5-5", "Oct 27, 2025"]
             ]
           }
