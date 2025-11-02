@@ -10,9 +10,9 @@
         "tabs": { "overview": "Overview", "chart": "Chart", "orders": "Orders", "results": "Results", "careTeam": "Care Team" },
         "encounter": {
           "title": "Upcoming Activities",
-          "arrived": "Arrived 10:02 AM",
+          "arrived": "",
           "chiefComplaint": { "label": "Chief Complaint", "value": "Rash" },
-          "vitals": { "label": "Triage Vitals", "value": "T 101.4°F • HR 102 • SpO₂ 98%" },
+          "vitals": { "label": "Triage Vitals", "value": "T 100.4°F • HR 92 • SpO₂ 98%" },
           "covid": { "label": "Last COVID Test", "value": "Negative (Sep 28)" },
           "timeline": {
             "label": "Timeline",
