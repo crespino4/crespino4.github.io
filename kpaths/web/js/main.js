@@ -1,5 +1,9 @@
     let TEXTS = {};
-    fetch('mrn_00421687.json')
+
+    var mrn = new URLSearchParams(window.location.search).get("mrn");
+    if (mrn == null) mrn = "00421687";
+
+    fetch('mrn_' + mrn + '.json')
         .then(r => r.json())
         .then(json => { TEXTS = json[0] || json; applyAll(); });
 
