@@ -26,9 +26,8 @@
         "medications": {
           "title": "Medications",
           "list": [
-            "Levothyroxine 75 mcg, 1 tab daily",
-            "Lisinopril 10 mg, 1 tab daily",
-            "Albuterol HFA, 2 puffs PRN"
+            "Lipitor 10 mg, 1 tab daily",
+            "Vytorin 10 mg, 1 tab daily"
           ],
           "refillButton": "Refill"
         },
@@ -38,9 +37,13 @@
           "table": {
             "headers": ["Test", "Value", "Ref", "Date"],
             "rows": [
-              ["CBC – WBC", "6.2 x10^3/µL", "4.5–11", "Oct 02, 2025"],
-              ["CMP – Glucose", "94 mg/dL", "70–99", "Sep 28, 2025"],
-              ["Rapid Strep A", "Pending", "–", "Today"]
+              ["Total Cholesterol", "156 mg/dl", "0-200", "Oct 27, 2025"],
+              ["Triglycerides Level", "150 mg/dl", "0-170", "Oct 27, 2025"],
+              ["HDL Cholesterol", "45 mg/dl", "40-70", "Oct 27, 2025"],
+              ["LDL Cholesterol", "81.00 mg/dl", "0-100", "Oct 27, 2025"],
+              ["VLDL Cholesterol", "30.00 mg/dl", "6-38", "Oct 27, 2025"],
+              ["LDL/HDL RATIO", "1.80", "2.5-3.5", "Oct 27, 2025"]
+              ["Total Cholesterol/HDL RATIO", "3.47", "3.5-5", "Oct 27, 2025"]
             ]
           }
         }

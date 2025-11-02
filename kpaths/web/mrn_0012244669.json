@@ -38,9 +38,10 @@
           "table": {
             "headers": ["Test", "Value", "Ref", "Date"],
             "rows": [
-              ["CBC – WBC", "6.2 x10^3/µL", "4.5–11", "Oct 02, 2025"],
-              ["CMP – Glucose", "94 mg/dL", "70–99", "Sep 28, 2025"],
-              ["Rapid Strep A", "Pending", "–", "Today"]
+              ["Glucose", "101 mg/dl", "65-99 (HIGH)", "Oct 02, 2025"],
+              ["BUN", "27 mg/dl", "6-20 (HIGH)", "Oct 02, 2025"],
+              ["Creatinine", "1.01 mg/dl", "0.57-1.00 (HIGH)", "Oct 02, 2025"],
+              ["BUN/Creatinine Ratio", "27", "9-23 (HIGH)", "Oct 02, 2025"]
             ]
           }
         }

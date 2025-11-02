@@ -46,7 +46,7 @@ window.Framework = {
                 primary: (() => {
                     let primarycolor = new URLSearchParams(window.location.search).get('primarycolor');
     
-                    if(!primarycolor) return '#666';
+                    if(!primarycolor) return '#3376eaff';
     
                     return decodeURI(primarycolor);
                 })(),
@@ -61,9 +61,7 @@ window.Framework = {
             display: {
                 interactionDetails: {
                     call: [
-                        "participant.PEF_Priority",
-                        "framework.DisplayAddress",
-                        "call.ConversationId"
+                        "mrn"
                     ]
                 }
             }

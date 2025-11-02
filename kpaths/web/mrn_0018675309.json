@@ -11,8 +11,8 @@
         "encounter": {
           "title": "Today's Encounter",
           "arrived": "Arrived 10:02 AM",
-          "chiefComplaint": { "label": "Chief Complaint", "value": "Sore throat, fever" },
-          "vitals": { "label": "Triage Vitals", "value": "T 101.4°F • HR 102 • SpO₂ 98%" },
+          "chiefComplaint": { "label": "Chief Complaint", "value": "Flu Symptoms, Fever, Sore Throat" },
+          "vitals": { "label": "Triage Vitals", "value": "T 102.4°F • HR 105 • SpO₂ 98%" },
           "covid": { "label": "Last COVID Test", "value": "Negative (Sep 28)" },
           "timeline": {
             "label": "Timeline",
