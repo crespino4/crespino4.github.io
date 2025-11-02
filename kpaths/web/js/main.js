@@ -1,9 +1,10 @@
     let TEXTS = {};
 
-    var mrn = new URLSearchParams(window.location.search).get("mrn");
-    if (mrn == null) mrn = "00421687";
+    let currentMRN = '';
+    currentMRN = new URLSearchParams(window.location.search).get("mrn");
+    if (currentMRN == null) mrn = "00421687";
 
-    fetch('mrn_' + mrn + '.json')
+    fetch('mrn_' + currentMRN + '.json')
         .then(r => r.json())
         .then(json => { TEXTS = json[0] || json; applyAll(); });
 
@@ -118,8 +119,6 @@
     }
 
     const ALLOWED_TYPES = new Set(['screenPop','processCallLog','openCallLog','contactSearch','userActionSubscription','interactionSubscription','notificationSubscription']);
-
-    let currentMRN = '';
 
     function handleMessage(event) {
       // NOTE: In production, validate event.origin against an allowlist
