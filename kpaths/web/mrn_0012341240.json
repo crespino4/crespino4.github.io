@@ -1,7 +1,7 @@
 {
       "banner": {
         "patientName": "Wrigth, Joyce (MRN 0012341240)",
-        "patientDetails": "DOB 04/28/2017 • M • Allergies: None • PCP: Davis, R.",
+        "patientDetails": "DOB 04/28/2017 • F • Allergies: None • PCP: Davis, R.",
         "location": { "label": "Location", "value": "San Jose FAC" },
         "encounter": { "label": "Encounter", "value": "Urgent Care • Today" },
         "status": { "label": "Status", "value": "Roomed" }
