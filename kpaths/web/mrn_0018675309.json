@@ -1,7 +1,7 @@
 {
       "banner": {
         "patientName": "Johnson, Tom (MRN 0018675309)",
-        "patientDetails": "DOB 04/28/2017 • M • Allergies: None • PCP: Davis, R.",
+        "patientDetails": "DOB 10/15/1973 • M • Allergies: None • PCP: Davis, R.",
         "location": { "label": "Location", "value": "San Jose FAC" },
         "encounter": { "label": "Encounter", "value": "Urgent Care • Today" },
         "status": { "label": "Status", "value": "Roomed" }
@@ -11,7 +11,7 @@
         "encounter": {
           "title": "Today's Encounter",
           "arrived": "Arrived 10:02 AM",
-          "chiefComplaint": { "label": "Chief Complaint", "value": "Flu Symptoms, Fever, Sore Throat" },
+          "chiefComplaint": { "label": "Chief Complaint", "value": "Short of breath" },
           "vitals": { "label": "Triage Vitals", "value": "T 102.4°F • HR 105 • SpO₂ 98%" },
           "covid": { "label": "Last COVID Test", "value": "Negative (Sep 28)" },
           "timeline": {
