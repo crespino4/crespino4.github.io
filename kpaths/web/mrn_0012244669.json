@@ -1,7 +1,7 @@
 {
       "banner": {
         "patientName": "Chun, Maria (MRN 0012244669)",
-        "patientDetails": "DOB 02/14/1995 • M • Allergies: None • PCP: Davis, R.",
+        "patientDetails": "DOB 02/14/1995 • F • Allergies: None • PCP: Davis, R.",
         "location": { "label": "Location", "value": "San Jose FAC" },
         "encounter": { "label": "Encounter", "value": "Urgent Care • Today" },
         "status": { "label": "Status", "value": "Roomed" }
