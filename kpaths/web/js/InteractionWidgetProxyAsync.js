@@ -161,6 +161,10 @@ async function initializeApplication() {
         if ( customer !== undefined ) {
             currentMRN = customer.attributes['mrn'];
 
+            if ( currentMRN.startsWith('00') === false ) {
+                currentMRN = '00' + currentMRN;
+            }
+
             var srcUrl = appParams.defaultURL + "?mrn=" + currentMRN;
             document.querySelector("#InteractionWidgetFrame").src = srcUrl;
         }
@@ -239,6 +243,10 @@ async function onSocketMessage(event){
             if ( customer !== undefined ) {
                 if ( customer.attributes['mrn'] != currentMRN ) {
                     currentMRN = customer.attributes['mrn'];
+
+                    if ( currentMRN.startsWith('00') === false ) {
+                        currentMRN = '00' + currentMRN;
+                    }
 
                     var srcUrl = appParams.defaultURL + "?mrn=" + currentMRN;
                     document.querySelector("#InteractionWidgetFrame").src = srcUrl;
