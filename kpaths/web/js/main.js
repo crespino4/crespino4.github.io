@@ -4,6 +4,10 @@
     currentMRN = new URLSearchParams(window.location.search).get("mrn");
     if (currentMRN == null) mrn = "00421687";
 
+    if ( !currentMRN.startsWith('00') ) {
+      currentMRN = '00' + currentMRN;
+    }
+
     fetch('mrn_' + currentMRN + '.json')
         .then(r => r.json())
         .then(json => { TEXTS = json[0] || json; applyAll(); });
