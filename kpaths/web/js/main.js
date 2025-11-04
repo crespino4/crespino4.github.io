@@ -163,13 +163,13 @@
           // Expected: { type:'processCallLog', log: { ... } }
           // Demo: just stash on window and open the widget
           window._lastCallLog = msg.log || {};
-          openGcWidget();
+          //openGcWidget();
           event.source && event.source.postMessage({ type:'ack', of:'processCallLog', status:'ok', correlationId }, event.origin);
           break;
         }
         case 'openCallLog': {
           // Expected: { type:'openCallLog' }
-          openGcWidget();
+          //openGcWidget();
           event.source && event.source.postMessage({ type:'ack', of:'openCallLog', status:'ok', correlationId }, event.origin);
           break;
         }
