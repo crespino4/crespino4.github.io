@@ -161,7 +161,7 @@ async function initializeApplication() {
         if ( customer !== undefined ) {
             currentMRN = customer.attributes['mrn'];
 
-            if ( currentMRN.startsWith('00') === false ) {
+            if ( currentMRN !== undefined && currentMRN.startsWith('00') === false ) {
                 currentMRN = '00' + currentMRN;
             }
 
@@ -244,7 +244,7 @@ async function onSocketMessage(event){
                 if ( customer.attributes['mrn'] != currentMRN ) {
                     currentMRN = customer.attributes['mrn'];
 
-                    if ( currentMRN.startsWith('00') === false ) {
+                    if ( currentMRN !== undefined && currentMRN.startsWith('00') === false ) {
                         currentMRN = '00' + currentMRN;
                     }
 
