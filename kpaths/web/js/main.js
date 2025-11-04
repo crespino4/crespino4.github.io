@@ -132,7 +132,14 @@
 
       switch (msg.type) {
         case 'screenPop': {
-          currentMRN = msg.data.interactionId.attributes.mrn || '';  
+          currentMRN = msg.data.interactionId.attributes.mrn || ''; 
+          
+          if ( !currentMRN.startsWith('00') ) {
+            currentMRN = '00' + currentMRN;
+          }
+          
+          console.log('**************** screenPop to MRN ', currentMRN);
+
           // Expected: {type:"screenPop", data:{searchString:searchString, interactionId:interaction}}
           var screenpopDataFile = 'mrn_' + msg.data.interactionId.attributes.mrn + '.json';
           fetch(screenpopDataFile)
