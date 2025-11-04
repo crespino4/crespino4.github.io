@@ -4,8 +4,7 @@
         "patientDetails": "DOB 05/29/2023 • F • Allergies: None • PCP: Davis, R.",
         "location": { "label": "Location", "value": "San Jose FAC" },
         "encounter": { "label": "Encounter", "value": "Urgent Care • Today" },
-        "status": { "label": "Status", "value": "Roomed" },
-        "authenticated": "Unauthenticated"
+        "status": { "label": "Authentication Status", "value": "Unauthenticated" }
       },
       "content": {
         "tabs": { "overview": "Overview", "chart": "Chart", "orders": "Orders", "results": "Results", "careTeam": "Care Team" },
