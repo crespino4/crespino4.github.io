@@ -200,7 +200,7 @@
     function addOrUpdateCallFromEntity(entity) {
       const convId = entity.id;
       // Find our participant (the logged in user)
-      const myPart = (entity.participants || []).find(p => p.userId === me.id && p.purpose === 'agent');
+      const myPart = (entity.participants || []).find(p => p.user.id === me.id && p.purpose === 'agent');
       if (!myPart) return; // not ours
 
       // Derive remote party info (first external or customer)
