@@ -298,7 +298,7 @@
     async function endCall(convId, c) {
       try {
         // Disconnect entire conversation (or use PATCH participant with state disconnected)
-        await conversationsApi.postConversationsCallDisconnect(convId);
+        await patchMyParticipant(convId, c.participantId, { state: "DISCONNECTED" });
         setStatus('Released', 'warn');
       } catch (e) {
         console.error(e);
