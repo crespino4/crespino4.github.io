@@ -45,7 +45,7 @@
   <script src="https://sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
   <script>
     // FIX: In a browser there is no `require`. The CDN exposes a global `PlatformClient`.
-    const platformClient = window.PlatformClient;
+    const platformClient = require('platformClient');
 
     // ===== Editable config (set these for your org/app) =====
     const GC_REGIONS = [
