@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkgcx_media_switcher=self.webpackChunkgcx_media_switcher||[]).push([[7215],{7215:(s,t,e)=>{e.r(t),e.d(t,{gux_command_action:()=>i});var c=e(7442);const i=class{constructor(s){(0,c.r)(this,s),this.press=(0,c.c)(this,"press",7),this.text="",this.details="",this.common=!1,this.recent=!1,this.shortcut=""}async invokePress(){this.press.emit()}render(){return""}}}}]);
-//# sourceMappingURL=7215.174df1d9.chunk.js.map

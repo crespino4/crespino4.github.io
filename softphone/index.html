@@ -63,7 +63,7 @@
 
     // ===== App state =====
     const apiClient = platformClient.ApiClient.instance;
-    client.setPersistSettings(true, 'gc_softphone_sample');
+    apiClient.setPersistSettings(true, 'gc_softphone_sample');
 
     const usersApi = new platformClient.UsersApi();
     const notificationsApi = new platformClient.NotificationsApi();
