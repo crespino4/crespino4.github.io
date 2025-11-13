@@ -181,7 +181,6 @@
       const stat = await userApi.getUserRoutingStatus(me.id);
       $('#routingStatusInfo').innerText = `${stat.status}`;
 
-
       // Also pull any active calls on load
       const resp = await conversationsApi.getConversationsCalls();
       (resp.entities || []).forEach(addOrUpdateCallFromEntity);
@@ -387,6 +386,7 @@
 
       // Run a quick preflight
       runTests();
+      login();
     });
   </script>
 </head>
