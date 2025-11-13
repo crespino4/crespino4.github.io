@@ -235,8 +235,8 @@
 
     async function setOnQueue(on) {
       // Find the system presence for On Queue / Available
-      const label = on ? 'On Queue' : 'Available';
-      const pd = systemPresences.find(p => (p.languageLabels?.en_US || p.systemPresence) === label);
+      const label = on ? 'ON_QUEUE' : 'AVAILABLE';
+      const pd = systemPresences.find(p => (p.name) === label);
       if (!pd) return alert('System presence not found: ' + label);
       await usersApi.patchUserPresence(me.id, 'PURECLOUD', { presenceDefinition: { id: pd.id } });
       setStatus(on ? 'On Queue' : 'Off Queue (Available)', on ? 'ok' : 'warn');
