@@ -220,7 +220,8 @@
       });
 
       // Clean up if conversation is disconnected
-      if ((entity.state || '').toLowerCase() === 'disconnected') {
+      if ((myPart.state || '').toLowerCase() === 'disconnected' ||
+          (myPart.state || '').toLowerCase() === 'terminated' ) {
         calls.delete(convId);
       }
     }
