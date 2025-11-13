@@ -331,7 +331,7 @@
     function runTests({ phase } = {}) {
       if (!$('#tests')) return; // tests UI not rendered yet
       if (phase !== 'append') clearTests();
-      const hasSdk = typeof window !== 'undefined' && !!window.PlatformClient;
+      const hasSdk = !!platformClient;
       assert('SDK global PlatformClient is present', hasSdk);
       if (hasSdk) {
         const api = platformClient.ApiClient.instance;
