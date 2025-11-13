@@ -175,6 +175,13 @@
       ];
       await notificationsApi.postNotificationsChannelSubscriptions(channel.id, topics);
 
+      const pres = await presenceApi.getUserPresencesPurecloud(me.id);
+      $('#presenceInfo').innerText = `${pres?.presenceDefinition?.systemPresence}`;
+
+      const stat = await userApi.getUserRoutingStatus(me.id);
+      $('#routingStatusInfo').innerText = `${stat.status}`;
+
+
       // Also pull any active calls on load
       const resp = await conversationsApi.getConversationsCalls();
       (resp.entities || []).forEach(addOrUpdateCallFromEntity);
@@ -413,7 +420,8 @@
       </div>
     </section>
 
-    <section id="app" class="two-col" style="display:none">
+    <!-- <section id="app" class="two-col" style="display:none"> -->
+    <section id="app" style="display:none">
       <div class="grid">
         <!-- Agent State -->
         <div class="card" style="grid-column: span 12;">
