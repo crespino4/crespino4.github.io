@@ -157,7 +157,7 @@
       // Load system presences (includes "On Queue", "Available", "Busy", etc.)
       systemPresences = await presenceApi.getSystempresences();
       const presenceSelect = $('#presence');
-      presenceSelect.innerHTML = systemPresences.map(p => `<option value="${p.id}">${p.languageLabels?.en_US || p.systemPresence}</option>`).join('');
+      presenceSelect.innerHTML = systemPresences.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
       // Preselect current
       if (me.presence?.presenceDefinition?.id) presenceSelect.value = me.presence.presenceDefinition.id;
 
