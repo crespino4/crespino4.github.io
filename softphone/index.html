@@ -170,7 +170,7 @@
 
       // Subscribe to presence and voice conversations for this user
       const topics = [
-        { id: `v2.users.${me.id}.presence` },
+        { id: `v2.users.${me.id}.activity` },
         { id: `v2.users.${me.id}.conversations.calls` }
       ];
       await notificationsApi.postNotificationsChannelSubscriptions(channel.id, topics);
