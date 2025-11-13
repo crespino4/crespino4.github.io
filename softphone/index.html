@@ -214,8 +214,8 @@
         participantId: myPart.id,
         communicationId: myCall.id,
         state: myCall.state || myPart.state,
-        held: !!myCall.held,
-        muted: !!myCall.muted,
+        held: !!myCall.held || myPart.held,
+        muted: !!myCall.muted || myPart.muted,
         other: { name: other?.name, address: other?.address }
       });
 
