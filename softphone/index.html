@@ -63,6 +63,8 @@
 
     // ===== App state =====
     const apiClient = platformClient.ApiClient.instance;
+    client.setPersistSettings(true, 'gc_softphone_sample');
+
     const usersApi = new platformClient.UsersApi();
     const notificationsApi = new platformClient.NotificationsApi();
     const presenceApi = new platformClient.PresenceApi();
@@ -127,6 +129,12 @@
         alert('Please fill Environment, Client ID and Redirect URI');
         return;
       }
+
+      // Save values to localStorage
+      localStorage.setItem('gc_region', region);
+      localStorage.setItem('gc_clientId', clientId);
+      localStorage.setItem('gc_redirectUri', redirectUri);      
+
       apiClient.setEnvironment(region);
 
       try {
@@ -359,6 +367,15 @@
       $('#btnOffQueue').onclick = () => setOnQueue(false);
       $('#btnCall').onclick = placeCall;
       $('#btnRunTests').onclick = () => runTests();
+
+      // Load saved values from localStorage
+      const savedRegion = localStorage.getItem('gc_region');
+      const savedClientId = localStorage.getItem('gc_clientId'); 
+      const savedRedirectUri = localStorage.getItem('gc_redirectUri');
+
+      if (savedRegion) $('#region').value = savedRegion;
+      if (savedClientId) $('#clientId').value = savedClientId;
+      if (savedRedirectUri) $('#redirectUri').value = savedRedirectUri;
 
       // Run a quick preflight
       runTests();
