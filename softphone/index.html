@@ -65,6 +65,7 @@
     const apiClient = platformClient.ApiClient.instance;
     const usersApi = new platformClient.UsersApi();
     const notificationsApi = new platformClient.NotificationsApi();
+    const presenceApi = new platformClient.PresenceApi();
     const conversationsApi = new platformClient.ConversationsApi();
 
     let me = null;                   // current user (GET /users/me)
@@ -146,7 +147,7 @@
       $('#me').innerText = `${me.name} (@${me.username})`;
 
       // Load system presences (includes "On Queue", "Available", "Busy", etc.)
-      systemPresences = await usersApi.getSystempresences();
+      systemPresences = await presenceApi.getSystempresences();
       const presenceSelect = $('#presence');
       presenceSelect.innerHTML = systemPresences.map(p => `<option value="${p.id}">${p.languageLabels?.en_US || p.systemPresence}</option>`).join('');
       // Preselect current
