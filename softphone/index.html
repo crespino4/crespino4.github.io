@@ -186,7 +186,7 @@
 
     function handleNotification(msg) {
       if (!msg.topicName) return;
-      if (msg.topicName.endsWith('.presence')) {
+      if (msg.topicName.endsWith('.activity')) {
         const activity = msg.eventBody;
         $('#presenceInfo').innerText = `${activity.presence?.presenceDefinition?.systemPresence}`;
         $('#routingStatusInfo').innerText = `${activity.routingStatus?.status}`;
