@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Genesys Cloud – Agent Call Control (Implicit Grant)</title>
+  <style>
+    :root { font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji"; }
+    body { margin: 0; background: #0b1020; color: #e6e7eb; }
+    header { padding: 16px 20px; border-bottom: 1px solid #1c2340; display: flex; gap: 16px; align-items: center; }
+    header h1 { font-size: 18px; font-weight: 700; margin: 0; }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(12, minmax(0, 1fr)); padding: 16px; }
+    .card { background: #121935; border: 1px solid #1c2340; border-radius: 14px; padding: 14px; box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+    .card h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .12em; color: #93a4fd; margin: 0 0 12px; }
+    .muted { color: #a9afc7; font-size: 12px; }
+    label { display:block; font-size:12px; color:#a9afc7; margin: 6px 0 4px; }
+    input, select, button { background:#0e1530; color:#f1f3ff; border:1px solid #28315e; border-radius:10px; padding:10px 12px; font-size:14px; }
+    input, select { width:100%; }
+    button { cursor:pointer; transition: transform .05s ease; }
+    button:hover { transform: translateY(-1px); }
+    button.primary { background:#4455ff; border-color:#4455ff; }
+    button.ghost { background: transparent; }
+    .row { display:flex; gap:8px; align-items:center; }
+    .row.wrap { flex-wrap:wrap; }
+    .pill { padding: 4px 8px; border-radius: 999px; background:#0e1530; border:1px solid #28315e; font-size:12px; }
+    .danger { background:#2a0d16; border-color:#6b1327; color:#ff99b3; }
+    .ok { background:#0f2218; border-color:#194a35; color:#9df2c2; }
+    .warn { background:#271b07; border-color:#5a3f10; color:#ffd38a; }
+    .stack { display:flex; flex-direction:column; gap:8px; }
+    .calls { display:flex; flex-direction:column; gap:10px; max-height: 420px; overflow:auto; }
+    .call { display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px; border-radius:12px; background:#0e1530; border:1px solid #28315e; }
+    .call .meta { display:flex; flex-direction:column; gap:2px; }
+    .call .actions { display:flex; gap:6px; flex-wrap: wrap; }
+    .small { font-size:12px; opacity:.8 }
+    a.link { color:#9fb2ff; text-decoration:none; }
+    .two-col { grid-column: span 12; }
+    @media (min-width: 960px) {
+      .two-col { grid-column: span 6; }
+    }
+    code { background:#0e1530; padding:2px 6px; border:1px solid #28315e; border-radius:8px; }
+    .pass { color:#9df2c2; }
+    .fail { color:#ff99b3; }
+  </style>
+  <!-- Platform Client SDK (browser distribution) -->
+  <script src="https://sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
+  <script>
+    // FIX: In a browser there is no `require`. The CDN exposes a global `PlatformClient`.
+    const platformClient = window.PlatformClient;
+
+    // ===== Editable config (set these for your org/app) =====
+    const GC_REGIONS = [
+      'mypurecloud.com',            // US East (N. Virginia)
+      'usw2.pure.cloud',            // US West (Oregon)
+      'cac1.pure.cloud',            // Canada (Central)
+      'mypurecloud.ie',             // EU (Dublin)
+      'euw2.pure.cloud',            // EU (Frankfurt)
+      'mypurecloud.de',             // EU (Frankfurt - legacy)
+      'apne2.pure.cloud',           // Asia Pacific (Seoul)
+      'mypurecloud.jp',             // Asia Pacific (Tokyo)
+      'mypurecloud.com.au',         // Asia Pacific (Sydney)
+      'sae1.pure.cloud'             // South America (São Paulo)
+    ];
+
+    // ===== App state =====
+    const apiClient = platformClient.ApiClient.instance;
+    const usersApi = new platformClient.UsersApi();
+    const notificationsApi = new platformClient.NotificationsApi();
+    const conversationsApi = new platformClient.ConversationsApi();
+
+    let me = null;                   // current user (GET /users/me)
+    let socket = null;               // WebSocket for Notifications
+    let channel = null;              // Notifications channel info
+    let systemPresences = [];        // cached GET /systempresences
+
+    // conversation cache keyed by conversationId with lightweight info needed for controls
+    const calls = new Map();
+
+    // ===== Utility helpers =====
+    const $ = (sel) => document.querySelector(sel);
+    const el = (tag, props={}) => Object.assign(document.createElement(tag), props);
+    const setBusy = (id, on) => { const btn = $(id); if (btn) btn.disabled = !!on; };
+    const log = (...args) => { console.log('[GC]', ...args); };
+
+    function renderCalls() {
+      const list = $('#calls');
+      list.innerHTML = '';
+      for (const [convId, c] of calls) {
+        const row = el('div', { className: 'call' });
+        const meta = el('div', { className: 'meta' });
+        meta.append(
+          el('div', { innerHTML: `<strong>${c.other?.name || c.other?.address || 'Unknown'}</strong>` }),
+          el('div', { className: 'small', innerText: `Conversation: ${convId}` }),
+          el('div', { className: 'small', innerText: `State: ${c.state || 'unknown'} | Held: ${c.held ? 'yes' : 'no'} | Muted: ${c.muted ? 'yes' : 'no'}` })
+        );
+
+        const actions = el('div', { className: 'actions' });
+        const mk = (label, fn, css='') => { const b = el('button', { innerText: label, className: css }); b.onclick = () => fn(convId, c); return b; };
+
+        actions.append(
+          mk('Answer', answerCall, 'primary'),
+          mk('Hold', holdCall),
+          mk('Resume', resumeCall),
+          mk('Mute', muteCall),
+          mk('Unmute', unmuteCall),
+          mk('Transfer', () => doTransfer(convId, c)),
+          mk('Release', endCall, 'danger')
+        );
+
+        row.append(meta, actions);
+        list.append(row);
+      }
+    }
+
+    function setStatus(msg, type='ok') {
+      const badge = $('#status');
+      badge.className = `pill ${type}`;
+      badge.innerText = msg;
+    }
+
+    // ===== Auth =====
+    async function login() {
+      const region = $('#region').value.trim();
+      const clientId = $('#clientId').value.trim();
+      const redirectUri = $('#redirectUri').value.trim();
+      if (!region || !clientId || !redirectUri) {
+        alert('Please fill Environment, Client ID and Redirect URI');
+        return;
+      }
+      apiClient.setEnvironment(region);
+
+      try {
+        await apiClient.loginImplicitGrant(clientId, redirectUri, { state: 'gc-demo' }); // Implicit grant
+        setStatus('Authenticated', 'ok');
+        $('#authBlock').style.display = 'none';
+        $('#app').style.display = 'block';
+        await bootstrap();
+      } catch (e) {
+        console.error(e);
+        setStatus('Auth failed – check clientId/redirectUri/scopes', 'danger');
+      }
+    }
+
+    // ===== After auth: bootstrap user, presence, and notifications =====
+    async function bootstrap() {
+      me = await usersApi.getUsersMe({ expand: ['presence','station','routingStatus'] });
+      $('#me').innerText = `${me.name} (@${me.username})`;
+
+      // Load system presences (includes "On Queue", "Available", "Busy", etc.)
+      systemPresences = await usersApi.getSystempresences();
+      const presenceSelect = $('#presence');
+      presenceSelect.innerHTML = systemPresences.map(p => `<option value="${p.id}">${p.languageLabels?.en_US || p.systemPresence}</option>`).join('');
+      // Preselect current
+      if (me.presence?.presenceDefinition?.id) presenceSelect.value = me.presence.presenceDefinition.id;
+
+      // Create notifications channel + websocket
+      channel = await notificationsApi.postNotificationsChannels();
+      socket = new WebSocket(channel.connectUri);
+      socket.onopen = () => setStatus('Notifications connected', 'ok');
+      socket.onerror = () => setStatus('Notifications error', 'warn');
+      socket.onmessage = (m) => handleNotification(JSON.parse(m.data));
+
+      // Subscribe to presence and voice conversations for this user
+      const topics = [
+        { id: `v2.users.${me.id}.presence` },
+        { id: `v2.users.${me.id}.conversations.calls` }
+      ];
+      await notificationsApi.postNotificationsChannelSubscriptions(channel.id, topics);
+
+      // Also pull any active calls on load
+      const resp = await conversationsApi.getConversationsCalls();
+      (resp.entities || []).forEach(addOrUpdateCallFromEntity);
+      renderCalls();
+
+      // Run post-auth diagnostics
+      runTests({ phase: 'post-auth' });
+    }
+
+    function handleNotification(msg) {
+      if (!msg.topicName) return;
+      if (msg.topicName.endsWith('.presence')) {
+        const pres = msg.eventBody;
+        $('#presenceInfo').innerText = `${pres.presenceDefinition?.systemPresence || pres.primary}`;
+      } else if (msg.topicName.endsWith('.conversations.calls')) {
+        // eventBody is a conversation entity with participants/calls arrays; keep only what's needed
+        addOrUpdateCallFromEntity(msg.eventBody);
+        renderCalls();
+      }
+    }
+
+    function addOrUpdateCallFromEntity(entity) {
+      const convId = entity.id;
+      // Find our participant (the logged in user)
+      const myPart = (entity.participants || []).find(p => p.userId === me.id && p.purpose === 'agent');
+      if (!myPart) return; // not ours
+
+      // Derive remote party info (first external or customer)
+      const other = (entity.participants || []).find(p => p.purpose === 'customer' || p.purpose === 'external' || p.direction === 'inbound' || p.direction === 'outbound');
+
+      // Pull top-level flags from my leg (if present)
+      const myCall = (myPart.calls || [])[0] || {};
+
+      calls.set(convId, {
+        conversationId: convId,
+        participantId: myPart.id,
+        communicationId: myCall.id,
+        state: myCall.state || myPart.state,
+        held: !!myCall.held,
+        muted: !!myCall.muted,
+        other: { name: other?.name, address: other?.address }
+      });
+
+      // Clean up if conversation is disconnected
+      if ((entity.state || '').toLowerCase() === 'disconnected') {
+        calls.delete(convId);
+      }
+    }
+
+    // ===== Presence / Agent state =====
+    async function updatePresence() {
+      const presenceId = $('#presence').value;
+      const body = { presenceDefinition: { id: presenceId } };
+      // PATCH /api/v2/users/{userId}/presences/{sourceId} (sourceId='PURECLOUD')
+      await usersApi.patchUserPresence(me.id, 'PURECLOUD', body);
+      setStatus('Presence updated', 'ok');
+    }
+
+    async function setOnQueue(on) {
+      // Find the system presence for On Queue / Available
+      const label = on ? 'On Queue' : 'Available';
+      const pd = systemPresences.find(p => (p.languageLabels?.en_US || p.systemPresence) === label);
+      if (!pd) return alert('System presence not found: ' + label);
+      await usersApi.patchUserPresence(me.id, 'PURECLOUD', { presenceDefinition: { id: pd.id } });
+      setStatus(on ? 'On Queue' : 'Off Queue (Available)', on ? 'ok' : 'warn');
+    }
+
+    // ===== Call control helpers (PATCH participant for hold/mute; dedicated endpoints for answer/transfer; disconnect to release) =====
+    async function patchMyParticipant(convId, participantId, patch) {
+      return conversationsApi.patchConversationsCallParticipant(convId, participantId, patch);
+    }
+
+    async function answerCall(convId, c) {
+      try {
+        await conversationsApi.postConversationsCallParticipantAnswer(convId, c.participantId);
+        setStatus('Answered', 'ok');
+      } catch (e) {
+        console.error(e);
+        alert('Answer failed – ensure WebRTC phone persistent connection is active and the user is alerting.');
+      }
+    }
+
+    async function holdCall(convId, c) {
+      await patchMyParticipant(convId, c.participantId, { held: true });
+      setStatus('Held', 'ok');
+    }
+    async function resumeCall(convId, c) {
+      await patchMyParticipant(convId, c.participantId, { held: false });
+      setStatus('Resumed', 'ok');
+    }
+    async function muteCall(convId, c) {
+      await patchMyParticipant(convId, c.participantId, { muted: true });
+      setStatus('Muted', 'ok');
+    }
+    async function unmuteCall(convId, c) {
+      await patchMyParticipant(convId, c.participantId, { muted: false });
+      setStatus('Unmuted', 'ok');
+    }
+
+    async function doTransfer(convId, c) {
+      const dest = prompt('Transfer to (E.164 phone number, userId, or queueId). Prefix with user: or queue: for internal, e.g., user:abcd-123 or queue:abcd-123. Leave blank to cancel.');
+      if (!dest) return;
+      try {
+        if (dest.startsWith('user:')) {
+          await conversationsApi.postConversationsCallParticipantConsult(convId, c.participantId, { userId: dest.slice(5) });
+          setStatus('Consult transfer started', 'ok');
+        } else if (dest.startsWith('queue:')) {
+          await conversationsApi.postConversationsCallParticipantConsult(convId, c.participantId, { queueId: dest.slice(6) });
+          setStatus('Consult transfer started', 'ok');
+        } else {
+          // Blind transfer to external number
+          await conversationsApi.postConversationsCallParticipantReplace(convId, c.participantId, { address: dest });
+          setStatus('Blind transfer sent', 'ok');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Transfer failed – verify destination and permissions.');
+      }
+    }
+
+    async function endCall(convId, c) {
+      try {
+        // Disconnect entire conversation (or use PATCH participant with state disconnected)
+        await conversationsApi.postConversationsCallDisconnect(convId);
+        setStatus('Released', 'warn');
+      } catch (e) {
+        console.error(e);
+        alert('Release failed');
+      }
+    }
+
+    // ===== Outbound =====
+    async function placeCall() {
+      const number = $('#outNumber').value.trim();
+      if (!number) return alert('Enter a phone number in E.164 format');
+      try {
+        await conversationsApi.postConversationsCalls({ phoneNumber: number });
+        setStatus('Dialing ' + number, 'ok');
+      } catch (e) {
+        console.error(e);
+        alert('Outbound failed – verify number and station is ready');
+      }
+    }
+
+    // ===== Simple test runner =====
+    function assert(name, condition) {
+      const li = el('li');
+      li.innerHTML = condition ? `✅ <span class="pass">${name}</span>` : `❌ <span class="fail">${name}</span>`;
+      $('#tests').append(li);
+      return !!condition;
+    }
+    function clearTests() { $('#tests').innerHTML = ''; }
+
+    function runTests({ phase } = {}) {
+      if (!$('#tests')) return; // tests UI not rendered yet
+      if (phase !== 'append') clearTests();
+      const hasSdk = typeof window !== 'undefined' && !!window.PlatformClient;
+      assert('SDK global PlatformClient is present', hasSdk);
+      if (hasSdk) {
+        const api = platformClient.ApiClient.instance;
+        assert('ApiClient.instance exists', !!api);
+        assert('loginImplicitGrant function exists', typeof api.loginImplicitGrant === 'function');
+        // basic API classes existence
+        assert('UsersApi is constructible', !!new platformClient.UsersApi());
+        assert('NotificationsApi is constructible', !!new platformClient.NotificationsApi());
+        assert('ConversationsApi is constructible', !!new platformClient.ConversationsApi());
+      }
+      // Validate E.164 input helper (no auth required)
+      const sampleGood = '+13125551212';
+      const sampleBad = '3125551212';
+      assert('Sample good E.164 passes startsWith +', sampleGood.startsWith('+'));
+      assert('Sample bad E.164 fails startsWith +', !sampleBad.startsWith('+'));
+
+      if (phase === 'post-auth') {
+        assert('Me is loaded after auth', !!me);
+        assert('Presence list is loaded', Array.isArray(systemPresences) && systemPresences.length > 0);
+        assert('Notifications channel created', !!channel && !!channel.connectUri);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Populate regions
+      const sel = $('#region');
+      sel.innerHTML = GC_REGIONS.map(r => `<option value="${r}">${r}</option>`).join('');
+
+      // Wire buttons
+      $('#btnLogin').onclick = login;
+      $('#btnPresence').onclick = updatePresence;
+      $('#btnOnQueue').onclick = () => setOnQueue(true);
+      $('#btnOffQueue').onclick = () => setOnQueue(false);
+      $('#btnCall').onclick = placeCall;
+      $('#btnRunTests').onclick = () => runTests();
+
+      // Run a quick preflight
+      runTests();
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Genesys Cloud – Agent Call Control</h1>
+    <span id="status" class="pill warn">Not authenticated</span>
+  </header>
+
+  <div class="grid">
+    <!-- Auth / Config -->
+    <section id="authBlock" class="card two-col">
+      <h2>1) Authenticate (Implicit Grant)</h2>
+      <div class="grid" style="grid-template-columns: repeat(12, minmax(0, 1fr)); gap:12px;">
+        <div style="grid-column: span 4;">
+          <label>Environment</label>
+          <select id="region"></select>
+        </div>
+        <div style="grid-column: span 4;">
+          <label>OAuth Client ID</label>
+          <input id="clientId" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" />
+        </div>
+        <div style="grid-column: span 4;">
+          <label>Redirect URI</label>
+          <input id="redirectUri" placeholder="https://yourapp.example.com/" />
+        </div>
+        <div style="grid-column: span 12;" class="row">
+          <button id="btnLogin" class="primary">Sign In</button>
+          <div class="muted">Your OAuth client must enable <code>Implicit Grant</code> and include scopes for Conversations, Users, Notifications.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="app" class="two-col" style="display:none">
+      <div class="grid">
+        <!-- Agent State -->
+        <div class="card">
+          <h2>Agent State</h2>
+          <div class="stack">
+            <div><strong id="me">—</strong></div>
+            <div class="row wrap">
+              <div style="flex:1 1 220px;">
+                <label>Presence</label>
+                <select id="presence"></select>
+              </div>
+              <div class="row" style="gap:8px; align-items:flex-end;">
+                <button id="btnPresence">Update</button>
+                <button id="btnOnQueue">Go On Queue</button>
+                <button id="btnOffQueue" class="ghost">Go Off Queue</button>
+              </div>
+            </div>
+            <div class="muted">Current presence: <span id="presenceInfo">—</span></div>
+          </div>
+        </div>
+
+        <!-- Outbound Dialer -->
+        <div class="card">
+          <h2>Outbound Call</h2>
+          <div class="row">
+            <input id="outNumber" placeholder="+13125551212" />
+            <button id="btnCall" class="primary">Call</button>
+          </div>
+          <div class="muted">Tip: the logged-in user must have a ready station/WebRTC phone.</div>
+        </div>
+
+        <!-- Active/Inbound Calls -->
+        <div class="card" style="grid-column: span 12;">
+          <h2>Active / Incoming Calls</h2>
+          <div id="calls" class="calls"></div>
+          <div class="muted">Inbound ringing calls will appear here. Use Answer/Hold/Mute/Transfer/Release buttons.</div>
+        </div>
+
+        <!-- Diagnostics / Tests -->
+        <div class="card" style="grid-column: span 12;">
+          <h2>Diagnostics</h2>
+          <div class="row" style="margin-bottom:8px;">
+            <button id="btnRunTests">Run Preflight Tests</button>
+            <div class="muted">Post-auth tests run automatically after successful sign-in.</div>
+          </div>
+          <ul id="tests" class="stack" style="margin:0; padding-left:18px;"></ul>
+        </div>
+
+        <!-- Notes -->
+        <div class="card" style="grid-column: span 12;">
+          <h2>Notes</h2>
+          <ul>
+            <li>This sample uses the <em>Implicit Grant</em> for browser apps via the Genesys Cloud JavaScript SDK (<code>loginImplicitGrant</code>).</li>
+            <li>Presence "On Queue" is set using <code>PATCH /api/v2/users/{userId}/presences/PURECLOUD</code> and the system presence definition.</li>
+            <li>Call control updates your agent participant via <code>PATCH /api/v2/conversations/calls/{conversationId}/participants/{participantId}</code> with fields like <code>held</code> and <code>muted</code>. Answer and transfers use the specific helper endpoints.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
