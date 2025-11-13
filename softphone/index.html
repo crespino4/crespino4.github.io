@@ -229,7 +229,7 @@
     async function updatePresence() {
       const presenceId = $('#presence').value;
       const body = { presenceDefinition: { id: presenceId } };
-      await presenceApi.patchUserPresencePurecloud(me.id, body);
+      await presenceApi.patchUserPresencesPurecloud(me.id, body);
       setStatus('Presence updated', 'ok');
     }
 
@@ -238,7 +238,7 @@
       const label = on ? 'ON_QUEUE' : 'AVAILABLE';
       const pd = systemPresences.find(p => (p.name) === label);
       if (!pd) return alert('System presence not found: ' + label);
-      await usersApi.patchUserPresence(me.id, 'PURECLOUD', { presenceDefinition: { id: pd.id } });
+      await presenceApi.patchUserPresencesPurecloud(me.id, { presenceDefinition: { id: pd.id } });
       setStatus(on ? 'On Queue' : 'Off Queue (Available)', on ? 'ok' : 'warn');
     }
 
