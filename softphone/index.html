@@ -187,8 +187,9 @@
     function handleNotification(msg) {
       if (!msg.topicName) return;
       if (msg.topicName.endsWith('.presence')) {
-        const pres = msg.eventBody;
-        $('#presenceInfo').innerText = `${pres.presenceDefinition?.systemPresence || pres.primary}`;
+        const activity = msg.eventBody;
+        $('#presenceInfo').innerText = `${activity.presence?.presenceDefinition?.systemPresence}`;
+        $('#routingStatusInfo').innerText = `${activity.routingStatus?.status}`;
       } else if (msg.topicName.endsWith('.conversations.calls')) {
         // eventBody is a conversation entity with participants/calls arrays; keep only what's needed
         addOrUpdateCallFromEntity(msg.eventBody);
@@ -431,6 +432,7 @@
               </div>
             </div>
             <div class="muted">Current presence: <span id="presenceInfo">—</span></div>
+            <div class="muted">Current routing status: <span id="routingStatusInfo">—</span></div>
           </div>
         </div>
 
