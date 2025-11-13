@@ -386,6 +386,11 @@
 
       // Run a quick preflight
       runTests();
+
+      if ( window.location.hash.length !== 0 ) {
+        // Possibly returning from OAuth redirect
+        login();
+      } 
     });
   </script>
 </head>
