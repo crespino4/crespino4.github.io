@@ -229,8 +229,7 @@
     async function updatePresence() {
       const presenceId = $('#presence').value;
       const body = { presenceDefinition: { id: presenceId } };
-      // PATCH /api/v2/users/{userId}/presences/{sourceId} (sourceId='PURECLOUD')
-      await usersApi.patchUserPresence(me.id, 'PURECLOUD', body);
+      await presenceApi.patchUserPresencePurecloud(me.id, body);
       setStatus('Presence updated', 'ok');
     }
 
