@@ -178,7 +178,7 @@
       const pres = await presenceApi.getUserPresencesPurecloud(me.id);
       $('#presenceInfo').innerText = `${pres?.presenceDefinition?.systemPresence}`;
 
-      const stat = await usersApi.getUserRoutingStatus(me.id);
+      const stat = await usersApi.getUserRoutingstatus(me.id);
       $('#routingStatusInfo').innerText = `${stat.status}`;
 
       // Also pull any active calls on load
