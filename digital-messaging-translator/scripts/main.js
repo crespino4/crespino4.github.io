@@ -54,11 +54,11 @@ const onMessage = data => {
             return;
         } else if(data.eventBody.participants.find(p => p.purpose === 'customer').endTime) {
             console.log('ending conversation');
-        } else if ( topic === topicTranscription && eventBody.conversationId == currentConversation.id ) {
+        } else if ( topic === topicTranscription && data.eventBody.conversationId == currentConversation.id ) {
             console.log("Received a transcription event for a Conversation ID that is recognized");
 
-            if (eventBody.transcripts !== undefined && eventBody.transcripts.length > 0 ) {
-                eventBody.transcripts.forEach( transcript => {
+            if (data.eventBody.transcripts !== undefined && data.eventBody.transcripts.length > 0 ) {
+                data.eventBody.transcripts.forEach( transcript => {
                     console.log("Transcript received: " + transcript);
                 
                     var name = (transcript.channel === 'EXTERNAL') ? customerName : agentAlias;
