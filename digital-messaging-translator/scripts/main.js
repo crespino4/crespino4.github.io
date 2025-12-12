@@ -59,7 +59,7 @@ const onMessage = data => {
                     var purpose = (transcript.channel === 'EXTERNAL') ? 'customer' : 'agent';
 
                     // Format and display the specific transcription event
-                    var transcript = transcripts.alternatives[0].decoratedTranscript;
+                    var transcript = transcript.alternatives[0].decoratedTranscript;
 
                     // Wait for translate to finish before calling addChatMessage
                     translate.translateText(transcript, genesysCloudLanguage, function(translatedData) {
