@@ -185,7 +185,7 @@ function showTranscript(conversationId) {
         if ( messageIds.length === 0 ) {
             return Promise.resolve([]);
         }
-        
+
         return conversationsApi.postConversationsMessageMessagesBulk(conversationId, { body: messageIds });
     }).then(data => {
         data.entities.reverse();
@@ -234,7 +234,7 @@ function setupNotificationChannel(conversationId) {
         // Subscribe to all incoming messages
 
         topicConversation = `v2.users.${userId}.conversations`;
-        topicTranscription = `v2.conversations.${currentConversation}.transcription`;
+        topicTranscription = `v2.conversations.${currentConversationId}.transcription`;
 
         let topics = [{"id": topicConversation},{"id": topicTranscription}];        
         controller.addSubscription(
