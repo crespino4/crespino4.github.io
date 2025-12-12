@@ -233,10 +233,11 @@ function setupNotificationChannel(conversationId) {
     .then(() => {
         // Subscribe to all incoming messages
 
-        topicConversation = `v2.users.${userId}.conversations`;
+        ///topicConversation = `v2.users.${userId}.conversations`;
         topicTranscription = `v2.conversations.${currentConversationId}.transcription`;
 
-        let topics = [{"id": topicConversation},{"id": topicTranscription}];        
+//        let topics = [{"id": topicConversation},{"id": topicTranscription}];        
+        let topics = [{"id": topicTranscription}];        
         controller.addSubscription(
             topics,
             onMessage);
