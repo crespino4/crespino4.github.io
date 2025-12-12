@@ -47,14 +47,12 @@ export default {
      * @param {String} topic PureCloud notification topic string
      * @param {Function} callback callback function to fire when the event occurs
      */
-    addSubscription(topic, callback) {
-        let body = [{ id: topic }];
-
+    addSubscription(topics, callback) {
         return notificationsApi.postNotificationsChannelSubscriptions(
-                channel.id, body)
+                channel.id, topics)
         .then(() => {
             subscriptionMap[topic] = callback;
-            console.log(`Added subscription to ${topic}`);
+            console.log(`Added subscription to ${topics}`);
         });
     }
 };

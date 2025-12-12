@@ -22,6 +22,8 @@ let translationData = null;
 let genesysCloudLanguage = 'en-us';
 let messageType = '';
 let messageIds = [];
+let topicConversation = '';
+let topicTranscription = '';
 
 /**
  * Callback function for 'message' and 'typing-indicator' events.
@@ -52,6 +54,26 @@ const onMessage = data => {
             return;
         } else if(data.eventBody.participants.find(p => p.purpose === 'customer').endTime) {
             console.log('ending conversation');
+        } else if ( topic === topicTranscription && eventBody.conversationId == currentConversation.id ) {
+            console.log("Received a transcription event for a Conversation ID that is recognized");
+
+            if (eventBody.transcripts !== undefined && eventBody.transcripts.length > 0 ) {
+                eventBody.transcripts.forEach( transcript => {
+                    console.log("Transcript received: " + transcript);
+                
+                    var name = (transcript.channel === 'EXTERNAL') ? customerName : agentAlias;
+                    var purpose = (transcript.channel === 'EXTERNAL') ? 'customer' : 'agent';
+
+                    // Format and display the specific transcription event
+                    var transcript = "[" + eventBody.transcripts[0].channel + "]: " + eventBody.transcripts[0].alternatives[0].decoratedTranscript;
+
+                    // Wait for translate to finish before calling addChatMessage
+                    translate.translateText(transcript, genesysCloudLanguage, function(translatedData) {
+                        view.addChatMessage(name, translatedData.translated_text, purpose);
+                        translationData = translatedData;
+                    });
+                });
+            }
         } else {
             data.eventBody.participants.forEach(participant => {
                 if(!participant.endTime && Array.isArray(participant.messages[0].messages)) {
@@ -147,7 +169,7 @@ function sendMessage(message, conversationId, communicationId, originalMessage =
  * @param {String} conversationId
  * @returns {Promise}
  */
-function showChatTranscript(conversationId) {
+function showTranscript(conversationId) {
     return conversationsApi.getConversation(conversationId)
     .then(data => {
         data.participants.forEach(participant => {
@@ -202,13 +224,20 @@ function showChatTranscript(conversationId) {
  * @param {String} conversationId
  * @returns {Promise}
  */
-function setupChatChannel(conversationId) {
+function setupNotificationChannel(conversationId) {
     return controller.createChannel()
     .then(() => {
         // Subscribe to all incoming messages
-        return controller.addSubscription(
-            `v2.users.${userId}.conversations`,
+
+        topicConversation = `v2.users.${userId}.conversations`;
+        topicTranscription = `v2.conversations.${currentConversation}.transcription`;
+
+        let topics = [{"id": topicConversation},{"id": topicTranscription}];        
+        controller.addSubscription(
+            topics,
             onMessage);
+
+        return;
     });
 }
 
@@ -399,10 +428,10 @@ client.loginImplicitGrant(
         customerName = customer.attributes['name'];
     }
 
-    return setupChatChannel(currentConversationId);
+    return setupNotificationChannel(currentConversationId);
 }).then(() => {
     // Get current chat conversations
-    return showChatTranscript(currentConversationId);
+    return showTranscript(currentConversationId);
 }).then(() => {
     console.log('Finished Setup');
 // Error Handling
