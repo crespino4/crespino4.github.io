@@ -54,7 +54,7 @@ const onMessage = data => {
             return;
         } else if(data.eventBody.participants.find(p => p.purpose === 'customer').endTime) {
             console.log('ending conversation');
-        } else if ( topic === topicTranscription && data.eventBody.conversationId == currentConversation.id ) {
+        } else if ( data.topicName === topicTranscription && data.eventBody.conversationId == currentConversation.id ) {
             console.log("Received a transcription event for a Conversation ID that is recognized");
 
             if (data.eventBody.transcripts !== undefined && data.eventBody.transcripts.length > 0 ) {
