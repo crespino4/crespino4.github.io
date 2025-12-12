@@ -182,6 +182,10 @@ function showTranscript(conversationId) {
             }
         });
 
+        if ( messageIds.length === 0 ) {
+            return Promise.resolve([]);
+        }
+        
         return conversationsApi.postConversationsMessageMessagesBulk(conversationId, { body: messageIds });
     }).then(data => {
         data.entities.reverse();
