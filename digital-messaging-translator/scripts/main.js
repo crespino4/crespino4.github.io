@@ -48,12 +48,6 @@ const onMessage = data => {
             // Heartbeat
             // console.info('Ignoring metadata: ', notification);
             return;
-        } else if(data.eventBody.id !== currentConversationId) {
-            // Conversation event not related to the current conversationId (in this frame)
-            // Ignore
-            return;
-        } else if(data.eventBody.participants.find(p => p.purpose === 'customer').endTime) {
-            console.log('ending conversation');
         } else if ( data.topicName === topicTranscription && data.eventBody.conversationId == currentConversation.id ) {
             console.log("Received a transcription event for a Conversation ID that is recognized");
 
@@ -74,6 +68,13 @@ const onMessage = data => {
                     });
                 });
             }
+        } else if(data.eventBody.id !== currentConversationId) {
+            // Conversation event not related to the current conversationId (in this frame)
+            // Ignore
+            return;
+        } else if(data.eventBody.participants.find(p => p.purpose === 'customer').endTime) {
+            console.log('ending conversation');
+
         } else {
             data.eventBody.participants.forEach(participant => {
                 if(!participant.endTime && Array.isArray(participant.messages[0].messages)) {
