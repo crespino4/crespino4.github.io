@@ -1,6 +1,6 @@
 export default {
     // Token Implicit Grant Client ID
-    clientID: '1da5ad3b-5250-49c9-97c5-6cddea1e48be',
+    clientID: '7d7ab35e-646a-4105-9721-737a0f86dfa4',
 
     redirectUri: 'https://crespino4.github.io/digital-messaging-translator/index.html',
 
