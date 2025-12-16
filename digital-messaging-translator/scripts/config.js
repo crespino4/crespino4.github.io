@@ -10,5 +10,5 @@ export default {
         region: 'mypurecloud.com'
     },
 
-    translateServiceURI: 'http://localhost:3000/translate'
+    translateServiceURI: 'https://four-dancers-decide.loca.lt/translate'
 } 
