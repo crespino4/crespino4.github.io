@@ -36,9 +36,10 @@ export default {
                     languageCodeMapping[language] : language;
 
         let data = {
-            raw_text: text,
-            source_language: 'auto',
-            target_language: language_code
+            q: text,
+            source: 'auto',
+            target: language_code,
+            format: 'text'
         };
 
         fetch(config.translateServiceURI,

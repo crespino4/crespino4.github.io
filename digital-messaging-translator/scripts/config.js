@@ -10,5 +10,5 @@ export default {
         region: 'mypurecloud.com'
     },
 
-    translateServiceURI: '' //'https://localhost/translate'
+    translateServiceURI: 'http://localhost:3000/translate'
 } 
