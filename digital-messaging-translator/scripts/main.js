@@ -106,7 +106,6 @@ const onMessage = data => {
 
                     // Wait for translate to finish before calling addChatMessage
                     translate.translateText(messageDetail.textBody, genesysCloudLanguage, function(translatedData) {
-                        // Wait for translate to finish before calling addChatMessage
                         view.addChatMessage(name, translatedData.translatedText, purpose);
                         translationData = translatedData;
                     });
