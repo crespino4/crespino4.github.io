@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue Activation Widget</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 400px; }
+        .checkbox-group { margin: 20px 0; }
+        label { display: block; margin: 10px 0; cursor: pointer; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        #status { margin-top: 20px; color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Queue Activation</h2>
+        <div id="auth-section">
+            <button id="loginBtn">Login to Genesys Cloud</button>
+        </div>
+        <div id="queue-section" style="display:none;">
+            <div class="checkbox-group">
+                <label><input type="checkbox" id="selectAll"> Select All</label>
+                <label><input type="checkbox" class="media-type" value="V"> Voice</label>
+                <label><input type="checkbox" class="media-type" value="E"> Email</label>
+                <label><input type="checkbox" class="media-type" value="M"> Messaging</label>
+            </div>
+            <button id="activateBtn">Activate</button>
+            <div id="status"></div>
+        </div>
+    </div>
+    <script src="https://sdk-cdn.mypurecloud.com/javascript/latest/purecloud-platform-client-v2.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
