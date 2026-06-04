@@ -6,7 +6,7 @@ const client = platformClient.ApiClient.instance;
 
 // OAuth
 const redirectUri = window.location.href;
-const clientId = '1da5ad3b-5250-49c9-97c5-6cddea1e48be';
+const clientId = 'a6ff82f4-0296-4f05-9a4f-b81a7edaa22e';
 
 var selectedQueueId = '';
 var selectedQueueName = '';
@@ -240,8 +240,12 @@ function setQueueListener(){
         });
 }
 
+
 // Initial Setup
-client.loginImplicitGrant(clientId, redirectUri)
+let codeVerifier = client.generatePKCECodeVerifier(128);
+let codeChallenge = await client.computePKCECodeChallenge(codeVerifier);
+
+client.authorizePKCEGrant(clientId, codeVerifier, codeChallenge, redirectUri)
     .then((data) => {
         console.log(data);
 
