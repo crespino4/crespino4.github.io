@@ -19,8 +19,13 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
+        const stored = localStorage.getItem('htmlInput');
+        if (stored) $('#htmlInput').val(stored);
+
         $('#testBtn').on('click', function() {
-            $('#output').append($('#htmlInput').val());
+            const val = $('#htmlInput').val();
+            localStorage.setItem('htmlInput', val);
+            $('#output').append(val);
         });
     </script>
 </body>
