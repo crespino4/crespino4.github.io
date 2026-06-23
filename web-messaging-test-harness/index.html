@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Messaging Test Harness</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Web Messaging Test Harness</h2>
+        <div class="mb-3">
+            <label for="htmlInput" class="form-label">Enter HTML</label>
+            <textarea id="htmlInput" class="form-control" rows="10"></textarea>
+        </div>
+        <button id="testBtn" class="btn btn-primary">Test</button>
+        <hr>
+        <div id="output"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $('#testBtn').on('click', function() {
+            $('#output').append($('#htmlInput').val());
+        });
+    </script>
+</body>
+</html>
