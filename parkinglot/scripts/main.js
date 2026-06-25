@@ -5,7 +5,7 @@ const platformClient = require('platformClient');
 const client = platformClient.ApiClient.instance;
 
 // OAuth
-const redirectUri = window.location.href;
+const redirectUri = window.location.origin + window.location.pathname;
 const clientId = 'a6ff82f4-0296-4f05-9a4f-b81a7edaa22e';
 
 var selectedQueueId = '';
@@ -245,7 +245,7 @@ function setQueueListener(){
 let codeVerifier = client.generatePKCECodeVerifier(128);
 let codeChallenge = await client.computePKCECodeChallenge(codeVerifier);
 
-client.authorizePKCEGrant(clientId, codeVerifier, codeChallenge, redirectUri)
+client.loginPKCEGrant(clientId, redirectUri)
     .then((data) => {
         console.log(data);
 
